@@ -1,0 +1,85 @@
+#
+# batch simulation script for ns-2
+#
+# $Id: tfrc_red_reverse,v 1.3 2006/01/12 12:07:14 soohyunc Exp $
+
+# get the start number of TFRC sources
+echo -n "Enter the initial TFRC sources		"
+read SRC
+SOURCE=$SRC
+
+# get the increase step for TFRC sources
+echo -n "Enter the increase step for TFRC source	"
+read SRC_STP
+TFRC_STEP=$SRC_STP
+
+# get the start queue length
+echo -n "Enter the initial RED Q length		"
+read QLEN
+QUEUE=$QLEN
+
+# get the increase setp for bottleneck Queue size
+echo -n "Enter the increase step for Q length	"
+read Q_STP
+Q_STEP=$Q_STP
+
+# get the simulation time
+echo -n "Enter simulation time			"
+read T_SIM
+TIME=$T_SIM
+
+# get the random seed number for ns-2 simulation
+echo -n "Enter the random seed number		"
+read RAND
+RND=$RAND
+
+# get the number of iteration for the simulation
+echo -n "Enter the iteration time (sourcee)     "
+read NUM_IT_SRC
+ITERATE_SRC=$NUM_IT_SRC
+
+# get the number of iteration for the simulation
+echo -n "Enter the iteration time (queue)       "
+read NUM_IT_Q
+ITERATE_Q=$NUM_IT_Q
+
+for i in `seq 1 $ITERATE_SRC`;
+do
+	echo "-------------------------------"
+	for j in `seq 1 $ITERATE_Q`;
+	do
+		echo -n "* You are running on	"
+		hostname
+		echo "<TFRCs with reverse TCPs>"
+		echo "TFRC Sources	"	$SOURCE
+		echo "RED Queue 	"	$QUEUE
+		echo "Simulation Time	"	$TIME
+		echo "Random Seed	"	$RND
+
+		nice ns tfrc_red_reverse.tcl $SOURCE $QUEUE $TIME $RND > temp.tfrc
+
+		echo ""
+		
+		# plotting graphs
+		mv graph/aggr_loss_tfrc_red.png graph/aggr_loss_red_tfrc_reverse_src\($SOURCE\)_q\($QUEUE\).png
+		mv graph/aggr_q_tfrc_red.png graph/aggr_q_red_tfrc_reverse_src\($SOURCE\)_q\($QUEUE\).png
+		mv graph/aggr_thru_tfrc_red.png graph/aggr_thru_red_tfrc_reverse_src\($SOURCE\)_q\($QUEUE\).png
+		mv graph/tfrc_red_ali.png graph/tfrc_reverse_ali_red_src\($SOURCE\)_q\($QUEUE\).png
+		# end of plotting graphs
+
+		# saving trace files
+                mv trace/tfrc_loss.xg trace/tfrc_reverse_loss_src\($SOURCE\)_red\($QUEUE\).xg
+                mv trace/tfrc_q.xg trace/tfrc_reverse_q_src\($SOURCE\)_red\($QUEUE\).xg
+                mv trace/tfrc_thru.xg trace/tfrc_reverse_thru_src\($SOURCE\)_red\($QUEUE\).xg
+                mv trace/tfrc_avg_int_01.xg trace/tfrc_reverse_avg_int_01_src\($SOURCE\)_red\($QUEUE\).xg
+                mv trace/tfrc_avg_int_02.xg trace/tfrc_reverse_avg_int_02_src\($SOURCE\)_red\($QUEUE\).xg
+                mv trace/tfrc_avg_int_03.xg trace/tfrc_reverse_avg_int_03_src\($SOURCE\)_red\($QUEUE\).xg
+                mv trace/tfrc_avg_int_04.xg trace/tfrc_reverse_avg_int_04_src\($SOURCE\)_red\($QUEUE\).xg
+		# end of saving trace files
+
+
+		let QUEUE=QUEUE+$Q_STP
+	done
+	let QUEUE=$QLEN
+	let SOURCE=SOURCE+$SRC_STP
+done

@@ -1,0 +1,17 @@
+###								###
+###	"sc" stands for sanity check				###
+###								###
+###	$Id$	###
+###								###
+
+The files in "$NS_HOME/exercise/sc" are to check TCP/TFRC/TFWC
+performance verification (sanity check). We want to understand the
+TFWC's dynamics, and also would like to review TCP/TFRC dynamics in
+odrder to understand the system. By doing so, we expect to find bugs in
+TFRC.
+
+The primary purpose is to understand TFWC systems.
+
+Soo-Hyun Choi (S.Choi@cs.ucl.ac.uk)
+Computer Science Department
+University College London

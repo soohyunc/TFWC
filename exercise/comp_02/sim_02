@@ -1,0 +1,63 @@
+#
+# batch simulation script for ns-2
+#
+# $Id: sim_02,v 1.4 2006/01/12 12:05:57 soohyunc Exp $
+
+# get the start number of TFRC sources
+echo -n "Enter the initial TFRC sources		"
+read SRC
+SOURCE=$SRC
+
+# get the increase step for TFRC sources
+echo -n "Enter the increase step for TFRC source	"
+read SRC_STP
+TFRC_STEP=$SRC_STP
+
+# get the start queue length
+echo -n "Enter the initial queue (RED) length		"
+read QLEN
+QUEUE=$QLEN
+
+# get the increase setp for bottleneck Queue size
+echo -n "Enter the increase step for Q length	"
+read Q_STP
+Q_STEP=$Q_STP
+
+# get the simulation time
+echo -n "Enter simulation time			"
+read T_SIM
+TIME=$T_SIM
+
+# get the random seed number for ns-2 simulation
+echo -n "Enter the random seed number		"
+read RAND
+RND=$RAND
+
+for i in `seq 1 20`;
+do
+	echo "-------------------------------"
+	for j in `seq 1 20`;
+	do
+		echo -n "You are running on	"
+		hostname
+		echo "New Simulation Started..."
+		echo "TFRC Sources	"	$SOURCE
+		echo "RED Queue Length	"	$QUEUE
+		echo "Simulation Time	"	$TIME
+		echo "Random Seed	"	$RND
+
+		nice ns tfrc_red_reverse.tcl $SOURCE $QUEUE $TIME $RND > temp.tfrc
+
+		echo ""
+		
+		mv graph/aggr_loss_tfrc_red_reverse.png graph/aggr_loss_red_tfrc_src\($SOURCE\)_q\($QUEUE\).png
+		mv graph/aggr_q_tfrc_red_reverse.png graph/aggr_q_red_tfrc_src\($SOURCE\)_q\($QUEUE\).png
+		mv graph/aggr_thru_tfrc_red_reverse.png graph/aggr_thru_red_tfrc_src\($SOURCE\)_q\($QUEUE\).png
+		mv graph/tfrc_red_ali.png graph/tfrc_ali_red_src\($SOURCE\)_q\($QUEUE\).png
+
+
+		let QUEUE=QUEUE+$Q_STP
+	done
+	let QUEUE=$QLEN
+	let SOURCE=SOURCE+$SRC_STP
+done
