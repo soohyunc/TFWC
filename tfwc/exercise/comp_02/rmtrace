@@ -1,0 +1,10 @@
+
+# delete all trace files
+#
+# $Header: /home/narwhal/u0/soohyunc/CVS_SERV/TFWC/exercise/comp_02/rmtrace,v 1.3 2006/01/17 11:27:59 soohyunc Exp $
+
+rm trace/*.tr
+rm trace/*.xg
+rm trace/out.*
+rm trace/foo
+

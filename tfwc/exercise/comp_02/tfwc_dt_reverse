@@ -1,0 +1,90 @@
+#
+# batch simulation script for ns-2
+#
+# $Id: tfwc_dt_reverse,v 1.3 2006/01/12 12:07:38 soohyunc Exp $
+
+# get the start number of TFWC sources
+echo -n "Enter the initial TFWC sources		"
+read SRC
+SOURCE=$SRC
+
+# get the increase step for TFWC sources
+echo -n "Enter the increase step for TFWC source	"
+read SRC_STP
+TFWC_STEP=$SRC_STP
+
+# get the start queue length
+echo -n "Enter the initial DropTail Q length		"
+read QLEN
+QUEUE=$QLEN
+
+# get the increase setp for bottleneck Queue size
+echo -n "Enter the increase step for Q length	"
+read Q_STP
+Q_STEP=$Q_STP
+
+# get the simulation time
+echo -n "Enter simulation time			"
+read T_SIM
+TIME=$T_SIM
+
+# get the random seed number for ns-2 simulation
+echo -n "Enter the random seed number		"
+read RAND
+RND=$RAND
+
+# get the number of iteration for the simulation
+echo -n "Enter the iteration time (sourcee)	"
+read NUM_IT_SRC
+ITERATE_SRC=$NUM_IT_SRC
+
+# get the number of iteration for the simulation
+echo -n "Enter the iteration time (queue)	"
+read NUM_IT_Q
+ITERATE_Q=$NUM_IT_Q
+
+for i in `seq 1 $ITERATE_SRC`;
+do
+	echo "-------------------------------"
+	for j in `seq 1 $ITERATE_Q`;
+	do
+		echo -n "* You are running on	"
+		hostname
+		echo "<TFWCs with reverse TCPs>"
+		echo "TFWC Sources	"	$SOURCE
+		echo "DropTail Queue 	"	$QUEUE
+		echo "Simulation Time	"	$TIME
+		echo "Random Seed	"	$RND
+
+		nice ns tfwc_dt_reverse.tcl $SOURCE $QUEUE $TIME $RND > temp.tfwc
+
+		echo ""
+		
+		# plotting graphs
+		mv graph/aggr_loss_tfwc_dt.png graph/aggr_loss_dt_tfwc_reverse_src\($SOURCE\)_q\($QUEUE\).png
+		mv graph/aggr_q_tfwc_dt.png graph/aggr_q_dt_tfwc_reverse_src\($SOURCE\)_q\($QUEUE\).png
+		mv graph/aggr_thru_tfwc_dt.png graph/aggr_thru_dt_tfwc_reverse_src\($SOURCE\)_q\($QUEUE\).png
+		mv graph/tfwc_dt_cwnd.png graph/tfwc_reverse_cwnd_dt_src\($SOURCE\)_q\($QUEUE\).png
+		mv graph/tfwc_dt_ali.png graph/tfwc_reverse_ali_dt_src\($SOURCE\)_q\($QUEUE\).png
+		# end of plotting graphs
+
+		# saving trace files
+		mv trace/tfwc_loss.xg trace/tfwc_reverse_loss_src\($SOURCE\)_dtq\($QUEUE\).xg
+		mv trace/tfwc_q.xg trace/tfwc_reverse_q_src\($SOURCE\)_dtq\($QUEUE\).xg
+		mv trace/tfwc_thru.xg trace/tfwc_reverse_thru_src\($SOURCE\)_dtq\($QUEUE\).xg
+		mv trace/tfwc_cwnd_01.xg trace/tfwc_reverse_cwnd_01_src\($SOURCE\)_dtq\($QUEUE\).xg
+		mv trace/tfwc_cwnd_02.xg trace/tfwc_reverse_cwnd_02_src\($SOURCE\)_dtq\($QUEUE\).xg
+		mv trace/tfwc_cwnd_03.xg trace/tfwc_reverse_cwnd_03_src\($SOURCE\)_dtq\($QUEUE\).xg
+		mv trace/tfwc_cwnd_04.xg trace/tfwc_reverse_cwnd_04_src\($SOURCE\)_dtq\($QUEUE\).xg
+		mv trace/tfwc_avg_int_01.xg trace/tfwc_reverse_avg_int_01_src\($SOURCE\)_dtq\($QUEUE\).xg
+		mv trace/tfwc_avg_int_02.xg trace/tfwc_reverse_avg_int_02_src\($SOURCE\)_dtq\($QUEUE\).xg
+		mv trace/tfwc_avg_int_03.xg trace/tfwc_reverse_avg_int_03_src\($SOURCE\)_dtq\($QUEUE\).xg
+		mv trace/tfwc_avg_int_04.xg trace/tfwc_reverse_avg_int_04_src\($SOURCE\)_dtq\($QUEUE\).xg
+		# end of saving trace files
+
+
+		let QUEUE=QUEUE+$Q_STP
+	done
+	let QUEUE=$QLEN
+	let SOURCE=SOURCE+$SRC_STP
+done

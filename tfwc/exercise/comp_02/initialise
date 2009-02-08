@@ -1,0 +1,11 @@
+
+# Initialise the simulation set up
+# This will delete ALL graphs and trace files!
+#
+# $Header: /home/narwhal/u0/soohyunc/CVS_SERV/TFWC/exercise/comp_02/initialise,v 1.4 2006/01/12 12:10:03 soohyunc Exp $
+
+./rmtrace
+./rmgraph
+rm temp.tfwc
+rm temp.tfrc
+rm temp.tcp
