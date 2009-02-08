@@ -1,6 +1,0 @@
-
-# delete all graphs
-#
-# $Header: /home/narwhal/u0/soohyunc/CVS_SERV/TFWC/exercise/comp_02/rmgraph,v 1.3 2006/01/17 11:27:31 soohyunc Exp $
-
-rm graph/*.png
