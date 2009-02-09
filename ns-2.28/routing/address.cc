@@ -274,7 +274,7 @@ int Address::str2addr(const char *str) const
 		if (tmp < 0)     
 			return (tmp);
 		if (tmp > ((unsigned long)(1 << bpl_[1])) ) {
-			fprintf(stderr, "Error!!\nstr2addr:Address %d outside range of address field length %d\n", tmp, ((unsigned long)(1<< bpl_[1])));
+			fprintf(stderr, "Error!!\nstr2addr:Address %d outside range of address field length %ld\n", tmp, ((unsigned long)(1<< bpl_[1])));
 			exit(1);
 		}
 		return tmp;
@@ -292,7 +292,7 @@ int Address::str2addr(const char *str) const
 	RouteLogic::ns_strtok((char*)str, istr);
 	for (int i = 0; i < levels_; i++) {
 		if (--istr[i] > ((unsigned long)(1 << bpl_[i+1])) ) {
-			fprintf(stderr, "Error!!\nstr2addr:Address %d outside range of address field length %d\n", istr[i], ((unsigned long)(1<< bpl_[i+1])));
+			fprintf(stderr, "Error!!\nstr2addr:Address %d outside range of address field length %ld\n", istr[i], ((unsigned long)(1<< bpl_[i+1])));
 			exit(1);
 		}
 		addr = set_word_field(addr, istr[i],

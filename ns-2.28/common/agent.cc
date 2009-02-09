@@ -493,7 +493,7 @@ Agent::initpkt(Packet* p) const
 
  	hdr_nv* nv = hdr_nv::access(p);
  	if (0)
-		printf("Off hdr_nv %d, ip_hdr %d myaddr %ld\n",
+		printf("Off hdr_nv %d, ip_hdr %d myaddr %d\n",
 		       hdr_nv::offset(), hdr_ip::offset(), here_.addr_);
  	NixNode* pNixNode = NixNode::GetNodeObject(here_.addr_);
  	if (0)
