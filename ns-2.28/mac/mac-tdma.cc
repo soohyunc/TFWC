@@ -238,7 +238,7 @@ void MacTdma::dump(char *fname)
 	
 	fprintf(stderr, "\ttx_state_: %x, rx_state_: %x, idle: %d\n", 
 		tx_state_, rx_state_, is_idle());
-	fprintf(stderr, "\tpktTx_: %x, pktRx_: %x, callback: %x\n", 
+	fprintf(stderr, "\tpktTx_: %ld, pktRx_: %ld, callback: %ld\n", 
 		(long) pktTx_, (long) pktRx_, (long) callback_);
 }
 

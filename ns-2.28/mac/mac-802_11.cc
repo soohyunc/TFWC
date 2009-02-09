@@ -325,7 +325,7 @@ Mac802_11::dump(char *fname)
 		tx_state_, rx_state_, nav_, is_idle());
 
 	fprintf(stderr,
-		"\tpktTx_: %x, pktRx_: %x, pktRTS_: %x, pktCTRL_: %x, callback: %x\n",
+		"\tpktTx_: %ld, pktRx_: %ld, pktRTS_: %ld, pktCTRL_: %ld, callback: %ld\n",
 		(long) pktTx_, (long) pktRx_, (long) pktRTS_,
 		(long) pktCTRL_, (long) callback_);
 
