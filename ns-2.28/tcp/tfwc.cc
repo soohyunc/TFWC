@@ -292,7 +292,7 @@ void TfwcAgent::recv(Packet* pkt, Handler*) {
 bool TfwcAgent::isHole(hdr_tfwc_ack* tfwcah, int end, int begin) {
 	bool retval;	// 'true' when there is a hole in AckVec
 	int numVec;		// total number of tempvec
-	int loss_count = 0;	// number of lost packet
+	int numLoss = 0;// number of lost packet
 
 	/*
 	 * create a temp vector which can accommodate
@@ -318,7 +318,7 @@ bool TfwcAgent::isHole(hdr_tfwc_ack* tfwcah, int end, int begin) {
 		if (!isThere_) {
 			// recording the very first lost packet
 			if(!isFirstLostSeen_) firstLostPkt_ = tempvec[i];
-			loss_count++;
+			numLoss++;
 		}
 	} 
 
@@ -326,7 +326,7 @@ bool TfwcAgent::isHole(hdr_tfwc_ack* tfwcah, int end, int begin) {
 	firstvec_ = tempvec[0];			// first tempvec element
 	lastvec_ = firstvec_ + (numVec - 1);	// last tempvec element
 
-	return retval = (loss_count > 0) ? true : false;
+	return retval = (numLoss > 0) ? true : false;
 }
 
 /*
