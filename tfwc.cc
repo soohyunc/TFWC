@@ -205,6 +205,17 @@ TfwcAgent::TfwcAgent() : Agent(PT_TFWC), rtx_timer_(this) {
 
 	// Other test purpose
 	isDupAck_	= false;
+
+	// smoothing 'cwnd_'
+	smoothing_ = true;
+	if (smoothing_) {
+		winvec_		= (int *) malloc(sizeof(int) * TSZ);
+		timevec_	= (double *) malloc(sizeof(double) * TSZ);
+		timevec_[0]	= 0.0;
+		tvrec_		= 0.0;	// timestampe for the last cwnd_ 
+		numvec_		= 1;	// vector index (or numver of vector)
+		is_inflated_ = false;
+	}
 }
 
 /*
@@ -495,6 +506,10 @@ void TfwcAgent::send_more(int seqno) {
 
 	// timestamp vector for loss history update
 	tsvec_[seqno%TSZ] = tfwch->ts_;	
+
+	// timestamp vector for smoother
+	if (smoothing_) 
+		timevec_[(numvec_-1)%TSZ] = now();
 
 	if (isFakeLoss_) {
 		// XXX TEST PURPOSE ONLY
@@ -882,11 +897,16 @@ void TfwcAgent::ctrl_win(hdr_tfwc_ack* tfwcah){
 	int r = -1;
 #endif
 
-	// cwnd control
-	if (r < factor)
-		cwnd_ = (int) t_win_ + 1;	// artificially inflate cwnd by 1
-	else
-		cwnd_ = (int) t_win_;		// use calculated cwnd
+	// finally, cwnd control
+	//if (r < factor)
+	//	cwnd_ = (int) t_win_ + 1;	// artificially inflate cwnd by 1
+	//else
+	//	cwnd_ = (int) t_win_;		// use calculated cwnd
+
+	cwnd_ = (int) t_win_;
+	// are we inflating 'cwnd_' for smoothing?
+	if (smoothing_)
+		cwnd_ = smoother (cwnd_);
 
 	/* TFWC is driven by rate-based timer if cwnd is less than 2 */
 	if (t_win_ < 2.0)
@@ -896,6 +916,40 @@ void TfwcAgent::ctrl_win(hdr_tfwc_ack* tfwcah){
 
 	/* printing loss rate seen by TCP Eq. */
 	printf("	[.]	loss_by_cal	%f	%f	%p\n", now(), p_, this);
+}
+
+/*
+ * Inflate 'cwnd_' once in an RTT
+ * @window:	cwnd_
+ * return:	inflated 'cwnd_'
+ */
+int TfwcAgent::smoother (int window) {
+	bool isNewRTT = false;
+	// check if the latest cwnd_ fall into a new RTT
+	if(timevec_[(numvec_-1)%TSZ] - tvrec_ > srtt_)
+		isNewRTT = true;
+
+	// same RTT
+	if (!isNewRTT) {
+		if (!is_inflated_) {
+			window++;
+			is_inflated_ = true;
+		}
+	}
+	// new RTT
+	else {
+		tvrec_ = timevec_[(numvec_-1)%TSZ];
+		numvec_ = 1;
+		is_inflated_ = false;
+	}
+
+	// store current cwnd value
+	winvec_[numvec_-1] = window;
+
+	if (!isNewRTT) 
+		numvec_++;
+
+	return window;
 }
 
 /*
@@ -990,10 +1044,16 @@ void TfwcAgent::loss_history(hdr_tfwc_ack* tfwcah){
 	 *	   if tempvec[i] is NOT in the AckVec
 	 */
 	for(int i = 0; i < numVec; i++) {
+		// packet loss??
 		isGap = !(tfwcah->tfwcAV.ackv_bool_search(tempvec[i]));
-		isNewEvent = (tsvec_[tempvec[i]%TSZ] - ts_ > srtt_) 
-			? true : false;
 
+		// this loss triggers a new loss event?
+		if (isGap) {
+			isNewEvent = (tsvec_[tempvec[i]%TSZ] - ts_ > srtt_) 
+				? true : false;
+		}
+
+		// packet loss with new loss event
 		if(isGap && isNewEvent) {
 			// increase current history size: hsz_
 			hsz_ = (hsz_ < HSZ) ? ++hsz_ : HSZ;
@@ -1009,7 +1069,9 @@ void TfwcAgent::loss_history(hdr_tfwc_ack* tfwcah){
 			// let the most recent history information be one
 			history_[0] = 1;
 			//print_history();
-		} else {	// no new loss event!
+		} 
+		// this is not a new loss event
+		else {	
 			// increase current history information
 			history_[0]++;
 			//print_history();

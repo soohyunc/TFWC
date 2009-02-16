@@ -283,5 +283,14 @@ protected:
 
 	// print packet timestamp
 	void print_timestamp(hdr_tfwc* tfwch);
+
+	// TFWC smoother
+	bool smoothing_;	// is smoother activated?
+	int *winvec_;		// cwnd vector
+	double *timevec_;	// cwnd time vector
+	double tvrec_;		// 'timevec_' record
+	int numvec_;		// number of 'winvec_' element
+	bool is_inflated_;	// have we inflated cwnd_ eariler in this RTT?
+	int smoother(int cwnd_);	// "cwnd_" smoother
 };
 #endif
