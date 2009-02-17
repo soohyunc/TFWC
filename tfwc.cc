@@ -42,6 +42,7 @@
 #include <assert.h>
 #include "basetrace.h"
 #include "tfwc.h"
+#include "control.h"
 
 int hdr_tfwc::offset_;          // header offset
 int hdr_tfwc_ack::offset_;      // header offset of an ACK
@@ -827,84 +828,10 @@ void TfwcAgent::ctrl_win(hdr_tfwc_ack* tfwcah){
 	f_p_ = term1 + term2;
 
 	/* TFWC window size */
-	t_win_ = 1 / f_p_;	// 't_win_' is a floating point value
+	t_win_ = 1 / f_p_;		// 't_win_' is a floating point value
+	cwnd_ = (int) t_win_;	// 'cwnd_' is an integer value
 
-#define SF	100		// scaling factor to use with rand() function	
-#define NOACT
-
-#ifdef NOACT
-	double factor = -1.0;
-#elif defined LINEAR
-	double cool, factor;
-	if (p_ < .1)
-		cool = 5 * p_;    
-	else
-		cool = p_;
-
-	factor = (cool * SF < SF) ? SF * cool : SF;
-#elif defined GAUSS
-	double gauss, peak, median, coeff, factor;
-	peak = 0.5;
-	median = 0.1;
-
-	if (p_ < .1) {
-		coeff = .035;
-		gauss = peak * exp(pow((p_ - median),2.0) / (-2.0 * pow(coeff, 2.0)));
-	} else {
-		coeff = .075;
-		gauss = peak * exp(pow((p_ - median),2.0) / (-2.0 * pow(coeff, 2.0)));
-	}
-
-	factor = (gauss * SF < SF) ? gauss * SF : SF;
-#elif defined POLY
-#define COF	62.5
-	double poly, factor;
-	double cutoff = .2;
-	double y = .5;
-
-	if	(p_ < cutoff)
-		poly = COF * pow((p_ - cutoff), 3.0) + y;
-	else
-		poly = pow((p_ - cutoff), 2.0) + y;
-
-	factor = (poly * SF < SF) ? poly * SF : SF;
-#elif defined MIX
-	double mix, cutoff, peak, median, coeff, y, factor;
-	peak = .5;
-	median = .1;
-	coeff = .035;
-	cutoff = .1;
-
-	y = peak * exp( pow((cutoff - median),2.0) / (-2.0 * pow(coeff, 2.0)) );
-
-	if (p_ < .01)
-		mix = 5 * p_;
-	else if (p_ >= .01 && p_ < cutoff)
-		mix = peak * exp( pow((p_ - median),2.0) / (-2.0 * pow(coeff, 2.0)) );
-	else
-		mix = 2.0 * pow((p_ - .1), 2.0) + y;	
-
-	factor = (mix * SF < SF) ? mix * SF : SF;
-#endif
-
-	// generate random number [0:100)
-	double n = (double)rand() / ((double)(RAND_MAX + 1.0));
-	double m = SF * n;
-#ifndef ALWAYS
-	int r = (int) m;
-#else
-	double factor = 1;
-	int r = -1;
-#endif
-
-	// finally, cwnd control
-	//if (r < factor)
-	//	cwnd_ = (int) t_win_ + 1;	// artificially inflate cwnd by 1
-	//else
-	//	cwnd_ = (int) t_win_;		// use calculated cwnd
-
-	cwnd_ = (int) t_win_;
-	// are we inflating 'cwnd_' for smoothing?
+	// are we inflating 'cwnd_' in the same RTT for smoothing?
 	if (smoothing_)
 		cwnd_ = smoother (cwnd_);
 
@@ -919,32 +846,32 @@ void TfwcAgent::ctrl_win(hdr_tfwc_ack* tfwcah){
 }
 
 /*
- * Inflate 'cwnd_' once in an RTT
+ * Inflate 'cwnd_' in the same RTT
  * @window:	cwnd_
  * return:	inflated 'cwnd_'
  */
 int TfwcAgent::smoother (int window) {
 	bool isNewRTT = false;
-	// check if the latest cwnd_ fall into a new RTT
-	if(timevec_[(numvec_-1)%TSZ] - tvrec_ > srtt_)
-		isNewRTT = true;
+	for (int i = 0; i < numvec_; i++) {
+		// check if this cwnd triggers a new RTT
+		if(timevec_[i%TSZ] - tvrec_ > srtt_)
+			isNewRTT = true;
 
-	// same RTT
-	if (!isNewRTT) {
-		if (!is_inflated_) {
-			window++;
-			is_inflated_ = true;
+		// same RTT
+		if (!isNewRTT) {
+			window = control_functions (is_inflated_, 'o', window, 
+					p_, now(), srtt_);
 		}
-	}
-	// new RTT
-	else {
-		tvrec_ = timevec_[(numvec_-1)%TSZ];
-		numvec_ = 1;
-		is_inflated_ = false;
-	}
+		// new RTT
+		else {
+			tvrec_ = timevec_[i%TSZ];
+			numvec_ = 1;
+			is_inflated_ = false;
+		}
 
-	// store current cwnd value
-	winvec_[numvec_-1] = window;
+		// store current cwnd value
+		winvec_[numvec_-1] = window;
+	}
 
 	if (!isNewRTT) 
 		numvec_++;

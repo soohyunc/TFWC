@@ -287,10 +287,16 @@ protected:
 	// TFWC smoother
 	bool smoothing_;	// is smoother activated?
 	int *winvec_;		// cwnd vector
-	double *timevec_;	// cwnd time vector
+	double *timevec_;	// each cwnd time vector
 	double tvrec_;		// 'timevec_' record
 	int numvec_;		// number of 'winvec_' element
 	bool is_inflated_;	// have we inflated cwnd_ eariler in this RTT?
-	int smoother(int cwnd_);	// "cwnd_" smoother
+
+	// 'cwnd_' smoother
+	int smoother(int cwnd_);
+	// control functions
+	int control_functions (bool, char, int, double, double, double);
+	// setting 'is_inflated_' as true
+	inline void set_inflated() { is_inflated_ = true; };
 };
 #endif
