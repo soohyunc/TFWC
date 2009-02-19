@@ -853,32 +853,28 @@ void TfwcAgent::ctrl_win(hdr_tfwc_ack* tfwcah){
  */
 int TfwcAgent::smoother (int window) {
 	bool isNewRTT = false;
-	//for (int i = 0; i < numvec_; i++) {
-		// check if this cwnd triggers a new RTT
-		//if(timevec_[i%TSZ] - tvrec_ > srtt_)
-		if(timevec_[(numvec_ - 1)%TSZ] - tvrec_ > srtt_)
-			isNewRTT = true;
+	// check if this cwnd triggers a new RTT
+	if(timevec_[(numvec_ - 1)%TSZ] - tvrec_ > srtt_)
+		isNewRTT = true;
 
-		// same RTT
-		if (!isNewRTT) {
-			window = control_functions ('o', window);
-		}
-		// new RTT
-		else {
-			//window = force_inflate (cwnd_);
-			//tvrec_ = timevec_[i%TSZ];
-			tvrec_ = timevec_[(numvec_ - 1)%TSZ];
+	// same RTT
+	if (!isNewRTT) {
+		window = control_functions ('o', window);
+	}
+	// new RTT
+	else {
+		//window = force_inflate (cwnd_);
+		tvrec_ = timevec_[(numvec_ - 1)%TSZ];
 
-			printf(" num_inf: %d total: %d startRTT: %f now: %f %p\n", 
-					num_infl_, (num_infl_ + num_asis_), 
-					timevec_[0], now(), this);
+		printf(" num_inf: %d total: %d startRTT: %f now: %f %p\n", 
+				num_infl_, (num_infl_ + num_asis_), 
+				timevec_[0], now(), this);
 
-			reset_smoother();
-		}
+		reset_smoother();
+	}
 
-		// store current cwnd value
-		winvec_[numvec_-1] = window;
-	//}
+	// store current cwnd value
+	winvec_[numvec_-1] = window;
 
 	if (!isNewRTT) 
 		numvec_++;
