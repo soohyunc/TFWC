@@ -1,7 +1,7 @@
 # Update TFWC/ns-2.28/tcp
 # $Id$
 
-for target in ibex echidna quokka wombat redkite \
+for target in ibex echidna quokka wombat redkite hopback \
 	saleem1 saleem2 saleem3 saleem4 saleem5
 do
 
