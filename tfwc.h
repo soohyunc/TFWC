@@ -291,12 +291,16 @@ protected:
 	double tvrec_;		// 'timevec_' record
 	int numvec_;		// number of 'winvec_' element
 	bool is_inflated_;	// have we inflated cwnd_ eariler in this RTT?
+	int num_infl_;		// number of cwnd inflation in an RTT
+	int num_asis_;		// number of cwnd not-inflation in an RTT
 
 	// 'cwnd_' smoother
 	int smoother(int cwnd_);
 	// control functions
-	int control_functions (bool, char, int, double, double, double);
-	// setting 'is_inflated_' as true
-	inline void set_inflated() { is_inflated_ = true; };
+	int control_functions (char, int);
+	// reset smoother
+	void reset_smoother();
+	// force inflate
+	int force_inflate(int window);
 };
 #endif

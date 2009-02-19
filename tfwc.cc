@@ -42,7 +42,6 @@
 #include <assert.h>
 #include "basetrace.h"
 #include "tfwc.h"
-#include "control.h"
 
 int hdr_tfwc::offset_;          // header offset
 int hdr_tfwc_ack::offset_;      // header offset of an ACK
@@ -216,6 +215,8 @@ TfwcAgent::TfwcAgent() : Agent(PT_TFWC), rtx_timer_(this) {
 		tvrec_		= 0.0;	// timestampe for the last cwnd_ 
 		numvec_		= 1;	// vector index (or numver of vector)
 		is_inflated_ = false;
+		num_infl_	= 0;
+		num_asis_	= 0;
 	}
 }
 
@@ -852,26 +853,32 @@ void TfwcAgent::ctrl_win(hdr_tfwc_ack* tfwcah){
  */
 int TfwcAgent::smoother (int window) {
 	bool isNewRTT = false;
-	for (int i = 0; i < numvec_; i++) {
+	//for (int i = 0; i < numvec_; i++) {
 		// check if this cwnd triggers a new RTT
-		if(timevec_[i%TSZ] - tvrec_ > srtt_)
+		//if(timevec_[i%TSZ] - tvrec_ > srtt_)
+		if(timevec_[(numvec_ - 1)%TSZ] - tvrec_ > srtt_)
 			isNewRTT = true;
 
 		// same RTT
 		if (!isNewRTT) {
-			window = control_functions (is_inflated_, 'o', window, 
-					p_, now(), srtt_);
+			window = control_functions ('p', window);
 		}
 		// new RTT
 		else {
-			tvrec_ = timevec_[i%TSZ];
-			numvec_ = 1;
-			is_inflated_ = false;
+			//window = force_inflate (cwnd_);
+			//tvrec_ = timevec_[i%TSZ];
+			tvrec_ = timevec_[(numvec_ - 1)%TSZ];
+
+			printf(" num_inf: %d total: %d startRTT: %f now: %f %p\n", 
+					num_infl_, (num_infl_ + num_asis_), 
+					timevec_[0], now(), this);
+
+			reset_smoother();
 		}
 
 		// store current cwnd value
 		winvec_[numvec_-1] = window;
-	}
+	//}
 
 	if (!isNewRTT) 
 		numvec_++;
@@ -1156,4 +1163,132 @@ void TfwcAgent::print_history_element(int i) {
 void TfwcAgent::stop() {
 	alive_ = 0;
 	rtx_timer_.force_cancel();
+}
+
+/*
+ * Various Control Functions
+ */
+int TfwcAgent::control_functions (char c, int window) {
+
+	double y = 0.0;
+	double peak = 0.0;
+	double cutoff = 0.0;
+	double median = 0.0;
+	double coeff = 0.0;
+	double factor = 0.0;
+
+	switch (c) {
+		case 'o':       // just once
+		{
+			if (!is_inflated_) {
+				is_inflated_ = true;
+				factor = 1.0;
+			}
+		}
+			break;
+		case 'l':       // linear functions
+		{
+			double cool;
+			if (p_ < .1)
+				cool = 5 * p_;
+			else
+				cool = p_;
+
+			factor = (cool < 1.0) ? cool : 1.0;
+		}
+			break;
+		case 'g':       // gaussian functions
+		{
+			double gauss;
+			peak = 0.5;
+			median = 0.1;
+
+			if (p_ < .1) {
+				coeff = .035;
+				gauss = peak * exp(pow((p_ - median),2.0)
+						/ (-2.0 * pow(coeff, 2.0)));
+			} else {
+				coeff = .075;
+				gauss = peak * exp(pow((p_ - median),2.0)
+						/ (-2.0 * pow(coeff, 2.0)));
+			}
+
+			factor = (gauss < 1.0) ? gauss : 1.0;
+		}
+			break;
+		case 'p':       // polynomial functions
+		{
+			double poly;
+			double POLYCOF = 62.5;
+			y = .5;
+			cutoff = .2;
+
+			if  (p_ < cutoff)
+				poly = POLYCOF * pow((p_ - cutoff), 3.0) + y;
+			else
+				poly = pow((p_ - cutoff), 2.0) + y;
+
+			factor = (poly < 1.0) ? poly : 1.0;
+		}
+			break;
+		case 'm':       // mixture functions
+		{
+			double mix;
+			peak = .5;
+			median = .1;
+			coeff = .035;
+			cutoff = .1;
+
+			y = peak * exp( pow((cutoff - median),2.0)
+					/ (-2.0 * pow(coeff, 2.0)) );
+
+			if (p_ < .01)
+				mix = 5 * p_;
+			else if (p_ >= .01 && p_ < cutoff)
+				mix = peak * exp( pow((p_ - median),2.0)
+						/ (-2.0 * pow(coeff, 2.0)) );
+			else
+				mix = 2.0 * pow((p_ - .1), 2.0) + y;
+
+			factor = (mix < 1.0) ? mix : 1.0;
+		}
+			break;
+		default:
+			factor = -1.0;
+	} // switch
+
+
+	// generate random number [0:1)
+	//srand (now * p_);
+	double n = (double) rand() / (double) 0x7fffffff;
+
+	// finally, inflate 'window' according to the given case
+	if (n < factor) {
+		num_infl_++;
+		return (window + 1);
+	} else {
+		num_asis_++;
+		return window;
+	}
+}
+
+/*
+ * Reset TFWC smoother
+ */
+void TfwcAgent::reset_smoother() {
+	is_inflated_ = false;
+	numvec_ = 1;
+	num_infl_ = 0;
+	num_asis_ = 0;
+}
+
+/*
+ * Force inflate
+ */
+int TfwcAgent::force_inflate(int window) {
+	if (num_infl_ == 0) {
+		window++;
+		num_infl_++;
+	}
+	return window;
 }
