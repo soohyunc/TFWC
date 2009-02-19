@@ -1219,7 +1219,7 @@ int TfwcAgent::control_functions (char c, int window) {
 		case 'p':       // polynomial functions
 		{
 			double poly;
-			double POLYCOF = 62.5;
+			const double POLYCOF = 62.5;
 			y = .5;
 			cutoff = .2;
 
