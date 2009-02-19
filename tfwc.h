@@ -201,7 +201,7 @@ protected:
 	void dupack_action();
 
 	// main TFWC cwnd control method
-	void ctrl_win(hdr_tfwc_ack* tfwcah);
+	int ctrl_win(hdr_tfwc_ack* tfwcah);
 
 	// update loss history
 	void loss_history(hdr_tfwc_ack* tfwcah);
@@ -216,7 +216,7 @@ protected:
 	double pseudo_p_;// a faked packet loss probability
 	double pseudo_interval_;// a faked packet loss interval
 	double p_;		// packet loss probability
-	double t_win_;		// temporal cwin size to get p_ value
+	double float_win_;	// floating point cwnd value
 	double ts_;		// timestamp for last lost packet
 	double *tsvec_;		// timestamp vector
 	double avg_interval_;	// average loss interval

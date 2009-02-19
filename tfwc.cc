@@ -155,7 +155,7 @@ TfwcAgent::TfwcAgent() : Agent(PT_TFWC), rtx_timer_(this) {
 	 * cwndCtrl variables
 	 */
 	isFirstLostSeen_ = false;	// is this a first loss?
-	t_win_	= 1.0;			// temp cwnd size
+	float_win_	= 1.0;			// temp cwnd size
 	ts_		= 0.0;			// timestamp for last lost packet
 	avg_interval_	= 0.0;	// average loss interval
 	I_tot0_		= 0.0;		
@@ -278,7 +278,7 @@ void TfwcAgent::recv(Packet* pkt, Handler*) {
 		}
 		opencwnd();			// TCP-like cwin control
 	} else
-		ctrl_win(tfwcah);	// TFWC cwnd control
+		cwnd_ = ctrl_win(tfwcah);	// TFWC cwnd control
 
 	// marking AckofAck
 	ackofack_ = ackofack();
@@ -812,38 +812,41 @@ void TfwcAgent::dupack_action() {
  *	o  average loss interval calculation
  *	o  loss event rate calculation
  *	o  update cwnd_ using TCP throughput equation
+ *  
+ *  @tfwcah: TFWC Ack Header
+ *	return: window (congestion window)
  */
-void TfwcAgent::ctrl_win(hdr_tfwc_ack* tfwcah){
+int TfwcAgent::ctrl_win(hdr_tfwc_ack* tfwcah){
+	int window;		// congestion window
 
 	loss_history(tfwcah);	// update loss history
 	avg_loss_interval();	// computing average loss interval
 
-	/* Loss Event Rate */
+	// Loss Event Rate
 	p_ = 1.0 / avg_interval_;
 
-	/* simplified TCP throughput equation */
+	// simplified TCP throughput equation
 	double tmp1	= 12.0 * sqrt(p_ * 3.0/8.0);
 	double tmp2 = p_ * (1.0 + 32.0 * pow(p_, 2.0));
 	double term1 = sqrt(p_ * 2.0/3.0);
 	double term2 = tmp1 * tmp2;
 	f_p_ = term1 + term2;
 
-	/* TFWC window size */
-	t_win_ = 1 / f_p_;		// 't_win_' is a floating point value
-	cwnd_ = (int) t_win_;	// 'cwnd_' is an integer value
+	// TFWC congestion window
+	float_win_ = 1.0 / f_p_;	// 'float_win_' is a floating point value
+	window = (int) float_win_;	// 'window' is an integer value
 
-	// are we inflating 'cwnd_' in the same RTT for smoothing?
-	if (smoothing_)
-		cwnd_ = smoother (cwnd_);
-
-	/* TFWC is driven by rate-based timer if cwnd is less than 2 */
-	if (t_win_ < 2.0)
+	// TFWC is driven by rate-based timer when window is less than 3
+	if (float_win_ <= 2.0)
 		isRateDriven_ = true;
 	else
 		isRateDriven_ = false;
 
-	/* printing loss rate seen by TCP Eq. */
-	printf("	[.]	loss_by_cal	%f	%f	%p\n", now(), p_, this);
+	// are we inflating sending window in the same RTT for smoothing?
+	if (smoothing_)
+		return smoother(window);
+	else 
+		return window;
 }
 
 /*
@@ -853,16 +856,12 @@ void TfwcAgent::ctrl_win(hdr_tfwc_ack* tfwcah){
  */
 int TfwcAgent::smoother (int window) {
 	bool isNewRTT = false;
-	// check if this cwnd triggers a new RTT
-	if(timevec_[(numvec_ - 1)%TSZ] - tvrec_ > srtt_)
+	// check if the most recent cwnd_ is in the same RTT or not.
+	if(timevec_[(numvec_-1)%TSZ] - tvrec_ > srtt_)
 		isNewRTT = true;
 
-	// same RTT
-	if (!isNewRTT) {
-		window = control_functions ('o', window);
-	}
 	// new RTT
-	else {
+	if (isNewRTT) {
 		//window = force_inflate (cwnd_);
 		tvrec_ = timevec_[(numvec_ - 1)%TSZ];
 
@@ -871,14 +870,16 @@ int TfwcAgent::smoother (int window) {
 				timevec_[0], now(), this);
 
 		reset_smoother();
+	} 
+	// same RTT
+	else {
+		window = control_functions ('o', window);
+		numvec_++;
 	}
 
 	// store current cwnd value
 	winvec_[numvec_-1] = window;
-
-	if (!isNewRTT) 
-		numvec_++;
-
+	// return congestion window
 	return window;
 }
 
@@ -892,9 +893,9 @@ void TfwcAgent::pseudo_p(){
 		f_p_ = sqrt((2.0/3.0) * pseudo_p_) + 12.0 * pseudo_p_ * 
 			(1.0 + 32.0 * pow(pseudo_p_, 2.0)) * sqrt((3.0/8.0) * pseudo_p_);
 
-		t_win_ = 1 / f_p_;
+		float_win_ = 1 / f_p_;
 
-		if(t_win_ < tmp_cwnd_) 
+		if(float_win_ < tmp_cwnd_) 
 			break;
 	}
 	p_ = pseudo_p_;
@@ -1050,6 +1051,8 @@ void TfwcAgent::avg_loss_interval(){
 
 	//printf("\n   [.] tot_weight_ %f %f %p\n", tot_weight_, now(), this);
 	printf("\n   [.] avg_interval_ %f %.1f %p\n", now(), avg_interval_, this);
+	/* printing loss rate seen by TCP Eq. */
+	printf("\t[.] loss_by_cal %f %f %p\n", now(), (1.0/avg_interval_), this);
 }
 
 /*
