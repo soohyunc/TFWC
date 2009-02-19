@@ -108,7 +108,7 @@ int main (int argc, char *argv[]) {
 
 		// string stream (to create file names accordingly)
 		stringstream ss;
-		ss << "trace/" << "tfwc_sr_" << i+1 << ".xg";
+		ss << "trace/" << "tfwc_sr_" << i+1 << ".tr";
 
 		// opne a file and prepare to write
 		fout.open(ss.str().c_str());
