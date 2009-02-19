@@ -88,3 +88,24 @@ gnuplot -persist << EOF
         "tfwc_cwnd_8.xg" with lines notitle
 EOF
 
+# smoothing ratio
+gnuplot -persist << EOF
+    set terminal x11
+
+    set title "8 TFWC Flows"
+    set xlabel "Simulation Time (sec)"
+    set ylabel "Smoothing Ratio (tot/smooth)"
+
+    set xrange [$FROM:$TO]
+    set mxtics 5
+    set yrange [0:1]
+
+    plot "tfwc_sr_1.xg" with lines notitle, \
+        "tfwc_sr_2.xg" with lines notitle, \
+        "tfwc_sr_3.xg" with lines notitle, \
+        "tfwc_sr_4.xg" with lines notitle, \
+        "tfwc_sr_5.xg" with lines notitle, \
+        "tfwc_sr_6.xg" with lines notitle, \
+        "tfwc_sr_7.xg" with lines notitle, \
+        "tfwc_sr_8.xg" with lines notitle
+EOF
