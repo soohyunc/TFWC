@@ -552,6 +552,10 @@ proc tfwc_results {} {
 	exec grep pkt_drop_in_avg_hist temp > trace/tfwc_loss_in_hist.tr
 	exec ./add-on/map trace/tfwc_avg_int.tr tfwc_avg_int
 	exec ./add-on/map trace/tfwc_loss_in_hist.tr tfwc_loss_in_hist
+
+	# TFWC Smoother
+	exec grep num_inf temp > trace/tfwc_smoothing.tr
+	exec ./add-on/s_ratio trace/tfwc_smoothing.tr
 }
 
 # end of file
