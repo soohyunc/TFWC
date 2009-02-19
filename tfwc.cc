@@ -861,7 +861,7 @@ int TfwcAgent::smoother (int window) {
 
 		// same RTT
 		if (!isNewRTT) {
-			window = control_functions ('p', window);
+			window = control_functions ('o', window);
 		}
 		// new RTT
 		else {
