@@ -850,9 +850,9 @@ int TfwcAgent::ctrl_win(hdr_tfwc_ack* tfwcah){
 }
 
 /*
- * Inflate 'cwnd_' in the same RTT
- * @window:	cwnd_
- * return:	inflated 'cwnd_'
+ * Inflate congestion window in the same RTT
+ * @window:	window
+ * return:	inflated window
  */
 int TfwcAgent::smoother (int window) {
 	bool isNewRTT = false;
@@ -863,7 +863,7 @@ int TfwcAgent::smoother (int window) {
 	// new RTT
 	if (isNewRTT) {
 		//window = force_inflate (cwnd_);
-		tvrec_ = timevec_[(numvec_ - 1)%TSZ];
+		tvrec_ = timevec_[(numvec_-1)%TSZ];
 
 		printf(" num_inf: %d total: %d startRTT: %f now: %f %p\n", 
 				num_infl_, (num_infl_ + num_asis_), 
