@@ -144,7 +144,6 @@ protected:
 	int window_;		// receiver's window size
 	int cwnd_;			// congestion control window size
 	int ctrl_cwnd_;		// window's controlled cwnd size
-	int tmp_cwnd_;		// temporary cwnd value
 	int ssthresh_;		// slow start threshold
 	int congest_iteration_;
 
@@ -206,7 +205,7 @@ protected:
 	// update loss history
 	void loss_history(hdr_tfwc_ack* tfwcah);
 
-	void pseudo_p();			// calculating a faked p_
+	void pseudo_p(int tmpwin);	// calculating a faked p_
 	void pseudo_history();		// creating a faked loss history
 	void gen_weight();			// generating weights
 	void avg_loss_interval();	// computing average loss interval

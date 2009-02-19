@@ -271,12 +271,10 @@ void TfwcAgent::recv(Packet* pkt, Handler*) {
 	 *     the various TFWC methods will be activated. 
 	 */
 	if(!isTFWC_) {
-		if(isLoss_) { 
-			isTFWC_ = true;
+		if(isLoss_)
 			dupack_action();
-			ts_ = tsvec_[firstLostPkt_%TSZ]; 
-		}
-		opencwnd();			// TCP-like cwin control
+		else
+			opencwnd();	// additively increase cwnd
 	} else
 		cwnd_ = ctrl_win(tfwcah);	// TFWC cwnd control
 
@@ -794,16 +792,18 @@ void TfwcAgent::dupack_action() {
 	if (cwnd_ < 1)
 		cwnd_ = 1;	
 
-	/* temp cwnd used to calculate pseudo packet loss probability */
-	tmp_cwnd_ = cwnd_;
-
 	/* creating a faked loss probability and history */
-	pseudo_p();		// calculating a faked p_ value
+	pseudo_p(cwnd_);	// calculating a faked p_ value
 	pseudo_history();	// creating a faked loss history
 	gen_weight();	// generating weights
 
 	/* printing all history information */
 	// print_history();
+	
+	// record timestamp for the first packet loss
+	ts_ = tsvec_[firstLostPkt_%TSZ]; 
+	// turn on TFWC 
+	isTFWC_ = true;		
 }
 
 /*
@@ -887,15 +887,15 @@ int TfwcAgent::smoother (int window) {
  * Calculate the packet loss probability by using TCP thruput equation 
  * to get the loss_interval_ eventually.
  */
-void TfwcAgent::pseudo_p(){
+void TfwcAgent::pseudo_p(int tmpwin){
 
 	for (pseudo_p_ = 0.00001; pseudo_p_ < 1.0; pseudo_p_ += 0.00001) {
 		f_p_ = sqrt((2.0/3.0) * pseudo_p_) + 12.0 * pseudo_p_ * 
 			(1.0 + 32.0 * pow(pseudo_p_, 2.0)) * sqrt((3.0/8.0) * pseudo_p_);
 
-		float_win_ = 1 / f_p_;
+		float_win_ = 1.0 / f_p_;
 
-		if(float_win_ < tmp_cwnd_) 
+		if(float_win_ < tmpwin) 
 			break;
 	}
 	p_ = pseudo_p_;
