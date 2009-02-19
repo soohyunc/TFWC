@@ -82,7 +82,7 @@ set delbw	[expr $delbw_in_bits / 8000]
 
 set cutoff	20;	# cutoff time
 set granul [expr 4 * $rtt_in_sec]; # gnuplot sampling granularity
-if { $granul < 1} {
+if { $granul < 1 } {
 	set granul	1; # if granul is too small, we use 1 sec granularity
 }
 
@@ -556,6 +556,11 @@ proc tfwc_results {} {
 	# TFWC Smoother
 	exec grep num_inf temp > trace/tfwc_smoothing.tr
 	exec ./add-on/s_ratio trace/tfwc_smoothing.tr
+
+	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
+        exec awk -f awk/smoother_indiv.awk option=tfwc ix=$i granul=$granul \
+            cutoff=$cutoff trace/tfwc_sr_$i.tr
+	}
 }
 
 # end of file
