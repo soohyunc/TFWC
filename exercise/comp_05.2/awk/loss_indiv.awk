@@ -1,4 +1,4 @@
-# $Id $
+# $Id$
 
 BEGIN{
 	time        = 0;
