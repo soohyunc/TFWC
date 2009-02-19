@@ -1188,7 +1188,7 @@ int TfwcAgent::control_functions (char c, int window) {
 			break;
 		case 'l':       // linear functions
 		{
-			double cool;
+			double cool = 0.0;
 			if (p_ < .1)
 				cool = 5 * p_;
 			else
@@ -1199,7 +1199,7 @@ int TfwcAgent::control_functions (char c, int window) {
 			break;
 		case 'g':       // gaussian functions
 		{
-			double gauss;
+			double gauss = 0.0;
 			peak = 0.5;
 			median = 0.1;
 
@@ -1218,7 +1218,7 @@ int TfwcAgent::control_functions (char c, int window) {
 			break;
 		case 'p':       // polynomial functions
 		{
-			double poly;
+			double poly = 0.0;
 			const double POLYCOF = 62.5;
 			y = .5;
 			cutoff = .2;
@@ -1233,7 +1233,7 @@ int TfwcAgent::control_functions (char c, int window) {
 			break;
 		case 'm':       // mixture functions
 		{
-			double mix;
+			double mix = 0.0;
 			peak = .5;
 			median = .1;
 			coeff = .035;
