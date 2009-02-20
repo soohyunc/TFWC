@@ -836,7 +836,7 @@ int TfwcAgent::ctrl_win(hdr_tfwc_ack* tfwcah){
 	float_win_ = 1.0 / f_p_;	// 'float_win_' is a floating point value
 	window = (int) float_win_;	// 'window' is an integer value
 
-	// TFWC is driven by rate-based timer when window is less than 3
+	// TFWC is driven by rate-based timer when window is less than 2
 	if (float_win_ <= 2.0)
 		isRateDriven_ = true;
 	else
