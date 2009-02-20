@@ -862,7 +862,7 @@ int TfwcAgent::smoother (int window) {
 
 	// new RTT
 	if (isNewRTT) {
-		//window = force_inflate (cwnd_);
+		window = force_inflate (cwnd_);
 		tvrec_ = timevec_[(numvec_-1)%TSZ];
 
 		printf(" num_inf: %d total: %d startRTT: %f now: %f %p\n", 
@@ -873,7 +873,7 @@ int TfwcAgent::smoother (int window) {
 	} 
 	// same RTT
 	else {
-		window = control_functions ('o', window);
+		window = control_functions ('f', window);
 		numvec_++;
 	}
 
@@ -1177,6 +1177,9 @@ int TfwcAgent::control_functions (char c, int window) {
 	double factor = 0.0;
 
 	switch (c) {
+		case 'f':		// fixed rate in an RTT
+			factor = 0.10;
+			break;
 		case 'o':       // just once
 		{
 			if (!is_inflated_) {
