@@ -1,5 +1,5 @@
 #
-# Copyright(c) 2005-2008 University College London
+# Copyright(c) 2005-2009 University College London
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -60,9 +60,6 @@ if {$argc < 13} {
 	puts "  l: q_weight for RED"
 	puts "     \(Note: Type \'auto\' for automatic q_weight configuratioin\)"
 	puts ""
-	#puts "Example of Queue Type: type \"DropTail\" or \"RED\""
-	#puts "Example of Reverse Traffic: type \"y\" or \"n\""
-	#puts ""
 	exit
 }
 
@@ -75,13 +72,13 @@ if {$argc == 13} {
 	set accessMaxDel	[lindex $argv 5]
 	set bottleneckBW	[lindex $argv 6]
 	set bottleneckDel	[lindex $argv 7]
-	set q_len		[lindex $argv 8]
+	set q_len			[lindex $argv 8]
 	set duration		[lindex $argv 9]
-	set seedno		[lindex $argv 10]
+	set seedno			[lindex $argv 10]
 	set isReverse		[lindex $argv 11]
 	set queue_type		[lindex $argv 12]
-	set max_p		auto
-	set q_w			auto
+	set max_p			auto
+	set q_w				auto
 }
 
 if {$argc == 14} {
@@ -93,13 +90,13 @@ if {$argc == 14} {
 	set accessMaxDel	[lindex $argv 5]
 	set bottleneckBW	[lindex $argv 6]
 	set bottleneckDel	[lindex $argv 7]
-	set q_len		[lindex $argv 8]
+	set q_len			[lindex $argv 8]
 	set duration		[lindex $argv 9]
-	set seedno		[lindex $argv 10]
+	set seedno			[lindex $argv 10]
 	set isReverse		[lindex $argv 11]
 	set queue_type		[lindex $argv 12]
-	set max_p		[lindex $argv 13]
-	set q_w			auto
+	set max_p			[lindex $argv 13]
+	set q_w				auto
 }
 
 if {$argc == 15} {
@@ -111,14 +108,21 @@ if {$argc == 15} {
 	set accessMaxDel	[lindex $argv 5]
 	set bottleneckBW	[lindex $argv 6]
 	set bottleneckDel	[lindex $argv 7]
-	set q_len		[lindex $argv 8]
+	set q_len			[lindex $argv 8]
 	set duration		[lindex $argv 9]
-	set seedno		[lindex $argv 10]
+	set seedno			[lindex $argv 10]
 	set isReverse		[lindex $argv 11]
 	set queue_type		[lindex $argv 12]
-	set max_p		[lindex $argv 13]
-	set q_w			[lindex $argv 14]
+	set max_p			[lindex $argv 13]
+	set q_w				[lindex $argv 14]
 }
+
+puts ""
+puts " ----------------------------------------------------------------------"
+puts " ns main.tcl $tcp_src_num $tfrc_src_num $tfwc_src_num $accessBW\
+	$accessMinDel $accessMaxDel $bottleneckBW $bottleneckDel\
+	$q_len $duration $seedno $isReverse $queue_type > temp"
+puts " ----------------------------------------------------------------------"
 
 source common.tcl
 

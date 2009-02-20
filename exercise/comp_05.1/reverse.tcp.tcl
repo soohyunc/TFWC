@@ -1,5 +1,5 @@
 #
-# Copyright(c) 1991-1997 Regents of the University of California.
+# Copyright(c) 2005-2009 University College London
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without

@@ -1,5 +1,5 @@
 #
-# Copyright(c) 2005-2008 University College London
+# Copyright(c) 2005-2009 University College London
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without 
@@ -54,25 +54,25 @@ set queue_out [open trace/out.queue w]
 set tcp_node_num	$tcp_src_num
 set tfrc_node_num	$tfrc_src_num
 set tfwc_node_num	$tfwc_src_num
-set numeric_access_bandwidth		$accessBW
-set access_bandwidth	"$numeric_access_bandwidth\Mb"
-set min_dly		$accessMinDel
-set max_dly		$accessMaxDel
-set numeric_bottleneck_bandwidth	$bottleneckBW
-set bottleneck_bandwidth        "$numeric_bottleneck_bandwidth\Mb"
-set numeric_bottleneck_delay		$bottleneckDel
-set bottleneck_delay		"$numeric_bottleneck_delay\ms"
 set tcp_app_num		$tcp_src_num
 set tfrc_app_num	$tfrc_src_num
 set tfwc_app_num	$tfwc_src_num
+set min_dly			$accessMinDel
+set max_dly			$accessMaxDel
+set numeric_access_bandwidth		$accessBW
+set numeric_bottleneck_bandwidth	$bottleneckBW
+set numeric_bottleneck_delay		$bottleneckDel
+set access_bandwidth		"$numeric_access_bandwidth\Mb"
+set bottleneck_bandwidth	"$numeric_bottleneck_bandwidth\Mb"
+set bottleneck_delay		"$numeric_bottleneck_delay\ms"
 set node_num	[expr ($tcp_node_num + $tfrc_node_num + $tfwc_node_num)]
-set src_num	[expr ($tcp_src_num + $tfrc_src_num + $tfwc_src_num)]
-set app_num	[expr ($tcp_app_num + $tfrc_app_num + $tfwc_app_num)]
+set src_num		[expr ($tcp_src_num + $tfrc_src_num + $tfwc_src_num)]
+set app_num		[expr ($tcp_app_num + $tfrc_app_num + $tfwc_app_num)]
 set t_sim       $duration
 set q_size      $q_len
 set queuetype   $queue_type
-set maxth	[expr ($q_size / 2.0)]
-set minth	[expr ($maxth / 3.0)]
+set maxth		[expr ($q_size / 2.0)]
+set minth		[expr ($maxth / 3.0)]
 
 set rtt_in_sec [expr (2 * ($bottleneckDel + ($min_dly + $max_dly) / 2.0)) \
 		* 0.001]
@@ -87,7 +87,8 @@ if { $granul < 1 } {
 }
 
 puts ""
-puts " Delay-Bandwidth Product		$delbw packets"
+puts " Bandwidth-Delay Product		$delbw	packets"
+puts " Approximated e2e delay (RTT)	$rtt_in_sec	(sec)"
 puts ""
 
 #
@@ -299,7 +300,8 @@ for {set i 1} {$i <= $app_num} {incr i} {
 	$ns at $startT($i) "$ftp($i) start"
 	puts " startT($i)       $startT($i)"
 }
-
+puts ""
+puts ""
 #
 # Make a queue trace
 #
