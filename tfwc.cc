@@ -949,8 +949,8 @@ void TfwcAgent::gen_weight(){
  */
 void TfwcAgent::loss_history(hdr_tfwc_ack* tfwcah){
 
-	bool isGap;			// is there a gap in the received AckVec?
-	bool isNewEvent;		// is this a new loss event?
+	bool isGap = false;	// is there a gap in the received AckVec?
+	bool isNewEvent = false;// is this a new loss event?
 	int numVec = lastvec_ - firstvec_ + 1;	// tot number of tempvec
 	int tempvec[numVec];	// identical to tempvec[] in isHole() method
 
