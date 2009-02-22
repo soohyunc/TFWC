@@ -126,7 +126,8 @@ TfwcAgent::TfwcAgent() : Agent(PT_TFWC), rtx_timer_(this) {
 	srtt_init_	= 0;
 	rttvar_init_= 12;
 	rttvar_exp_	= 2;
-	df_		= 0.95;			// decay factor for RTT calculation
+	//df_		= 0.95;		// decay factor for RTT calculation
+	df_		= 0.9;			// by RFC 5348
 	tcp_tick_	= 0.1;
 	t_srtt_	= int(srtt_init_/tcp_tick_) << T_SRTT_BITS;
 	t_rttvar_	= int(rttvar_init_/tcp_tick_) << T_RTTVAR_BITS;
@@ -135,7 +136,6 @@ TfwcAgent::TfwcAgent() : Agent(PT_TFWC), rtx_timer_(this) {
 	last_ack_	= -1;
 	ackofack_	= -1;		// initial ackofack_ value
 	firstLostPkt_= -1;		// first lost packet sequence number
-	isRtxTimerReset_= false;
 
 	nackpkt_	= 0;
 	ndatapkt_	= 0;
@@ -856,9 +856,12 @@ int TfwcAgent::ctrl_win(hdr_tfwc_ack* tfwcah){
  */
 int TfwcAgent::smoother (int window) {
 	bool isNewRTT = false;
+	int num_total = num_infl_ + num_asis_;
+
 	// check if the most recent cwnd_ is in the same RTT or not.
-	if(timevec_[(numvec_-1)%TSZ] - tvrec_ > srtt_)
-		isNewRTT = true;
+	if(num_total)
+		isNewRTT = (timevec_[(numvec_-1)%TSZ] - tvrec_ > srtt_) 
+			? true : false;
 
 	// new RTT
 	if (isNewRTT) {
@@ -866,8 +869,7 @@ int TfwcAgent::smoother (int window) {
 		tvrec_ = timevec_[(numvec_-1)%TSZ];
 
 		printf(" num_inf: %d total: %d startRTT: %f now: %f %p\n", 
-				num_infl_, (num_infl_ + num_asis_), 
-				timevec_[0], now(), this);
+				num_infl_, num_total, timevec_[0], now(), this);
 
 		reset_smoother();
 	} 
@@ -1078,7 +1080,7 @@ void TfwcAgent::reset_rtx_timer(int backoff) {
  * double the 'rto_' value as the timer is backed off 
  */
 void TfwcAgent::backoff_timer() {
-	rto_ = 2 * rto_;
+	rto_ = 2.0 * rto_;
 
 	if (rto_ > maxrto_)
 		rto_ = maxrto_;
@@ -1089,13 +1091,12 @@ void TfwcAgent::timeout(int tno) {
 
 	/* retransmit timer */
 	if (tno == TFWC_TIMER_RTX) {
-		//isRtxTimerReset_ = true;
 		if (!isRateDriven_)
 			reset_rtx_timer(1);
 		else
 			reset_rtx_timer(0);
 
-		if(!isRateDriven_)
+		if(!isRateDriven_) 
 			last_ack_++;	// artificially inflate the last ack
 
 		output(seqno_);
@@ -1104,7 +1105,7 @@ void TfwcAgent::timeout(int tno) {
 
 void TfwcAgent::new_rto(double rtt) {
 
-	double tmp1 = 3.0 * sqrt(p_*3.0/8.0);
+	double tmp1 = 3.0 * sqrt(p_ * 3.0/8.0);
 	double tmp2 = t0_ * p_ * (1.0 + 32.0 * pow(p_, 2.0));
 
 	if (tmp1 > 1.0)
@@ -1113,10 +1114,9 @@ void TfwcAgent::new_rto(double rtt) {
 	double term1 = rtt * sqrt(p_*2.0/3.0);
 	double term2 = tmp1 * tmp2;
 
-	rto_ = term1 + term2;
-	rto_ = rto_ * sqrt(rtt)/sqrtrtt_;
+	rto_ = (term1 + term2) * sqrt(rtt)/sqrtrtt_;
 
-	double Tx = 8000 / rto_;
+	double Tx = 8000.0 / rto_;
 	printf(" %f tfwcTx: %.4f rto_: %f t0_: %.4f rtt: %.5f p_: %.4f %p\n", 
 			now(), Tx, rto_, t0_, rtt, p_, this);
 }
@@ -1289,8 +1289,14 @@ void TfwcAgent::reset_smoother() {
  */
 int TfwcAgent::force_inflate(int window) {
 	if (num_infl_ == 0) {
-		window++;
 		num_infl_++;
+		double num_total = num_infl_ + num_asis_;
+		// inflate  window if this inflation will
+		// result in the ratio less than 25%.
+		if (num_infl_/num_total < .25)
+			window++;
+		else
+			num_infl_--;
 	}
 	return window;
 }
