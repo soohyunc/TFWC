@@ -236,11 +236,9 @@ protected:
 	 * Rtx Timer
 	 */
 	TfwcRtxTimer rtx_timer_;
-	bool isRtxTimerReset_;		// has the RtxTimer been reset?
 	void set_rtx_timer();		// set retransmission timer
 	void reset_rtx_timer(int);	// reset retransmission timer
 	void backoff_timer();		// backoff the timer
-	int backoff_;				// multiplier, 1 if not backed off 
 
 	/*
 	 * Dynamic state
