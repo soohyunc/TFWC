@@ -3,7 +3,6 @@
 BEGIN{
 	time        = 0;
 	last_bits   = 0;
-	last_lbits  = 0;
 	thru        = 0;
 	option		= ARGV[1];
 	ix			= ARGV[2];
