@@ -856,7 +856,7 @@ int TfwcAgent::ctrl_win(hdr_tfwc_ack* tfwcah){
  */
 int TfwcAgent::smoother (int window) {
 	bool isNewRTT = false;
-	int num_total = num_infl_ + num_asis_;
+	int num_total;
 
 	// check if the most recent cwnd_ is in the same RTT or not.
 	if(num_total)
@@ -867,6 +867,7 @@ int TfwcAgent::smoother (int window) {
 	if (isNewRTT) {
 		window = force_inflate (cwnd_);
 		tvrec_ = timevec_[(numvec_-1)%TSZ];
+		num_total = num_infl_ + num_asis_;
 
 		printf(" num_inf: %d total: %d startRTT: %f now: %f %p\n", 
 				num_infl_, num_total, timevec_[0], now(), this);
