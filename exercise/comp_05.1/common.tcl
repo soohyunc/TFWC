@@ -563,6 +563,13 @@ proc tfwc_results {} {
         exec awk -f awk/smoother_indiv.awk option=tfwc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfwc_sr_$i.tr
 	}
+
+	# TIMEOUT
+	exec grep TIMEOUT temp > trace/tfwc_timeout.tr
+	exec ./add-on/timeout trace/tfwc_timeout.tr
+	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
+		exec ./add-on/paste $i trace/tfwc_to_$i.tr trace/tfwc_cwnd_$i.xg
+	}
 }
 
 # end of file
