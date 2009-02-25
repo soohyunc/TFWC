@@ -55,7 +55,8 @@ int main (int argc, char *argv[]) {
 	int	num_flow	= 0;
 
 	if (argc < 6) {
-		cout << "Usage: ./fairness [tcp-tfrc|tcp-tfwc] [queue_type] [bandwidth] [# of flows] [tcp_data] [tfrc/tfwc_data]" << endl;
+		cout << "Usage: ./fairness [tcp-tfrc|tcp-tfwc] [queue_type] \
+			[bandwidth] [# of flows] [tcp_data] [tfrc/tfwc_data]" << endl;
 		exit (0);
 	}
 
