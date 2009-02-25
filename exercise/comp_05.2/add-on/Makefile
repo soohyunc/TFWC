@@ -17,8 +17,10 @@ all: $(SOURCES)
 	$(CPP) $(CFLAGS) loss_by_eq.cc -o loss_by_eq
 	$(CPP) $(CFLAGS) thru_by_eq.cc -o thru_by_eq
 	$(CPP) $(CFLAGS) s_ratio.cc -o s_ratio
+	$(CPP) $(CFLAGS) timeout.cc -o timeout
+	$(CPP) $(CFLAGS) paste.cc -o paste
 
 clean:
 	$(RM) minmax fairness round breakline cov average map indiv \
-		loss_by_eq thru_by_eq s_ratio
+		loss_by_eq thru_by_eq s_ratio timeout paste
 
