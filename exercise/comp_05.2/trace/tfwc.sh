@@ -85,7 +85,15 @@ gnuplot -persist << EOF
         "tfwc_cwnd_5.xg" with lines notitle, \
         "tfwc_cwnd_6.xg" with lines notitle, \
         "tfwc_cwnd_7.xg" with lines notitle, \
-        "tfwc_cwnd_8.xg" with lines notitle
+        "tfwc_cwnd_8.xg" with lines notitle, \
+		"tfwc_to_1.xg" with points notitle, \
+		"tfwc_to_2.xg" with points notitle, \
+		"tfwc_to_3.xg" with points notitle, \
+		"tfwc_to_4.xg" with points notitle, \
+		"tfwc_to_5.xg" with points notitle, \
+		"tfwc_to_6.xg" with points notitle, \
+		"tfwc_to_7.xg" with points notitle, \
+		"tfwc_to_8.xg" with points notitle
 EOF
 
 # smoothing ratio

@@ -133,7 +133,15 @@ gnuplot -persist << EOF
         "tfwc_cwnd_5.xg" with lines notitle linestyle 5, \
         "tfwc_cwnd_6.xg" with lines notitle linestyle 6, \
         "tfwc_cwnd_7.xg" with lines notitle linestyle 7, \
-        "tfwc_cwnd_8.xg" with lines notitle linestyle 8
+        "tfwc_cwnd_8.xg" with lines notitle linestyle 8, \
+		"tfwc_to_1.xg" with points notitle linestyle 1, \
+		"tfwc_to_2.xg" with points notitle linestyle 2, \
+		"tfwc_to_3.xg" with points notitle linestyle 3, \
+		"tfwc_to_4.xg" with points notitle linestyle 4, \
+		"tfwc_to_5.xg" with points notitle linestyle 5, \
+		"tfwc_to_6.xg" with points notitle linestyle 6, \
+		"tfwc_to_7.xg" with points notitle linestyle 7, \
+		"tfwc_to_8.xg" with points notitle linestyle 8
 EOF
 
 # average loss interval (tfrc/tfwc)
