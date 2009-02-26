@@ -568,7 +568,16 @@ proc tfwc_results {} {
 	exec grep TIMEOUT temp > trace/tfwc_timeout.tr
 	exec ./add-on/timeout trace/tfwc_timeout.tr
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
-		exec ./add-on/paste $i trace/tfwc_to_$i.tr trace/tfwc_cwnd_$i.xg
+		for {set j 1} {$j <= $tfwc_src_num} {incr j} {
+			exec ./add-on/paste $j $tfwc_src_num $cutoff \
+				trace/tfwc_to_$i.tr trace/tfwc_cwnd_$j.tr
+		}
+	}
+	
+	# Estimated Timeout
+	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
+		exec ./add-on/estimated_t0 $i $cutoff \
+			trace/tfwc_to_$i.tr trace/tfwc_thru_$i.xg
 	}
 }
 
