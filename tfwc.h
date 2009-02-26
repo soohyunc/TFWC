@@ -283,11 +283,16 @@ protected:
 
 	// TFWC smoother
 	bool smoothing_;	// is smoother activated?
+	bool is_inflated_;	// have we inflated cwnd_ eariler in this RTT?
+	// cwnd recording with timestamp
 	int *winvec_;		// cwnd vector
 	double *timevec_;	// each cwnd time vector
 	double tvrec_;		// 'timevec_' record
 	int numvec_;		// number of 'winvec_' element
-	bool is_inflated_;	// have we inflated cwnd_ eariler in this RTT?
+	// ALI recording associated with RTT(s)
+	double *alivec_;	// Avg. Loss Interval vector
+	int numalivec_;		// numver of 'alivec_' element
+	// number of instances for cwnd inflation
 	int num_infl_;		// number of cwnd inflation in an RTT
 	int num_asis_;		// number of cwnd not-inflation in an RTT
 

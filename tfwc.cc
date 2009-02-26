@@ -211,9 +211,11 @@ TfwcAgent::TfwcAgent() : Agent(PT_TFWC), rtx_timer_(this) {
 	if (smoothing_) {
 		winvec_		= (int *) malloc(sizeof(int) * TSZ);
 		timevec_	= (double *) malloc(sizeof(double) * TSZ);
+		alivec_		= (double *) malloc(sizeof(double) * TSZ);
 		timevec_[0]	= 0.0;
-		tvrec_		= 0.0;	// timestampe for the last cwnd_ 
-		numvec_		= 1;	// vector index (or numver of vector)
+		tvrec_		= 0.0;	// timestamp for the latest cwnd_ 
+		numvec_		= 1;	// vector index (or number of timevec_)
+		numalivec_	= 1;	// vector index (for number of alivec_)
 		is_inflated_ = false;
 		num_infl_	= 0;
 		num_asis_	= 0;
@@ -508,7 +510,7 @@ void TfwcAgent::send_more(int seqno) {
 	tsvec_[seqno%TSZ] = tfwch->ts_;	
 
 	// timestamp vector for smoother
-	if (smoothing_) 
+	if (smoothing_)
 		timevec_[(numvec_-1)%TSZ] = now();
 
 	if (isFakeLoss_) {
@@ -763,10 +765,9 @@ void TfwcAgent::congestion_avoid(int cwnd) {
 	congest_iteration_++;
 
 	if (cwnd == congest_iteration_) {
-		cwnd_ = cwnd + 1;
+		cwnd_ += 1;
 		congest_iteration_ = 0;
-	} else
-		cwnd_ = cwnd;
+	}
 }
 
 /*
@@ -856,7 +857,7 @@ int TfwcAgent::ctrl_win(hdr_tfwc_ack* tfwcah){
  */
 int TfwcAgent::smoother (int window) {
 	bool isNewRTT = false;
-	int num_total;
+	int num_total = num_infl_ + num_asis_;
 
 	// check if the most recent cwnd_ is in the same RTT or not.
 	if(num_total)
@@ -867,7 +868,6 @@ int TfwcAgent::smoother (int window) {
 	if (isNewRTT) {
 		window = force_inflate (cwnd_);
 		tvrec_ = timevec_[(numvec_-1)%TSZ];
-		num_total = num_infl_ + num_asis_;
 
 		printf(" num_inf: %d total: %d startRTT: %f now: %f %p\n", 
 				num_infl_, num_total, timevec_[0], now(), this);
@@ -878,10 +878,14 @@ int TfwcAgent::smoother (int window) {
 	else {
 		window = control_functions ('f', window);
 		numvec_++;
+		numalivec_++;
 	}
 
 	// store current cwnd value
 	winvec_[numvec_-1] = window;
+	// record current ALI value in the vec.
+	alivec_[(numalivec_-1)%TSZ] = avg_interval_;
+
 	// return congestion window
 	return window;
 }
@@ -1289,15 +1293,34 @@ void TfwcAgent::reset_smoother() {
  * Force inflate
  */
 int TfwcAgent::force_inflate(int window) {
-	if (num_infl_ == 0) {
-		num_infl_++;
-		double num_total = num_infl_ + num_asis_;
-		// inflate  window if this inflation will
-		// result in the ratio less than 25%.
-		if (num_infl_/num_total < .25)
-			window++;
-		else
-			num_infl_--;
+	bool goodToGo = false;
+
+	// do we have more than 4 ALI instances in this RTT?
+	if (numalivec_ > 4) {
+		double target = abs(alivec_[0] - alivec_[numalivec_-1]);
+		// is the ALI differences greater than 10?
+		if (target > 10.0) {
+			goodToGo = true;
+			numalivec_ = 1;
+		} else {
+			numalivec_++;
+		}
+	} else {
+		numalivec_++;
+	}
+
+	// force inflate 'cwnd_' by one if we are good to go.
+	if (goodToGo) {
+		if (num_infl_ == 0) {
+			num_infl_++;
+			double num_total = num_infl_ + num_asis_;
+			// inflate  window if this inflation will
+			// result in the ratio less than 25%.
+			if (num_infl_/num_total < .25)
+				window++;
+			else
+				num_infl_--;
+		}
 	}
 	return window;
 }
