@@ -102,7 +102,7 @@ gnuplot -persist << EOF
 
     set title "8 TFWC Flows"
     set xlabel "Simulation Time (sec)"
-    set ylabel "Smoothing Ratio (tot/smooth)"
+    set ylabel "Smoothing Ratio (num_infl/num_total)"
 
     set xrange [$FROM:$TO]
     set mxtics 5
