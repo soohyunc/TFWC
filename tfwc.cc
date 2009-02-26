@@ -40,6 +40,7 @@
 #include <sys/types.h>
 #include <iostream>
 #include <assert.h>
+#include <cmath>
 #include "basetrace.h"
 #include "tfwc.h"
 
