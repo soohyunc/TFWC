@@ -157,6 +157,7 @@ protected:
 	 */
 	// update RTT
 	virtual void update_rtt(double tao);
+	bool isTcpRto_;
 
 	// calculate a new RTO when cwnd goes less than 2
 	void new_rto(double tao);

@@ -134,6 +134,7 @@ TfwcAgent::TfwcAgent() : Agent(PT_TFWC), rtx_timer_(this) {
 	t_rttvar_	= int(rttvar_init_/tcp_tick_) << T_RTTVAR_BITS;
 	sqrtrtt_	= 1.0;
 	t0_		= 6.0;			// initial t0_ value
+	isTcpRto_ 	= true;		// TCP's RTT calcuation
 	last_ack_	= -1;
 	ackofack_	= -1;		// initial ackofack_ value
 	firstLostPkt_= -1;		// first lost packet sequence number
@@ -146,7 +147,7 @@ TfwcAgent::TfwcAgent() : Agent(PT_TFWC), rtx_timer_(this) {
 	 * window control variables
 	 */
 	window_	= 10000;		// receiver's window size
-	cwnd_	= 1;
+	cwnd_	= 1;			// initial 'cwnd_' size
 	ssthresh_	= window_;	// set initial ssthresh 
 	dupacks_	= 0; 		// initial dupacks_ value
 	congest_iteration_ = 0;
@@ -732,11 +733,16 @@ void TfwcAgent::update_rtt(double tao) {
 
 	/* update the current RTO value */
 	if (!isRateDriven_) {
-		// RTO <- SRTT + max (g_, k*RTTVAR)
-		if (k_ * rttvar_ > g_)
-			rto_ = srtt_ + k_ * rttvar_;
-		else
-			rto_ = srtt_ + g_;
+		if (isTcpRto_) {
+			// RTO <- SRTT + max (g_, k*RTTVAR)
+			if (k_ * rttvar_ > g_)
+				rto_ = srtt_ + k_ * rttvar_;
+			else
+				rto_ = srtt_ + g_;
+		} else {
+			// this follows TFRC rule
+			rto_ = 2.0 * srtt_;
+		}
 
 		// 'rto' could be rounded down to 'maxrto_'
 		if (rto_ > maxrto_)
@@ -1086,7 +1092,9 @@ void TfwcAgent::reset_rtx_timer(int backoff) {
  * double the 'rto_' value as the timer is backed off 
  */
 void TfwcAgent::backoff_timer() {
-	rto_ = 2.0 * rto_;
+	//rto_ = 2.0 * rto_;
+	if (srtt_ < 0) srtt_ = 1.0;
+	rto_ = 2.0 * srtt_;
 
 	if (rto_ > maxrto_)
 		rto_ = maxrto_;
