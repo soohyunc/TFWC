@@ -39,6 +39,7 @@
 #include <sstream>
 #include <vector>
 #include <map>
+#include <string.h>
 #include <stdlib.h>
 
 using namespace std;
@@ -103,19 +104,37 @@ int main (int argc, char *argv[]) {
 
 	int i;
 	int size = imap.size();	// map size (no. of pointers)
+	ofstream foxg;
 
 	for (i=0, pitr=imap.begin(); i<size && pitr!=imap.end(); pitr++, i++) {
 
 		// string stream (to create file names accordingly)
 		stringstream sstr;
-		sstr << "trace/" << option << '_' << i+1 << ".xg";
-	    fout.open(sstr.str().c_str());  // create a file and open to write
+		if(!strcmp(option.c_str(), "tfwc_cwnd")) {
+			stringstream ssxg;
+			sstr << "trace/" << option << '_' << i+1 << ".tr";
+			ssxg << "trace/" << option << '_' << i+1 << ".xg";
+	    	fout.open(sstr.str().c_str()); 
+	    	foxg.open(ssxg.str().c_str());
+		} else {
+			sstr << "trace/" << option << '_' << i+1 << ".xg";
+	    	fout.open(sstr.str().c_str());
+		}
 
 		// recording imap
-		for (itr = pitr->second.begin(); itr != pitr->second.end(); itr++) 
-			fout << itr->first << "\t" << itr->second << endl;
-
-		fout.close();	// close file
+		if(!strcmp(option.c_str(), "tfwc_cwnd")) {
+			for (itr = pitr->second.begin(); itr != pitr->second.end(); itr++) {
+				foxg << itr->first << "\t" << itr->second << endl;
+				fout << itr->first << "\t" << itr->second 
+					<< "\t" << pitr->first << endl;
+			}
+			foxg.close();	// close file
+			fout.close();	// close file
+		} else {
+			for (itr = pitr->second.begin(); itr != pitr->second.end(); itr++)
+				fout << itr->first << "\t" << itr->second << endl;
+			fout.close();	// close file
+		}
 	}
 
 	return 0;
