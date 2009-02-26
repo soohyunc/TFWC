@@ -19,6 +19,7 @@ all: $(SOURCES)
 	$(CPP) $(CFLAGS) s_ratio.cc -o s_ratio
 	$(CPP) $(CFLAGS) timeout.cc -o timeout
 	$(CPP) $(CFLAGS) paste.cc -o paste
+	$(CPP) $(CFLAGS) estimated_t0.cc -o estimated_t0
 
 clean:
 	$(RM) minmax fairness round breakline cov average map indiv \
