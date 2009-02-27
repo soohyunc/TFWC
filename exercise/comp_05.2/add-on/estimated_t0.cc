@@ -9,6 +9,7 @@
 #include <cmath>
 #include <math.h>
 #include <stdlib.h>
+#include <sys/types.h>
 
 using namespace std;
 
