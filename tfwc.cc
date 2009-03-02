@@ -289,7 +289,7 @@ void TfwcAgent::recv(Packet* pkt, Handler*) {
 	update_rtt(now() - tfwcah->ts_echo_);
 
 	// driven by rate-based? or win-based?
-	if (isRateDriven_)
+	if (isRateDriven_ && isTFWC_)
 		new_rto(rtt_sample_);	// rate-based timer driven
 	else
 		output(seqno_);			// normal TFWC procedures
