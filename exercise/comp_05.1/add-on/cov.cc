@@ -96,7 +96,7 @@ int main (int argc, char *argv[]) {
 	stringstream ss;
 	ss << "trace/" << option << "_cov_" << index << ".dat";
 	fout.open(ss.str().c_str());
-	fout << bw << "\t" << cov << endl;
+	fout << cov << endl;
 	fout.close();
 
 	return 0;

@@ -11,6 +11,7 @@ all: $(SOURCES)
 	$(CPP) $(CFLAGS) round.cc -o round
 	$(CPP) $(CFLAGS) breakline.cc -o breakline
 	$(CPP) $(CFLAGS) cov.cc -o cov
+	$(CPP) $(CFLAGS) avg_cov.cc -o avg_cov
 	$(CPP) $(CFLAGS) average.cc -o average
 	$(CPP) $(CFLAGS) average_i.cc -o average_i
 	$(CPP) $(CFLAGS) map.cc -o map
@@ -23,6 +24,6 @@ all: $(SOURCES)
 	$(CPP) $(CFLAGS) estimated_t0.cc -o estimated_t0
 
 clean:
-	$(RM) minmax fairness round breakline cov average map indiv \
-loss_by_eq thru_by_eq s_ratio timeout paste average_i estimated_t0
+	$(RM) minmax fairness round breakline cov average map indiv timeout \
+loss_by_eq thru_by_eq s_ratio paste average_i estimated_t0 avg_cov
 

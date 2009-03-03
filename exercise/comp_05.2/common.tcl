@@ -421,6 +421,20 @@ proc tcp_results {} {
 		trace/tcp_thru_$i.dat $bottleneck_bandwidth
 	}
 
+	# Individual CoV
+	for {set i 1} {$i <= $tcp_src_num} {incr i} {
+		set cov($i) [exec cat trace/tcp_cov_$i.dat]
+	}
+
+	# Average CoV
+	set totCoV 0
+	for {set i 1} {$i <= $tcp_src_num} {incr i} {
+		set totCoV [expr $totCoV + $cov($i)]
+	}
+	#set avgCoV [expr $totCoV / $tcp_src_num]
+	#puts "average CoV	$avgCoV"
+	exec ./add-on/avg_cov tcp $totCoV $tcp_src_num $bottleneck_bandwidth
+
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
 	exec awk -f awk/tcp_q.awk cutoff=$cutoff trace/out.queue
     for {set i 1} {$i <= $tcp_src_num} {incr i} {
@@ -479,6 +493,20 @@ proc tfrc_results {} {
 		exec ./add-on/cov tfrc $i trace/tfrc_thru_avg_$i.dat \
 		trace/tfrc_thru_$i.dat $bottleneck_bandwidth
 	}
+
+	# Individual CoV
+	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
+		set cov($i) [exec cat trace/tfrc_cov_$i.dat]
+	}
+
+	# Average CoV
+	set totCoV 0
+	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
+		set totCoV [expr $totCoV + $cov($i)]
+	}
+	#set avgCoV [expr $totCoV / $tfrc_src_num]
+	#puts "average CoV	$avgCoV"
+	exec ./add-on/avg_cov tfrc $totCoV $tfrc_src_num $bottleneck_bandwidth
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
 	exec awk -f awk/tfrc_inst_q.awk cutoff=$cutoff trace/out.queue
@@ -541,6 +569,20 @@ proc tfwc_results {} {
 		exec ./add-on/cov tfwc $i trace/tfwc_thru_avg_$i.dat \
 		trace/tfwc_thru_$i.dat $bottleneck_bandwidth
 	}
+
+	# Individual CoV
+	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
+		set cov($i) [exec cat trace/tfwc_cov_$i.dat]
+	}
+
+	# Average CoV
+	set totCoV 0
+	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
+		set totCoV [expr $totCoV + $cov($i)]
+	}
+	#set avgCoV [expr $totCoV / $tfwc_src_num]
+	#puts "average CoV	$avgCoV"
+	exec ./add-on/avg_cov tfwc $totCoV $tfwc_src_num $bottleneck_bandwidth
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
 	exec awk -f awk/tfwc_inst_q.awk cutoff=$cutoff trace/out.queue
