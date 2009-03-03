@@ -344,12 +344,8 @@ do
 	nice ns main.tcl $tcp $tfrc $tfwc $accessBW $accessMinDel $accessMaxDel $bw $bottleneckDel $qsize $TIME $RND $isReverse $toq > temp 2> /dev/null
 
 	# CoV computation
-	cat trace/tcp_thru_01.xg | awk '{print $2}' > trace/tcp_thru_01.dat 
-	cat trace/tfrc_thru_01.xg | awk '{print $2}' > trace/tfrc_thru_01.dat
-	tcp_thru_avg_01=`./add-on/average trace/tcp_thru_01.dat` 
-	tfrc_thru_avg_01=`./add-on/average trace/tfrc_thru_01.dat`
-	./add-on/cov tcp $tcp_thru_avg_01 trace/tcp_thru_01.dat $bw $SRC
-	./add-on/cov tfrc $tfrc_thru_avg_01 trace/tfrc_thru_01.dat $bw $SRC 
+	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.dat 
+	cat trace/tfrc_avg_cov.xg >> trace/tfrc_cov.dat
 
 	# archives throughput and fairness
 	if [ $toq == 'DropTail' ]
@@ -443,12 +439,8 @@ do
 	nice ns main.tcl $tcp $tfrc $tfwc $accessBW $accessMinDel $accessMaxDel $bw $bottleneckDel $qsize $TIME $RND $isReverse $toq > temp 2> /dev/null
 
 	# CoV computation
-	cat trace/tcp_thru_01.xg | awk '{print $2}' > trace/tcp_thru_01.dat 
-	cat trace/tfrc_thru_01.xg | awk '{print $2}' > trace/tfrc_thru_01.dat
-	tcp_thru_avg_01=`./add-on/average trace/tcp_thru_01.dat` 
-	tfrc_thru_avg_01=`./add-on/average trace/tfrc_thru_01.dat`
-	./add-on/cov tcp $tcp_thru_avg_01 trace/tcp_thru_01.dat $bw $SRC
-	./add-on/cov tfrc $tfrc_thru_avg_01 trace/tfrc_thru_01.dat $bw $SRC 
+	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.dat 
+	cat trace/tfrc_avg_cov.xg >> trace/tfrc_cov.dat
 
 	if [ $toq == 'DropTail' ]
 	then
@@ -541,12 +533,8 @@ do
 	nice ns main.tcl $tcp $tfrc $tfwc $accessBW $accessMinDel $accessMaxDel $bw $bottleneckDel $qsize $TIME $RND $isReverse $toq > temp 2> /dev/null
 
 	# CoV computation
-	cat trace/tcp_thru_01.xg | awk '{print $2}' > trace/tcp_thru_01.dat 
-	cat trace/tfrc_thru_01.xg | awk '{print $2}' > trace/tfrc_thru_01.dat
-	tcp_thru_avg_01=`./add-on/average trace/tcp_thru_01.dat` 
-	tfrc_thru_avg_01=`./add-on/average trace/tfrc_thru_01.dat`
-	./add-on/cov tcp $tcp_thru_avg_01 trace/tcp_thru_01.dat $bw $SRC
-	./add-on/cov tfrc $tfrc_thru_avg_01 trace/tfrc_thru_01.dat $bw $SRC 
+	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.dat 
+	cat trace/tfrc_avg_cov.xg >> trace/tfrc_cov.dat
 
 	if [ $toq == 'DropTail' ]
 	then
@@ -662,12 +650,8 @@ do
 	nice ns main.tcl $tcp $tfrc $tfwc $accessBW $accessMinDel $accessMaxDel $bw $bottleneckDel $qsize $TIME $RND $isReverse $toq > temp 2> /dev/null
 
 	# CoV computation
-	cat trace/tcp_thru_01.xg | awk '{print $2}' > trace/tcp_thru_01.dat 
-	cat trace/tfwc_thru_01.xg | awk '{print $2}' > trace/tfwc_thru_01.dat
-	tcp_thru_avg_01=`./add-on/average trace/tcp_thru_01.dat` 
-	tfwc_thru_avg_01=`./add-on/average trace/tfwc_thru_01.dat`
-	./add-on/cov tcp $tcp_thru_avg_01 trace/tcp_thru_01.dat $bw $SRC
-	./add-on/cov tfwc $tfwc_thru_avg_01 trace/tfwc_thru_01.dat $bw $SRC 
+	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.dat 
+	cat trace/tfwc_avg_cov.xg >> trace/tfwc_cov.dat
 
 	if [ $toq == 'DropTail' ]
 	then
@@ -760,12 +744,8 @@ do
 	nice ns main.tcl $tcp $tfrc $tfwc $accessBW $accessMinDel $accessMaxDel $bw $bottleneckDel $qsize $TIME $RND $isReverse $toq > temp 2> /dev/null
 
 	# CoV computation
-	cat trace/tcp_thru_01.xg | awk '{print $2}' > trace/tcp_thru_01.dat 
-	cat trace/tfwc_thru_01.xg | awk '{print $2}' > trace/tfwc_thru_01.dat
-	tcp_thru_avg_01=`./add-on/average trace/tcp_thru_01.dat` 
-	tfwc_thru_avg_01=`./add-on/average trace/tfwc_thru_01.dat`
-	./add-on/cov tcp $tcp_thru_avg_01 trace/tcp_thru_01.dat $bw $SRC
-	./add-on/cov tfwc $tfwc_thru_avg_01 trace/tfwc_thru_01.dat $bw $SRC 
+	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.dat 
+	cat trace/tfwc_avg_cov.xg >> trace/tfwc_cov.dat
 
 	if [ $toq == 'DropTail' ]
 	then
@@ -858,12 +838,8 @@ do
 	nice ns main.tcl $tcp $tfrc $tfwc $accessBW $accessMinDel $accessMaxDel $bw $bottleneckDel $qsize $TIME $RND $isReverse $toq > temp 2> /dev/null
 
 	# CoV computation
-	cat trace/tcp_thru_01.xg | awk '{print $2}' > trace/tcp_thru_01.dat 
-	cat trace/tfwc_thru_01.xg | awk '{print $2}' > trace/tfwc_thru_01.dat
-	tcp_thru_avg_01=`./add-on/average trace/tcp_thru_01.dat` 
-	tfwc_thru_avg_01=`./add-on/average trace/tfwc_thru_01.dat`
-	./add-on/cov tcp $tcp_thru_avg_01 trace/tcp_thru_01.dat $bw $SRC
-	./add-on/cov tfwc $tfwc_thru_avg_01 trace/tfwc_thru_01.dat $bw $SRC 
+	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.dat 
+	cat trace/tfwc_avg_cov.xg >> trace/tfwc_cov.dat
 
 	if [ $toq == 'DropTail' ]
 	then
