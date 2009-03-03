@@ -344,8 +344,8 @@ do
 	nice ns main.tcl $tcp $tfrc $tfwc $accessBW $accessMinDel $accessMaxDel $bw $bottleneckDel $qsize $TIME $RND $isReverse $toq > temp 2> /dev/null
 
 	# CoV computation
-	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.dat 
-	cat trace/tfrc_avg_cov.xg >> trace/tfrc_cov.dat
+	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.xg
+	cat trace/tfrc_avg_cov.xg >> trace/tfrc_cov.xg
 
 	# archives throughput and fairness
 	if [ $toq == 'DropTail' ]
@@ -439,8 +439,8 @@ do
 	nice ns main.tcl $tcp $tfrc $tfwc $accessBW $accessMinDel $accessMaxDel $bw $bottleneckDel $qsize $TIME $RND $isReverse $toq > temp 2> /dev/null
 
 	# CoV computation
-	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.dat 
-	cat trace/tfrc_avg_cov.xg >> trace/tfrc_cov.dat
+	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.xg
+	cat trace/tfrc_avg_cov.xg >> trace/tfrc_cov.xg
 
 	if [ $toq == 'DropTail' ]
 	then
@@ -533,8 +533,8 @@ do
 	nice ns main.tcl $tcp $tfrc $tfwc $accessBW $accessMinDel $accessMaxDel $bw $bottleneckDel $qsize $TIME $RND $isReverse $toq > temp 2> /dev/null
 
 	# CoV computation
-	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.dat 
-	cat trace/tfrc_avg_cov.xg >> trace/tfrc_cov.dat
+	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.xg 
+	cat trace/tfrc_avg_cov.xg >> trace/tfrc_cov.xg
 
 	if [ $toq == 'DropTail' ]
 	then
@@ -650,8 +650,8 @@ do
 	nice ns main.tcl $tcp $tfrc $tfwc $accessBW $accessMinDel $accessMaxDel $bw $bottleneckDel $qsize $TIME $RND $isReverse $toq > temp 2> /dev/null
 
 	# CoV computation
-	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.dat 
-	cat trace/tfwc_avg_cov.xg >> trace/tfwc_cov.dat
+	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.xg
+	cat trace/tfwc_avg_cov.xg >> trace/tfwc_cov.xg
 
 	if [ $toq == 'DropTail' ]
 	then
@@ -744,8 +744,8 @@ do
 	nice ns main.tcl $tcp $tfrc $tfwc $accessBW $accessMinDel $accessMaxDel $bw $bottleneckDel $qsize $TIME $RND $isReverse $toq > temp 2> /dev/null
 
 	# CoV computation
-	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.dat 
-	cat trace/tfwc_avg_cov.xg >> trace/tfwc_cov.dat
+	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.xg
+	cat trace/tfwc_avg_cov.xg >> trace/tfwc_cov.xg
 
 	if [ $toq == 'DropTail' ]
 	then
@@ -838,8 +838,8 @@ do
 	nice ns main.tcl $tcp $tfrc $tfwc $accessBW $accessMinDel $accessMaxDel $bw $bottleneckDel $qsize $TIME $RND $isReverse $toq > temp 2> /dev/null
 
 	# CoV computation
-	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.dat 
-	cat trace/tfwc_avg_cov.xg >> trace/tfwc_cov.dat
+	cat trace/tcp_avg_cov.xg >> trace/tcp_cov.xg
+	cat trace/tfwc_avg_cov.xg >> trace/tfwc_cov.xg
 
 	if [ $toq == 'DropTail' ]
 	then
