@@ -384,7 +384,7 @@ done 2> /dev/null # done for .5 * delay*bw
 	rm trace/tfrc_cov.xg
 
 # queue size is equal to delay x bandwidth
-delbw=`echo "1.0" | bc -l`
+delbw=`echo "1.5" | bc -l`
 bw=$5	# initialize bottleneck b/w 
 for i in `seq 1 20`
 do
@@ -688,7 +688,7 @@ done 2> /dev/null # done for .5 * delay*bw
 	rm trace/tcp_cov.xg
 	rm trace/tfwc_cov.xg
 
-# queue size is equal to delay x bandwidth
+# queue size is equal to 1.5 x delay x bandwidth
 delbw=`echo "1.0" | bc -l`
 bw=$5	# initialize bottleneck b/w 
 for i in `seq 1 20`;
