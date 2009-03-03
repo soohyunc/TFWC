@@ -62,6 +62,7 @@ int main (int argc, char *argv[]) {
 	ifstream favg (argv[3]);
 	ifstream fin (argv[4]); 
 	double bw = atof(argv[5]);
+	bw = bw;
 
 	int	k = 0;		// index number
 	double cov;		// coefficient of variation

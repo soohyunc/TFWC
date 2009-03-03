@@ -69,7 +69,7 @@ int main (int argc, char *argv[]) {
 	stringstream ss;
 	ss << "trace/" << option << "_avg_cov" << ".xg";
 	fout.open(ss.str().c_str());
-	fout << bw << "\t" << avg_cov << endl;
+	fout << bw << "\t" << num << "\t" << avg_cov << endl;
 	fout.close();
 
 	return 0;
