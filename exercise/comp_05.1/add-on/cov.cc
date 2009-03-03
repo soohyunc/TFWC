@@ -36,13 +36,14 @@
 /*
  * compute coefficient of variance (CoV)
  *
- * Usage: ./cov [tcp|tfrc|tfwc] [avg_thru] [inst_thru] [bandwidth] [# of flows]
+ * Usage: ./cov [tcp|tfrc|tfwc] [index] [avg_thru] [inst_thru] [bandwidth] 
  */
 
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <cmath>
+#include <sstream>
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -51,25 +52,37 @@ using namespace std;
 int main (int argc, char *argv[]) {
 
 	if (argc < 5) {
-		cout << "Usage: ./cov [tcp|tfrc|tfwc] [avg_thru] [inst_thru] [bandwidth] [# of flows]" << endl;
+		cout << "Usage: ./cov [tcp|tfrc|tfwc] [index] [avg_thru] [inst_thru] \
+[bandwidth]" << endl;
 		exit (0);
 	}
 
-	ifstream fin (argv[3]); 
-	ofstream fout;
+	string option = argv[1];
+	int index = atoi(argv[2]);
+	ifstream favg (argv[3]);
+	ifstream fin (argv[4]); 
+	double bw = atof(argv[5]);
 
 	int	k = 0;		// index number
 	double cov;		// coefficient of variation
 	double inst_thru;	// instantaneous throughput
 	double term = 0.0;
+	double avg_thru;
+	ofstream fout;
+	string thru;
 
-	double avg_thru = atof(argv[2]);
-	double bw = atof(argv[4]);
-	int src = atoi(argv[5]);
+	// get average throughput value
+	if(favg.is_open()) {
+		while (!favg.eof())	{
+			favg >> avg_thru;
+		}
+		favg.close();
+	}
 
 	if (fin.is_open()) {
-		while(!fin.eof()) {
-			fin >> inst_thru;
+		while (getline(fin, thru)) {
+			istringstream t(thru);
+			t >> inst_thru;
 			term += pow((inst_thru - avg_thru), 2.0);
 			k++;
 		}
@@ -80,19 +93,11 @@ int main (int argc, char *argv[]) {
 
 	cov = sqrt(term/(k-1))/avg_thru;
 
-	if (!strcmp(argv[1],"tcp")) {
-		fout.open ("trace/tcp_cov.xg", ios::app);
-		fout << bw << "   " << src << "   " << cov << endl;
-		fout.close();
-	} else if (!strcmp(argv[1],"tfrc")) {
-        fout.open ("trace/tfrc_cov.xg", ios::app);
-        fout << bw << "   " << src << "   " << cov << endl;
-        fout.close();
-	} else if (!strcmp(argv[1],"tfwc")) {
-        fout.open ("trace/tfwc_cov.xg", ios::app);
-        fout << bw << "   " << src << "   " << cov << endl;
-        fout.close();
-	}
+	stringstream ss;
+	ss << "trace/" << option << "_cov_" << index << ".dat";
+	fout.open(ss.str().c_str());
+	fout << bw << "\t" << cov << endl;
+	fout.close();
 
 	return 0;
 }

@@ -396,6 +396,7 @@ proc fifo_plots {} {
 proc tcp_results {} {
 	global queuetype tcp_src_num
 	global cutoff t_sim src_num granul 
+	global bottleneck_bandwidth
 
 	# THROUGHPUT
 	exec awk -f awk/tcp_thru.awk cutoff=$cutoff trace/out.queue
@@ -407,6 +408,17 @@ proc tcp_results {} {
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tcp ix=$i granul=$granul \
             cutoff=$cutoff trace/tcp_indiv_$i.tr
+	}
+
+	# Average Throughput for CoV plot
+	for {set i 1} {$i <= $tcp_src_num} {incr i} {
+		exec ./add-on/average_i tcp $i trace/tcp_thru_$i.xg
+	}
+
+	# CoV per flow
+	for {set i 1} {$i <= $tcp_src_num} {incr i} {
+		exec ./add-on/cov tcp $i trace/tcp_thru_avg_$i.dat \
+		trace/tcp_thru_$i.dat $bottleneck_bandwidth
 	}
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
@@ -443,6 +455,7 @@ proc tcp_results {} {
 proc tfrc_results {} {
 	global queuetype tfrc_src_num
 	global cutoff t_sim src_num granul 
+	global bottleneck_bandwidth
 
 	# THROUGHPUT
 	exec awk -f awk/tfrc_thru.awk cutoff=$cutoff trace/out.queue
@@ -454,6 +467,17 @@ proc tfrc_results {} {
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tfrc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfrc_indiv_$i.tr
+	}
+
+	# Average Throughput for CoV plot
+	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
+		exec ./add-on/average_i tfrc $i trace/tfrc_thru_$i.xg
+	}
+
+	# CoV per flow
+	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
+		exec ./add-on/cov tfrc $i trace/tfrc_thru_avg_$i.dat \
+		trace/tfrc_thru_$i.dat $bottleneck_bandwidth
 	}
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
@@ -493,6 +517,7 @@ proc tfrc_results {} {
 proc tfwc_results {} {
 	global queuetype tfwc_src_num
 	global cutoff t_sim src_num granul
+	global bottleneck_bandwidth
 
 	# THROUGHPUT
 	exec awk -f awk/tfwc_thru.awk cutoff=$cutoff trace/out.queue
@@ -506,6 +531,17 @@ proc tfwc_results {} {
             cutoff=$cutoff trace/tfwc_indiv_$i.tr
 	}
 
+	# Average Throughput for CoV plot
+	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
+		exec ./add-on/average_i tfwc $i trace/tfwc_thru_$i.xg
+	}
+
+	# CoV per flow
+	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
+		exec ./add-on/cov tfwc $i trace/tfwc_thru_avg_$i.dat \
+		trace/tfwc_thru_$i.dat $bottleneck_bandwidth
+	}
+
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
 	exec awk -f awk/tfwc_inst_q.awk cutoff=$cutoff trace/out.queue
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
@@ -515,8 +551,8 @@ proc tfwc_results {} {
 
 	# AVERAGE RED QUEUE SIZE (aggregated red queue plot)
 	if {$queuetype == "RED"} {
-        exec awk -f awk/q_red.awk option=tfwc granul=$granul cutoff=$cutoff \
-                trace/red_q.tr
+        exec awk -f awk/q_red.awk option=tfwc granul=$granul \
+		cutoff=$cutoff trace/red_q.tr
 	}
 
 	# LOSS RATE
