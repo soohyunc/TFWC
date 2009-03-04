@@ -64,10 +64,7 @@ int main (int argc, char *argv[]) {
 	ofstream frec;
 
 	if (fname.is_open()) {
-		while(!fname.eof()) {
-			fname >> val;
-			//cout << val << endl;
-
+		while(fname >> val) {
 			min = (min > val) ? val : min;
 			max = (max < val) ? val : max;
 			sum += val;
@@ -78,7 +75,7 @@ int main (int argc, char *argv[]) {
 		cout << "Unable to open file!!!" << endl;
 	}
 
-	avg = sum / (count-1);
+	avg = sum / count;
 
 	if (!strcmp(argv[1],"tcp")) {
 		if (!strcmp(argv[2],"inst")) {

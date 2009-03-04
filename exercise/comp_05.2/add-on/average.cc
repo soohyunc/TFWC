@@ -14,15 +14,14 @@ int main (int argc, char *argv[]) {
 	double avg, item, total=0;
 
     if(fin.is_open()) {
-		while (!fin.eof()) {
-	        fin >> item;
+		while (fin >> item) {
         	total += item;
     	    k++;
 		}
 		fin.close();
     }
 
-    avg = total/(k-1);
+    avg = total/k;
 	cout << avg << endl;
 
 	return 0;

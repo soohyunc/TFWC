@@ -21,8 +21,7 @@ int main (int argc, char *argv[]) {
 		stringstream ss_thru;
 		ss_thru << "trace/" << option << "_thru_" << index << ".dat";
 		fout_thru.open(ss_thru.str().c_str());
-		while (!fin.eof()) {
-	        fin >> time >> item;
+		while (fin >> time >> item) {
         	total += item;
     	    k++;
 			fout_thru << item << endl;
