@@ -92,7 +92,7 @@ int main (int argc, char *argv[]) {
 		cout << "Unable to open file!!!" << endl;
 	}
 
-	cov = sqrt(term/(k-1))/avg_thru;
+	cov = sqrt(term/k)/avg_thru;
 
 	stringstream ss;
 	ss << "trace/" << option << "_cov_" << index << ".dat";
