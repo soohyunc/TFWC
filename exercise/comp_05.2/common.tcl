@@ -397,6 +397,7 @@ proc tcp_results {} {
 	global queuetype tcp_src_num
 	global cutoff t_sim src_num granul 
 	global bottleneck_bandwidth
+	global rtt_in_sec
 
 	# THROUGHPUT
 	exec awk -f awk/tcp_thru.awk cutoff=$cutoff trace/out.queue
@@ -408,6 +409,8 @@ proc tcp_results {} {
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tcp ix=$i granul=$granul \
             cutoff=$cutoff trace/tcp_indiv_$i.tr
+		exec ./add-on/anti-alias tcp $i $rtt_in_sec $cutoff \
+			trace/tcp_indiv_$i.tr
 	}
 
 	# Average Throughput for CoV plot
@@ -419,10 +422,6 @@ proc tcp_results {} {
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
 		exec ./add-on/cov tcp $i trace/tcp_thru_avg_$i.dat \
 		trace/tcp_thru_$i.dat $bottleneck_bandwidth
-	}
-
-	# Individual CoV
-	for {set i 1} {$i <= $tcp_src_num} {incr i} {
 		set cov($i) [exec cat trace/tcp_cov_$i.dat]
 	}
 
@@ -470,6 +469,7 @@ proc tfrc_results {} {
 	global queuetype tfrc_src_num
 	global cutoff t_sim src_num granul 
 	global bottleneck_bandwidth
+	global rtt_in_sec
 
 	# THROUGHPUT
 	exec awk -f awk/tfrc_thru.awk cutoff=$cutoff trace/out.queue
@@ -481,6 +481,8 @@ proc tfrc_results {} {
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tfrc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfrc_indiv_$i.tr
+		exec ./add-on/anti-alias tfrc $i $rtt_in_sec $cutoff \
+			trace/tfrc_indiv_$i.tr
 	}
 
 	# Average Throughput for CoV plot
@@ -492,10 +494,6 @@ proc tfrc_results {} {
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
 		exec ./add-on/cov tfrc $i trace/tfrc_thru_avg_$i.dat \
 		trace/tfrc_thru_$i.dat $bottleneck_bandwidth
-	}
-
-	# Individual CoV
-	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
 		set cov($i) [exec cat trace/tfrc_cov_$i.dat]
 	}
 
@@ -546,6 +544,7 @@ proc tfwc_results {} {
 	global queuetype tfwc_src_num
 	global cutoff t_sim src_num granul
 	global bottleneck_bandwidth
+	global rtt_in_sec
 
 	# THROUGHPUT
 	exec awk -f awk/tfwc_thru.awk cutoff=$cutoff trace/out.queue
@@ -557,6 +556,8 @@ proc tfwc_results {} {
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tfwc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfwc_indiv_$i.tr
+		exec ./add-on/anti-alias tfwc $i $rtt_in_sec $cutoff \
+			trace/tfwc_indiv_$i.tr
 	}
 
 	# Average Throughput for CoV plot
@@ -568,10 +569,6 @@ proc tfwc_results {} {
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
 		exec ./add-on/cov tfwc $i trace/tfwc_thru_avg_$i.dat \
 		trace/tfwc_thru_$i.dat $bottleneck_bandwidth
-	}
-
-	# Individual CoV
-	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
 		set cov($i) [exec cat trace/tfwc_cov_$i.dat]
 	}
 

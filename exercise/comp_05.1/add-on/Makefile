@@ -22,8 +22,9 @@ all: $(SOURCES)
 	$(CPP) $(CFLAGS) timeout.cc -o timeout
 	$(CPP) $(CFLAGS) paste.cc -o paste
 	$(CPP) $(CFLAGS) estimated_t0.cc -o estimated_t0
+	$(CPP) $(CFLAGS) anti-alias.cc -o anti-alias
 
 clean:
 	$(RM) minmax fairness round breakline cov average map indiv timeout \
-loss_by_eq thru_by_eq s_ratio paste average_i estimated_t0 avg_cov
+loss_by_eq thru_by_eq s_ratio paste average_i estimated_t0 avg_cov anti-alias
 
