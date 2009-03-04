@@ -396,7 +396,7 @@ proc fifo_plots {} {
 proc tcp_results {} {
 	global queuetype tcp_src_num
 	global cutoff t_sim src_num granul 
-	global bottleneck_bandwidth
+	global numeric_bottleneck_bandwidth
 	global rtt_in_sec
 
 	# THROUGHPUT
@@ -421,7 +421,7 @@ proc tcp_results {} {
 	# CoV per flow
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
 		exec ./add-on/cov tcp $i trace/tcp_thru_avg_$i.dat \
-		trace/tcp_thru_$i.dat $bottleneck_bandwidth
+		trace/tcp_thru_$i.dat $numeric_bottleneck_bandwidth
 		set cov($i) [exec cat trace/tcp_cov_$i.dat]
 	}
 
@@ -432,7 +432,8 @@ proc tcp_results {} {
 	}
 	#set avgCoV [expr $totCoV / $tcp_src_num]
 	#puts "average CoV	$avgCoV"
-	exec ./add-on/avg_cov tcp $totCoV $tcp_src_num $bottleneck_bandwidth
+	exec ./add-on/avg_cov tcp $totCoV $tcp_src_num \
+		$numeric_bottleneck_bandwidth
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
 	exec awk -f awk/tcp_q.awk cutoff=$cutoff trace/out.queue
@@ -468,7 +469,7 @@ proc tcp_results {} {
 proc tfrc_results {} {
 	global queuetype tfrc_src_num
 	global cutoff t_sim src_num granul 
-	global bottleneck_bandwidth
+	global numeric_bottleneck_bandwidth
 	global rtt_in_sec
 
 	# THROUGHPUT
@@ -493,7 +494,7 @@ proc tfrc_results {} {
 	# CoV per flow
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
 		exec ./add-on/cov tfrc $i trace/tfrc_thru_avg_$i.dat \
-		trace/tfrc_thru_$i.dat $bottleneck_bandwidth
+		trace/tfrc_thru_$i.dat $numeric_bottleneck_bandwidth
 		set cov($i) [exec cat trace/tfrc_cov_$i.dat]
 	}
 
@@ -504,7 +505,8 @@ proc tfrc_results {} {
 	}
 	#set avgCoV [expr $totCoV / $tfrc_src_num]
 	#puts "average CoV	$avgCoV"
-	exec ./add-on/avg_cov tfrc $totCoV $tfrc_src_num $bottleneck_bandwidth
+	exec ./add-on/avg_cov tfrc $totCoV $tfrc_src_num \
+		$numeric_bottleneck_bandwidth
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
 	exec awk -f awk/tfrc_inst_q.awk cutoff=$cutoff trace/out.queue
@@ -543,7 +545,7 @@ proc tfrc_results {} {
 proc tfwc_results {} {
 	global queuetype tfwc_src_num
 	global cutoff t_sim src_num granul
-	global bottleneck_bandwidth
+	global numeric_bottleneck_bandwidth
 	global rtt_in_sec
 
 	# THROUGHPUT
@@ -568,7 +570,7 @@ proc tfwc_results {} {
 	# CoV per flow
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
 		exec ./add-on/cov tfwc $i trace/tfwc_thru_avg_$i.dat \
-		trace/tfwc_thru_$i.dat $bottleneck_bandwidth
+		trace/tfwc_thru_$i.dat $numeric_bottleneck_bandwidth
 		set cov($i) [exec cat trace/tfwc_cov_$i.dat]
 	}
 
@@ -579,7 +581,8 @@ proc tfwc_results {} {
 	}
 	#set avgCoV [expr $totCoV / $tfwc_src_num]
 	#puts "average CoV	$avgCoV"
-	exec ./add-on/avg_cov tfwc $totCoV $tfwc_src_num $bottleneck_bandwidth
+	exec ./add-on/avg_cov tfwc $totCoV $tfwc_src_num \
+		$numeric_bottleneck_bandwidth
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
 	exec awk -f awk/tfwc_inst_q.awk cutoff=$cutoff trace/out.queue
