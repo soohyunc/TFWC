@@ -30,7 +30,7 @@ int main (int argc, char *argv[]) {
 		fin.close();
     }
 
-    avg = total/(k-1);
+    avg = total/k;
 
 	stringstream ss_avg;
 	ss_avg << "trace/" << option << "_thru_avg_" << index << ".dat";
