@@ -1305,31 +1305,23 @@ int TfwcAgent::force_inflate(int window) {
 	bool goodToGo = false;
 
 	// do we have more than 4 ALI instances in this RTT?
-	if (numalivec_ > 4) {
-		double target = abs(alivec_[0] - alivec_[numalivec_-1]);
-		// is the ALI differences greater than 10?
-		if (target > 10.0) {
-			goodToGo = true;
-			numalivec_ = 1;
-		} else {
-			numalivec_++;
-		}
-	} else {
+	// And, is the ALI differences greater than 10?
+	double target = abs(alivec_[0] - alivec_[numalivec_-1]);
+	if ((numalivec_ > 4) && (target > 10.0)) {
+		goodToGo = true; numalivec_ = 1;
+	} else
 		numalivec_++;
-	}
 
 	// force inflate 'cwnd_' by one if we are good to go.
-	if (goodToGo) {
-		if (num_infl_ == 0) {
-			num_infl_++;
-			double num_total = num_infl_ + num_asis_;
-			// inflate  window if this inflation will
-			// result in the ratio less than 25%.
-			if (num_infl_/num_total < .25)
-				window++;
-			else
-				num_infl_--;
-		}
+	if (goodToGo && (num_infl_ == 0)) {
+		num_infl_++;
+		double num_total = num_infl_ + num_asis_;
+		// inflate  window if this inflation will
+		// result in the ratio less than 25%.
+		if (num_infl_/num_total < .25)
+			window++;
+		else
+			num_infl_--;
 	}
 	return window;
 }
