@@ -564,8 +564,8 @@ proc tfwc_results {} {
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tfwc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfwc_indiv_$i.tr
-		exec ./add-on/ewma tfwc $i $freq $cutoff trace/tfwc_indiv_$i.tr
-		exec ./add-on/anti-alias tfwc $i $ff $cutoff \
+		exec ./add-on/ewma tfwc thru $i $freq $cutoff trace/tfwc_indiv_$i.tr
+		exec ./add-on/anti-alias tfwc thru $i $ff $cutoff \
 			trace/tfwc_ewma_thru_$i.xg
 	}
 
