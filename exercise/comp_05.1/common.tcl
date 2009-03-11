@@ -82,10 +82,6 @@ set delbw	[expr $delbw_in_bits / 8000]
 
 set cutoff	20;	# cutoff time
 set granul [expr 4 * $rtt_in_sec]; # gnuplot sampling granularity
-if { $granul < 1 } {
-	set granul	1; # if granul is too small, we use 1 sec granularity
-}
-
 puts ""
 puts " Bandwidth-Delay Product		$delbw	packets"
 puts " Approximated e2e delay (RTT)	$rtt_in_sec	(sec)"
@@ -263,6 +259,12 @@ if {$queuetype =="RED"} {
 	$redq attach $tchan_
 }
 
+# frequence variables
+if { $granul < 1 } {
+	set granul	1; # if granul is too small, we use 1 sec granularity
+}
+set freq [expr $rtt_in_sec/4.0]
+
 #
 # bottleneck queue setting
 #
@@ -397,7 +399,7 @@ proc tcp_results {} {
 	global queuetype tcp_src_num
 	global cutoff t_sim src_num granul 
 	global numeric_bottleneck_bandwidth
-	global rtt_in_sec
+	global freq rtt_in_sec
 
 	# THROUGHPUT
 	exec awk -f awk/tcp_thru.awk cutoff=$cutoff trace/out.queue
@@ -406,11 +408,13 @@ proc tcp_results {} {
 
 	exec ./add-on/indiv trace/out.queue tcp
 
+	set ff [expr 2.0 * $rtt_in_sec]
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tcp ix=$i granul=$granul \
             cutoff=$cutoff trace/tcp_indiv_$i.tr
-		exec ./add-on/anti-alias tcp $i $rtt_in_sec $cutoff \
-			trace/tcp_indiv_$i.tr
+		exec ./add-on/ewma tcp $i $freq $cutoff trace/tcp_indiv_$i.tr
+		exec ./add-on/anti-alias tcp $i $ff $cutoff \
+			trace/tcp_ewma_thru_$i.xg
 	}
 
 	# Average Throughput for CoV plot
@@ -470,7 +474,7 @@ proc tfrc_results {} {
 	global queuetype tfrc_src_num
 	global cutoff t_sim src_num granul 
 	global numeric_bottleneck_bandwidth
-	global rtt_in_sec
+	global freq rtt_in_sec
 
 	# THROUGHPUT
 	exec awk -f awk/tfrc_thru.awk cutoff=$cutoff trace/out.queue
@@ -479,11 +483,13 @@ proc tfrc_results {} {
 
 	exec ./add-on/indiv trace/out.queue tcpFriend
 
+	set ff [expr 2.0 * $rtt_in_sec]
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tfrc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfrc_indiv_$i.tr
-		exec ./add-on/anti-alias tfrc $i $rtt_in_sec $cutoff \
-			trace/tfrc_indiv_$i.tr
+		exec ./add-on/ewma tfrc $i $freq $cutoff trace/tfrc_indiv_$i.tr
+		exec ./add-on/anti-alias tfrc $i $ff $cutoff \
+			trace/tfrc_ewma_thru_$i.xg
 	}
 
 	# Average Throughput for CoV plot
@@ -546,7 +552,7 @@ proc tfwc_results {} {
 	global queuetype tfwc_src_num
 	global cutoff t_sim src_num granul
 	global numeric_bottleneck_bandwidth
-	global rtt_in_sec
+	global freq rtt_in_sec
 
 	# THROUGHPUT
 	exec awk -f awk/tfwc_thru.awk cutoff=$cutoff trace/out.queue
@@ -554,12 +560,13 @@ proc tfwc_results {} {
 		t_sim=$t_sim trace/out.queue
 
 	exec ./add-on/indiv trace/out.queue TFWC
-
+	set ff [expr 2.0 * $rtt_in_sec]
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tfwc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfwc_indiv_$i.tr
-		exec ./add-on/anti-alias tfwc $i $rtt_in_sec $cutoff \
-			trace/tfwc_indiv_$i.tr
+		exec ./add-on/ewma tfwc $i $freq $cutoff trace/tfwc_indiv_$i.tr
+		exec ./add-on/anti-alias tfwc $i $ff $cutoff \
+			trace/tfwc_ewma_thru_$i.xg
 	}
 
 	# Average Throughput for CoV plot
