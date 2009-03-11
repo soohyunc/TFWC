@@ -33,7 +33,7 @@
  * $Id$
  */
 
-// Anti-aliasing Filter
+// Anti-aliased Signal
 // Usage: ./anti-alias [tcp|tfrc|tfwc] [index] [granul] [cutoff] [trace_file] 
 
 #include <iostream>
@@ -46,7 +46,6 @@
 
 using namespace std;
 
-const int SZ = 5;
 int main (int argc, char *argv[]) {
 
 	if (argc < 5) {
@@ -65,13 +64,9 @@ int main (int argc, char *argv[]) {
 	// variables
 	string items, stat;
 	double currtime;
-	int psize;
-	double thru = 0;
-	double time = 0;
-	int bits = 0;
-	int last = 0;
+	double currthru = 0.0;
+	double time = 0.0;
 
-	granul *= 4;
 	if (fin.is_open()) {
 		// preparing for the output file
 		stringstream ss;
@@ -81,17 +76,11 @@ int main (int argc, char *argv[]) {
 		// get input file stream
 		while (getline(fin, items)) {
 			istringstream is(items);
-			is >> stat >> currtime >> psize;
-			// when only received status
-			if(!strcmp(stat.c_str(), "r")) {
-				bits += psize * 8;
-				if ((currtime-time) > granul) {
-					time += granul;
-					thru = (double)(bits - last)/1000000/granul;
-					if (currtime > cutoff)
-						fout << time << " " << thru << endl;
-					last = bits;
-				}
+			is >> currtime >> currthru;
+			if (currtime-time > granul) {
+				time += granul;
+				if (currtime > cutoff)
+					fout << time << " " << currthru << endl;
 			}
 		}
 		fin.close();
