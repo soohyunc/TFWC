@@ -54,7 +54,7 @@ int main (int argc, char *argv[]) {
 	}
 
 	string option = argv[1];
-	string signal = argv[2]
+	string signal = argv[2];
 	int index = atoi(argv[3]);
 	double granul = atof(argv[4]);
 	double cutoff = atof(argv[5]);
