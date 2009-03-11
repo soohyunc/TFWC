@@ -49,16 +49,16 @@ using namespace std;
 int main (int argc, char *argv[]) {
 
 	if (argc < 5) {
-		cout << "Usage: ./anti-alias [tcp|tfrc|tfwc] [index] [granul] [cutoff] \
-[trace_file]" << endl;
+		cout << "Usage: ./anti-alias [tcp|tfrc|tfwc] [thru|loss|...] [index] [granul] [cutoff] [trace_file]" << endl;
 		exit (0);
 	}
 
 	string option = argv[1];
-	int index = atoi(argv[2]);
-	double granul = atof(argv[3]);
-	double cutoff = atof(argv[4]);
-	ifstream fin (argv[5]); 
+	string signal = argv[2];
+	int index = atoi(argv[3]);
+	double granul = atof(argv[4]);
+	double cutoff = atof(argv[5]);
+	ifstream fin (argv[6]); 
 	ofstream fout;
 
 	// variables
@@ -70,7 +70,8 @@ int main (int argc, char *argv[]) {
 	if (fin.is_open()) {
 		// preparing for the output file
 		stringstream ss;
-		ss << "trace/" << option << "_ant_thru_" << index << ".xg";
+		ss << "trace/" << option << "_ant_" << signal 
+			<< "_" << index << ".xg";
 		fout.open(ss.str().c_str());
 
 		// get input file stream

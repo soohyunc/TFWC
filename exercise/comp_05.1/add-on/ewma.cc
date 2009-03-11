@@ -49,16 +49,16 @@ using namespace std;
 int main (int argc, char *argv[]) {
 
 	if (argc < 5) {
-		cout << "Usage: ./ewma [tcp|tfrc|tfwc] [index] [granul] [cutoff] \
-[trace_file]" << endl;
+		cout << "Usage: ./ewma [tcp|tfrc|tfwc] [thru|loss|...] [index] [granul] [cutoff] [trace_file]" << endl;
 		exit (0);
 	}
 
 	string option = argv[1];
-	int index = atoi(argv[2]);
-	double granul = atof(argv[3]);
-	double cutoff = atof(argv[4]);
-	ifstream fin (argv[5]); 
+	string signal = argv[2]
+	int index = atoi(argv[3]);
+	double granul = atof(argv[4]);
+	double cutoff = atof(argv[5]);
+	ifstream fin (argv[6]); 
 	ofstream fout_xg, fout_tr;
 
 	// variables
@@ -74,8 +74,10 @@ int main (int argc, char *argv[]) {
 	if (fin.is_open()) {
 		// preparing for the output file
 		stringstream ssxg, sstr;
-		ssxg << "trace/" << option << "_ewma_thru_" << index << ".xg";
-		sstr << "trace/" << option << "_ewma_thru_" << index << ".tr";
+		ssxg << "trace/" << option << "_ewma_" << signal 
+			<< "_" << index << ".xg";
+		sstr << "trace/" << option << "_ewma_" << signal 
+			<< "_" << index << ".tr";
 		fout_xg.open(ssxg.str().c_str());
 		fout_tr.open(sstr.str().c_str());
 
