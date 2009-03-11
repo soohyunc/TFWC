@@ -412,8 +412,8 @@ proc tcp_results {} {
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tcp ix=$i granul=$granul \
             cutoff=$cutoff trace/tcp_indiv_$i.tr
-		exec ./add-on/ewma tcp $i $freq $cutoff trace/tcp_indiv_$i.tr
-		exec ./add-on/anti-alias tcp $i $ff $cutoff \
+		exec ./add-on/ewma tcp thru $i $freq $cutoff trace/tcp_indiv_$i.tr
+		exec ./add-on/anti-alias tcp thru $i $ff $cutoff \
 			trace/tcp_ewma_thru_$i.xg
 	}
 
@@ -487,8 +487,8 @@ proc tfrc_results {} {
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tfrc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfrc_indiv_$i.tr
-		exec ./add-on/ewma tfrc $i $freq $cutoff trace/tfrc_indiv_$i.tr
-		exec ./add-on/anti-alias tfrc $i $ff $cutoff \
+		exec ./add-on/ewma tfrc thru $i $freq $cutoff trace/tfrc_indiv_$i.tr
+		exec ./add-on/anti-alias tfrc thru $i $ff $cutoff \
 			trace/tfrc_ewma_thru_$i.xg
 	}
 
