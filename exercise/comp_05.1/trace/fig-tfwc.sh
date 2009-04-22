@@ -26,14 +26,22 @@ gnuplot -persist << EOF
 	set mxtics 5
 	set yrange [0:1.4]
 
-	plot "tfwc_thru_1.xg" with lines notitle linestyle 1, \
-		"tfwc_thru_2.xg" with lines notitle linestyle 2, \
-        "tfwc_thru_3.xg" with lines notitle linestyle 3, \
-        "tfwc_thru_4.xg" with lines notitle linestyle 4, \
-        "tfwc_thru_5.xg" with lines notitle linestyle 5, \
-        "tfwc_thru_6.xg" with lines notitle linestyle 6, \
-        "tfwc_thru_7.xg" with lines notitle linestyle 7, \
-        "tfwc_thru_8.xg" with lines notitle linestyle 8
+#	plot "tfwc_thru_1.xg" with lines notitle linestyle 1, \
+#		"tfwc_thru_2.xg" with lines notitle linestyle 2, \
+#        "tfwc_thru_3.xg" with lines notitle linestyle 3, \
+#        "tfwc_thru_4.xg" with lines notitle linestyle 4, \
+#        "tfwc_thru_5.xg" with lines notitle linestyle 5, \
+#        "tfwc_thru_6.xg" with lines notitle linestyle 6, \
+#        "tfwc_thru_7.xg" with lines notitle linestyle 7, \
+#        "tfwc_thru_8.xg" with lines notitle linestyle 8
+	plot "tfwc_ant_thru_1.xg" with lines notitle linestyle 1, \
+		"tfwc_ant_thru_2.xg" with lines notitle linestyle 2, \
+        "tfwc_ant_thru_3.xg" with lines notitle linestyle 3, \
+        "tfwc_ant_thru_4.xg" with lines notitle linestyle 4, \
+        "tfwc_ant_thru_5.xg" with lines notitle linestyle 5, \
+        "tfwc_ant_thru_6.xg" with lines notitle linestyle 6, \
+        "tfwc_ant_thru_7.xg" with lines notitle linestyle 7, \
+        "tfwc_ant_thru_8.xg" with lines notitle linestyle 8
 EOF
 
 # measured loss rate 
