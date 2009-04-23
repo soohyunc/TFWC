@@ -51,6 +51,7 @@ set queue_out [open trace/out.queue w]
 #
 # set simulation parameters
 #
+#set tcl_precision	6
 set tcp_node_num	$tcp_src_num
 set tfrc_node_num	$tfrc_src_num
 set tfwc_node_num	$tfwc_src_num
@@ -74,17 +75,18 @@ set queuetype   $queue_type
 set maxth		[expr ($q_size / 2.0)]
 set minth		[expr ($maxth / 3.0)]
 
-set rtt_in_sec [expr (2 * ($bottleneckDel + ($min_dly + $max_dly) / 2.0)) \
-		* 0.001]
+set rtt_in_msec [expr (2.0 * ($bottleneckDel + ($min_dly + $max_dly)/2.0))]
+set rtt_in_sec [expr $rtt_in_msec * .001]
 set bottleneckBW_in_Bps [expr $bottleneckBW * 1000000]
 set delbw_in_bits	[expr $rtt_in_sec * $bottleneckBW_in_Bps]
 set delbw	[expr $delbw_in_bits / 8000]
 
 set cutoff	20;	# cutoff time
-set granul [expr 4 * $rtt_in_sec]; # gnuplot sampling granularity
+set granul [expr 4.0 * $rtt_in_sec]; # gnuplot sampling granularity
 puts ""
 puts " Bandwidth-Delay Product		$delbw	packets"
 puts " Approximated e2e delay (RTT)	$rtt_in_sec	(sec)"
+puts " Approximated e2e delay (RTT)	$rtt_in_msec (msec)"
 puts ""
 
 #
@@ -263,8 +265,10 @@ if {$queuetype =="RED"} {
 if { $granul < 1 } {
 	set granul	1; # if granul is too small, we use 1 sec granularity
 }
-set freq [expr $rtt_in_sec/4.0]
-
+set tcl_precision 6
+set freq [expr $rtt_in_sec/8.0]
+puts " sampling freq: $freq"
+set tcl_precision 16
 #
 # bottleneck queue setting
 #
@@ -564,7 +568,8 @@ proc tfwc_results {} {
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tfwc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfwc_indiv_$i.tr
-		exec ./add-on/ewma tfwc thru $i $freq $cutoff trace/tfwc_indiv_$i.tr
+		exec ./add-on/ewma tfwc thru $i $freq $cutoff \
+			trace/tfwc_indiv_$i.tr
 		exec ./add-on/anti-alias tfwc thru $i $ff $cutoff \
 			trace/tfwc_ewma_thru_$i.xg
 	}
