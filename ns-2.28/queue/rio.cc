@@ -562,13 +562,13 @@ RIOQueue::trace(TracedVar* v)
 {
 	char wrk[500], *p;
 
-	if (((p = strstr(v->name(), "ave")) == NULL) &&
-	    ((p = strstr(v->name(), "in_ave")) == NULL) &&
-	    ((p = strstr(v->name(), "out_ave")) == NULL) &&
-	    ((p = strstr(v->name(), "prob")) == NULL) &&
-	    ((p = strstr(v->name(), "in_prob")) == NULL) &&
-	    ((p = strstr(v->name(), "out_prob")) == NULL) &&
-	    ((p = strstr(v->name(), "curq")) == NULL)) {
+	if (((p = (char *) strstr(v->name(), "ave")) == NULL) &&
+	    ((p = (char *) strstr(v->name(), "in_ave")) == NULL) &&
+	    ((p = (char *) strstr(v->name(), "out_ave")) == NULL) &&
+	    ((p = (char *) strstr(v->name(), "prob")) == NULL) &&
+	    ((p = (char *) strstr(v->name(), "in_prob")) == NULL) &&
+	    ((p = (char *) strstr(v->name(), "out_prob")) == NULL) &&
+	    ((p = (char *) strstr(v->name(), "curq")) == NULL)) {
 		fprintf(stderr, "RIO:unknown trace var %s\n",
 			v->name());
 		return;
