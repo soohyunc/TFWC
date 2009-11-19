@@ -874,10 +874,10 @@ REDQueue::trace(TracedVar* v)
 {
 	char wrk[500], *p;
 
-	if (((p = strstr(v->name(), "ave")) == NULL) &&
-	    ((p = strstr(v->name(), "prob")) == NULL) &&
-	    ((p = strstr(v->name(), "curq")) == NULL) &&
-	    ((p = strstr(v->name(), "cur_max_p"))==NULL) ) {
+	if (((p = (char *) strstr(v->name(), "ave")) == NULL) &&
+	    ((p = (char *) strstr(v->name(), "prob")) == NULL) &&
+	    ((p = (char *) strstr(v->name(), "curq")) == NULL) &&
+	    ((p = (char *) strstr(v->name(), "cur_max_p"))==NULL) ) {
 		fprintf(stderr, "RED:unknown trace var %s\n",
 			v->name());
 		return;
