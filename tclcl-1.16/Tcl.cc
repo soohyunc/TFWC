@@ -561,7 +561,7 @@ TclClass::dispatch_instvar(ClientData /*cd*/, Tcl_Interp* in,
 		};
 		// handle arrays in instvars if -parse-part1 was specified.
 		if (need_parse) {
-			char *p = strchr(localName, '(');
+			char *p = (char *) strchr(localName, '(');
 			if (p)
 				*p = 0;
 		};
