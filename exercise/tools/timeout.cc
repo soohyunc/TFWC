@@ -1,6 +1,8 @@
 /*
- * Copyright(c) 2009-2010, Soo-Hyun Choi <s.choi@cs.ucl.ac.uk>
+ * Copyright(c) 2009-2010 University College London
  * All rights reserved.
+ *
+ * AUTHOR: Soo-Hyun Choi <s.choi@cs.ucl.ac.uk>
  *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions
