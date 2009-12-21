@@ -69,6 +69,7 @@
 #define HDR_CDIFF(p)    (hdr_cdiff::access(p))  /* chalermak's diffusion*/
 //#define HDR_DIFF(p)     (hdr_diff::access(p))  /* SCADD's diffusion ported into ns */
 #define HDR_LMS(p)		(hdr_lms::access(p))
+#define HDR_TFWC(p)	(hdr_tfwc::access(p))
 
 /* --------------------------------------------------------------------*/
 
@@ -182,8 +183,11 @@ static const packet_t PT_BLTRACE = 60;
 	// AOMDV packet
 static const packet_t PT_AOMDV = 61;
 
+static const packet_t PT_TFWC = 62;
+static const packet_t PT_TFWC_ACK = 63;
+
         // insert new packet types here
-static packet_t       PT_NTYPE = 62; // This MUST be the LAST one
+static packet_t       PT_NTYPE = 64; // This MUST be the LAST one
 
 enum packetClass
 {
@@ -382,6 +386,10 @@ public:
 		
 		// AOMDV patch
 		name_[PT_AOMDV]= "AOMDV";
+
+		// TFWC
+		name_[PT_TFWC] = "TFWC";
+		name_[PT_TFWC_ACK] = "tfwcACK";
 
 		name_[PT_NTYPE]= "undefined";
 	}
