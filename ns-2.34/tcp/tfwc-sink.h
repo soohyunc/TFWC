@@ -60,10 +60,10 @@ protected:
 	// sending an ack
 	void ack(Packet*);
 
+	int seqno_;			// pkt seqno that the receiver has just got
 	int ackpktSize_;	// ack packet size
 	int nextpkt_;		// expected pkt sequence number
 	double last_ts_;	// timestamp of last new, in-order pkt arrival
-	int seqno_;			// pkt seqno that the receiver has just got
 	int ackofack_;		// ack of ack
 };
 #endif
