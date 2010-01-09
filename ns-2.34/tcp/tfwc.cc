@@ -141,7 +141,7 @@ TfwcAgent::TfwcAgent() : Agent(PT_TFWC), rtx_timer_(this) {
 
 	nackpkt_	= 0;
 	ndatapkt_	= 0;
-	pktSize_	= 1040;		// TFWC packet size
+	pktSize_	= 1500;		// TFWC packet size
 
 	/*
 	 * window control variables
