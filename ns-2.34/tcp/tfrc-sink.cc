@@ -640,6 +640,10 @@ double TfrcSinkAgent::est_loss_WALI ()
                                 print_num_rtts_all(num_rtts);
 			}
 		}
+
+		// inserted by Soo-Hyun Choi for test purpose (Nov. 23, 2005)
+		printf(" [.] tfrc_avg_loss_int: %f %.1f %p\n", now(),
+				ave_interval1, this);
 		return 1/ave_interval1; 
 	} else return 999;     
 }
