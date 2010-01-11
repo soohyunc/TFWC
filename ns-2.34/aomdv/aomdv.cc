@@ -82,7 +82,10 @@
 
 //#include <ip.h>
 
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined (__OpenBSD__)
 #include <sys/socket.h>
+#endif
+
 #include <aomdv/aomdv.h>
 #include <aomdv/aomdv_packet.h>
 #include <random.h>
