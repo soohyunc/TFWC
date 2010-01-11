@@ -82,6 +82,7 @@
 
 //#include <ip.h>
 
+#include <sys/socket.h>
 #include <aomdv/aomdv.h>
 #include <aomdv/aomdv_packet.h>
 #include <random.h>
