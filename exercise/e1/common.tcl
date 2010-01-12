@@ -63,12 +63,19 @@ set tfrc_app_num	$tfrc_src_num
 set tfwc_app_num	$tfwc_src_num
 set min_dly			$accessMinDel
 set max_dly			$accessMaxDel
-set numeric_access_bandwidth		$accessBW
-set numeric_bottleneck_bandwidth	$bottleneckBW
-set numeric_bottleneck_delay		$bottleneckDel
-set access_bandwidth	"$numeric_access_bandwidth\Mb"
-set bottleneck_bandwidth	"$numeric_bottleneck_bandwidth\Mb"
-set bottleneck_delay		"$numeric_bottleneck_delay\ms"
+
+set numeric_access_bandwidth \
+	$accessBW
+set numeric_bottleneck_bandwidth \
+	$bottleneckBW
+set numeric_bottleneck_delay \
+	$bottleneckDel
+set access_bandwidth \
+	"$numeric_access_bandwidth\Mb"
+set bottleneck_bandwidth \
+	"$numeric_bottleneck_bandwidth\Mb"
+set bottleneck_delay \
+	"$numeric_bottleneck_delay\ms"
 set node_num	\
 	[expr ($tcp_node_num + $tfrc_node_num + $tfwc_node_num)]
 set src_num		\
@@ -92,9 +99,12 @@ set delbw_in_bits	\
 set delbw	\
 	[expr $delbw_in_bits / 8000]
 
-set cutoff	20;	# cutoff time
-set granul \
-	[expr 4.0 * $rtt_in_sec]; # gnuplot sampling granularity
+# initial cutoff time
+set cutoff	20
+
+# gnuplot sampling granularity
+set granul [expr 4.0 * $rtt_in_sec]
+
 puts ""
 puts " Bandwidth-Delay Product		$delbw	packets"
 puts " Approximated e2e delay (RTT)	$rtt_in_sec	(sec)"
@@ -374,19 +384,19 @@ proc common_files {} {
 
 proc red_plots {} {
 	global tcp_src_num tfrc_src_num tfwc_src_num app_num
-	global cutoff rtt_in_sec
+	global cutoff rtt_in_sec curr_dir
 
 	# THROUGHPUT PLOT
-	exec gnuplot ../plt/red.thru.plt 2> /dev/null
+	exec ../plt/red.thru.sh $curr_dir 2> /dev/null
 
 	# INSTANTANEOUS QUEUE SIZE PLOT
-	exec gnuplot ../plt/red.q.plt 2> /dev/null
+	exec ../plt/red.q.sh $curr_dir 2> /dev/null
 
 	# AVERAGE RED QUEUE SIZE PLOT
-	exec gnuplot ../plt/red.avg.plt 2> /dev/null
+	exec ../plt/red.avg.sh $curr_dir 2> /dev/null
 
 	# LOSS RATE PLOT
-	exec gnuplot ../plt/red.loss.plt 2> /dev/null
+	exec ../plt/red.loss.sh $curr_dir 2> /dev/null
 
 	if {$tcp_src_num > 0} {
 	}
