@@ -402,15 +402,15 @@ proc tcp_results {} {
 	global freq rtt_in_sec
 
 	# THROUGHPUT
-	exec awk -f awk/tcp_thru.awk cutoff=$cutoff trace/out.queue
-	exec awk -f awk/total_avg_thru.awk cutoff=$cutoff \
+	exec awk -f ../awk/tcp_thru.awk cutoff=$cutoff trace/out.queue
+	exec awk -f ../awk/total_avg_thru.awk cutoff=$cutoff \
 		t_sim=$t_sim trace/out.queue
 
 	exec ../tools/indiv trace/out.queue tcp
 
 	set ff [expr 2.0 * $rtt_in_sec]
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
-        exec awk -f awk/thru_indiv.awk option=tcp ix=$i granul=$granul \
+        exec awk -f ../awk/thru_indiv.awk option=tcp ix=$i granul=$granul \
             cutoff=$cutoff trace/tcp_indiv_$i.tr
 		exec ../tools/ewma tcp thru $i $freq $cutoff trace/tcp_indiv_$i.tr
 		exec ../tools/anti-alias tcp thru $i $ff $cutoff \
@@ -440,28 +440,28 @@ proc tcp_results {} {
 		$numeric_bottleneck_bandwidth
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
-	exec awk -f awk/tcp_q.awk cutoff=$cutoff trace/out.queue
+	exec awk -f ../awk/tcp_q.awk cutoff=$cutoff trace/out.queue
     for {set i 1} {$i <= $tcp_src_num} {incr i} {
-        exec awk -f awk/q_indiv.awk option=tcp ix=$i granul=$granul \
+        exec awk -f ../awk/q_indiv.awk option=tcp ix=$i granul=$granul \
             cutoff=$cutoff trace/tcp_indiv_$i.tr
     }
 
 	# AVERAGE RED QUEUE SIZE (aggregated red queue plot)
 	if {$queuetype == "RED"} {
-		exec awk -f awk/q_red.awk option=tcp granul=$granul cutoff=$cutoff \
+		exec awk -f ../awk/q_red.awk option=tcp granul=$granul cutoff=$cutoff \
 				trace/red_q.tr
 	}
 
 	# LOSS RATE
-	exec awk -f awk/tcp_loss.awk cutoff=$cutoff trace/out.queue
+	exec awk -f ../awk/tcp_loss.awk cutoff=$cutoff trace/out.queue
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
-        exec awk -f awk/loss_indiv.awk option=tcp ix=$i granul=$granul \
+        exec awk -f ../awk/loss_indiv.awk option=tcp ix=$i granul=$granul \
             cutoff=$cutoff trace/tcp_indiv_$i.tr
 	}
 
 	# CWND
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
-		exec awk -f awk/tcp_cwnd.awk granul=$granul cutoff=$cutoff \
+		exec awk -f ../awk/tcp_cwnd.awk granul=$granul cutoff=$cutoff \
 			trace/tcp_cwnd_$i.tr > trace/tcp_cwnd_$i.tmp
 
 		# delete the last line of a file
@@ -477,15 +477,15 @@ proc tfrc_results {} {
 	global freq rtt_in_sec
 
 	# THROUGHPUT
-	exec awk -f awk/tfrc_thru.awk cutoff=$cutoff trace/out.queue
-	exec awk -f awk/total_avg_thru.awk cutoff=$cutoff \
+	exec awk -f ../awk/tfrc_thru.awk cutoff=$cutoff trace/out.queue
+	exec awk -f ../awk/total_avg_thru.awk cutoff=$cutoff \
 		t_sim=$t_sim trace/out.queue
 
 	exec ../tools/indiv trace/out.queue tcpFriend
 
 	set ff [expr 2.0 * $rtt_in_sec]
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
-        exec awk -f awk/thru_indiv.awk option=tfrc ix=$i granul=$granul \
+        exec awk -f ../awk/thru_indiv.awk option=tfrc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfrc_indiv_$i.tr
 		exec ../tools/ewma tfrc thru $i $freq $cutoff trace/tfrc_indiv_$i.tr
 		exec ../tools/anti-alias tfrc thru $i $ff $cutoff \
@@ -515,22 +515,22 @@ proc tfrc_results {} {
 		$numeric_bottleneck_bandwidth
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
-	exec awk -f awk/tfrc_inst_q.awk cutoff=$cutoff trace/out.queue
+	exec awk -f ../awk/tfrc_inst_q.awk cutoff=$cutoff trace/out.queue
     for {set i 1} {$i <= $tfrc_src_num} {incr i} {
-        exec awk -f awk/q_indiv.awk option=tfrc ix=$i granul=$granul \
+        exec awk -f ../awk/q_indiv.awk option=tfrc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfrc_indiv_$i.tr
     }
 
 	# AVERAGE RED QUEUE SIZE (aggregated red queue plot)
 	if {$queuetype == "RED"} {
-        exec awk -f awk/q_red.awk option=tfrc granul=$granul cutoff=$cutoff \
+        exec awk -f ../awk/q_red.awk option=tfrc granul=$granul cutoff=$cutoff \
                 trace/red_q.tr
 	}
 
 	# LOSS RATE
-	exec awk -f awk/tfrc_loss.awk cutoff=$cutoff trace/out.queue
+	exec awk -f ../awk/tfrc_loss.awk cutoff=$cutoff trace/out.queue
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
-        exec awk -f awk/loss_indiv.awk option=tfrc ix=$i granul=$granul \
+        exec awk -f ../awk/loss_indiv.awk option=tfrc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfrc_indiv_$i.tr
 	}
 	if {[catch {exec grep tfrcTx temp > \
@@ -555,14 +555,14 @@ proc tfwc_results {} {
 	global freq rtt_in_sec
 
 	# THROUGHPUT
-	exec awk -f awk/tfwc_thru.awk cutoff=$cutoff trace/out.queue
-	exec awk -f awk/total_avg_thru.awk cutoff=$cutoff \
+	exec awk -f ../awk/tfwc_thru.awk cutoff=$cutoff trace/out.queue
+	exec awk -f ../awk/total_avg_thru.awk cutoff=$cutoff \
 		t_sim=$t_sim trace/out.queue
 
 	exec ../tools/indiv trace/out.queue TFWC
 	set ff [expr 2.0 * $rtt_in_sec]
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
-        exec awk -f awk/thru_indiv.awk option=tfwc ix=$i granul=$granul \
+        exec awk -f ../awk/thru_indiv.awk option=tfwc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfwc_indiv_$i.tr
 		exec ../tools/ewma tfwc thru $i $freq $cutoff \
 			trace/tfwc_indiv_$i.tr
@@ -593,22 +593,22 @@ proc tfwc_results {} {
 		$numeric_bottleneck_bandwidth
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
-	exec awk -f awk/tfwc_inst_q.awk cutoff=$cutoff trace/out.queue
+	exec awk -f ../awk/tfwc_inst_q.awk cutoff=$cutoff trace/out.queue
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
-        exec awk -f awk/q_indiv.awk option=tfwc ix=$i granul=$granul \
+        exec awk -f ../awk/q_indiv.awk option=tfwc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfwc_indiv_$i.tr
 	}
 
 	# AVERAGE RED QUEUE SIZE (aggregated red queue plot)
 	if {$queuetype == "RED"} {
-        exec awk -f awk/q_red.awk option=tfwc granul=$granul \
+        exec awk -f ../awk/q_red.awk option=tfwc granul=$granul \
 		cutoff=$cutoff trace/red_q.tr
 	}
 
 	# LOSS RATE
-	exec awk -f awk/tfwc_loss.awk cutoff=$cutoff trace/out.queue
+	exec awk -f ../awk/tfwc_loss.awk cutoff=$cutoff trace/out.queue
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
-        exec awk -f awk/loss_indiv.awk option=tfwc ix=$i granul=$granul \
+        exec awk -f ../awk/loss_indiv.awk option=tfwc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfwc_indiv_$i.tr
 	}
 	if {[catch {exec grep tfwcTx temp > \
@@ -646,7 +646,7 @@ proc tfwc_results {} {
 	exec ../tools/s_ratio trace/tfwc_smoothing.tr
 
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
-        exec awk -f awk/smoother_indiv.awk option=tfwc ix=$i granul=$granul \
+        exec awk -f ../awk/smoother_indiv.awk option=tfwc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfwc_sr_$i.tr
 	}
 
