@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Copyright(c) 2005-2008 University College London
 # All rights reserved.
