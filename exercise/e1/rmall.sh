@@ -5,7 +5,6 @@
 
 ./rmtrace.sh
 ./rmgraph.sh
-./rmarchives.sh
 rm -f temp
 
 for i in $( ls $PWD/temp.* ); do
