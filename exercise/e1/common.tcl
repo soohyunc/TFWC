@@ -96,8 +96,9 @@ set bottleneckBW_in_Bps \
 	[expr $bottleneckBW * 1000000]
 set delbw_in_bits	\
 	[expr $rtt_in_sec * $bottleneckBW_in_Bps]
-set delbw	\
-	[expr $delbw_in_bits / 8000]
+
+set pkt_size	1500; # packet size is 1500 bytes
+set delbw		[expr $delbw_in_bits / (8 * $pkt_size)]
 
 # initial cutoff time
 set cutoff	20
