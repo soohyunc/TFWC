@@ -45,10 +45,13 @@ $ns trace-all $output
 
 set queue_out [open trace/out.queue w]
 
+# hostname
+set hn [info hostname]
+
 # set pwd
 set curr_dir [pwd]
 puts ""
-puts " $curr_dir"
+puts " $hn:$curr_dir"
 
 # simulation parameters
 #set tcl_precision	6
