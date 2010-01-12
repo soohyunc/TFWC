@@ -1,3 +1,4 @@
+#!/bin/bash
 # $Id$
 
 # Initialise the simulation set up
