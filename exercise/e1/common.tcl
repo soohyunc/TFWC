@@ -355,16 +355,16 @@ proc red_plots {} {
 	global cutoff rtt_in_sec
 
 	# THROUGHPUT PLOT
-	exec gnuplot plt/red.thru.plt 2> /dev/null
+	exec gnuplot ../plt/red.thru.plt 2> /dev/null
 
 	# INSTANTANEOUS QUEUE SIZE PLOT
-	exec gnuplot plt/red.q.plt 2> /dev/null
+	exec gnuplot ../plt/red.q.plt 2> /dev/null
 
 	# AVERAGE RED QUEUE SIZE PLOT
-	exec gnuplot plt/red.avg.plt 2> /dev/null
+	exec gnuplot ../plt/red.avg.plt 2> /dev/null
 
 	# LOSS RATE PLOT
-	exec gnuplot plt/red.loss.plt 2> /dev/null
+	exec gnuplot ../plt/red.loss.plt 2> /dev/null
 
 	if {$tcp_src_num > 0} {
 	}
@@ -379,13 +379,13 @@ proc fifo_plots {} {
 	global cutoff rtt_in_sec
 
 	# THROUGHPUT PLOT
-	exec gnuplot plt/fifo.thru.plt 2> /dev/null 
+	exec gnuplot ../plt/fifo.thru.plt 2> /dev/null 
 
 	# INSTANTANEOUS QUEUE SIZE PLOT
-	exec gnuplot plt/fifo.q.plt 2> /dev/null
+	exec gnuplot ../plt/fifo.q.plt 2> /dev/null
 
 	# LOSS RATE PLOT
-	exec gnuplot plt/fifo.loss.plt 2> /dev/null
+	exec gnuplot ../plt/fifo.loss.plt 2> /dev/null
 
 	if {$tcp_src_num > 0} {
 	}
