@@ -32,7 +32,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $Header: /home/narwhal/u0/soohyunc/CVS_SERV/TFWC/ns-2.28/tcp/tfrc.cc,v 1.5 2006/07/06 16:13:53 soohyunc Exp $
+ * $Id$
  */
 
 #include <stdlib.h>
