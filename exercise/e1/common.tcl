@@ -406,25 +406,25 @@ proc tcp_results {} {
 	exec awk -f awk/total_avg_thru.awk cutoff=$cutoff \
 		t_sim=$t_sim trace/out.queue
 
-	exec ./add-on/indiv trace/out.queue tcp
+	exec ../tools/indiv trace/out.queue tcp
 
 	set ff [expr 2.0 * $rtt_in_sec]
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tcp ix=$i granul=$granul \
             cutoff=$cutoff trace/tcp_indiv_$i.tr
-		exec ./add-on/ewma tcp thru $i $freq $cutoff trace/tcp_indiv_$i.tr
-		exec ./add-on/anti-alias tcp thru $i $ff $cutoff \
+		exec ../tools/ewma tcp thru $i $freq $cutoff trace/tcp_indiv_$i.tr
+		exec ../tools/anti-alias tcp thru $i $ff $cutoff \
 			trace/tcp_ewma_thru_$i.xg
 	}
 
 	# Average Throughput for CoV plot
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
-		exec ./add-on/average_i tcp $i trace/tcp_thru_$i.xg
+		exec ../tools/average_i tcp $i trace/tcp_thru_$i.xg
 	}
 
 	# CoV per flow
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
-		exec ./add-on/cov tcp $i trace/tcp_thru_avg_$i.dat \
+		exec ../tools/cov tcp $i trace/tcp_thru_avg_$i.dat \
 		trace/tcp_thru_$i.dat $numeric_bottleneck_bandwidth
 		set cov($i) [exec cat trace/tcp_cov_$i.dat]
 	}
@@ -436,7 +436,7 @@ proc tcp_results {} {
 	}
 	#set avgCoV [expr $totCoV / $tcp_src_num]
 	#puts "average CoV	$avgCoV"
-	exec ./add-on/avg_cov tcp $totCoV $tcp_src_num \
+	exec ../tools/avg_cov tcp $totCoV $tcp_src_num \
 		$numeric_bottleneck_bandwidth
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
@@ -481,25 +481,25 @@ proc tfrc_results {} {
 	exec awk -f awk/total_avg_thru.awk cutoff=$cutoff \
 		t_sim=$t_sim trace/out.queue
 
-	exec ./add-on/indiv trace/out.queue tcpFriend
+	exec ../tools/indiv trace/out.queue tcpFriend
 
 	set ff [expr 2.0 * $rtt_in_sec]
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tfrc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfrc_indiv_$i.tr
-		exec ./add-on/ewma tfrc thru $i $freq $cutoff trace/tfrc_indiv_$i.tr
-		exec ./add-on/anti-alias tfrc thru $i $ff $cutoff \
+		exec ../tools/ewma tfrc thru $i $freq $cutoff trace/tfrc_indiv_$i.tr
+		exec ../tools/anti-alias tfrc thru $i $ff $cutoff \
 			trace/tfrc_ewma_thru_$i.xg
 	}
 
 	# Average Throughput for CoV plot
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
-		exec ./add-on/average_i tfrc $i trace/tfrc_thru_$i.xg
+		exec ../tools/average_i tfrc $i trace/tfrc_thru_$i.xg
 	}
 
 	# CoV per flow
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
-		exec ./add-on/cov tfrc $i trace/tfrc_thru_avg_$i.dat \
+		exec ../tools/cov tfrc $i trace/tfrc_thru_avg_$i.dat \
 		trace/tfrc_thru_$i.dat $numeric_bottleneck_bandwidth
 		set cov($i) [exec cat trace/tfrc_cov_$i.dat]
 	}
@@ -511,7 +511,7 @@ proc tfrc_results {} {
 	}
 	#set avgCoV [expr $totCoV / $tfrc_src_num]
 	#puts "average CoV	$avgCoV"
-	exec ./add-on/avg_cov tfrc $totCoV $tfrc_src_num \
+	exec ../tools/avg_cov tfrc $totCoV $tfrc_src_num \
 		$numeric_bottleneck_bandwidth
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
@@ -539,13 +539,13 @@ proc tfrc_results {} {
 	} else {
 		exec grep tfrcTx temp > trace/tfrc_loss_by_equation.tr
 	}
-    exec ./add-on/loss_by_eq trace/tfrc_loss_by_equation.tr tfrc
-    exec ./add-on/thru_by_eq trace/tfrc_loss_by_equation.tr tfrc
+    exec ../tools/loss_by_eq trace/tfrc_loss_by_equation.tr tfrc
+    exec ../tools/thru_by_eq trace/tfrc_loss_by_equation.tr tfrc
 
 
 	# Avg Loss Interval
 	exec grep tfrc_avg_loss_int temp > trace/tfrc_avg_int.tr
-	exec ./add-on/map trace/tfrc_avg_int.tr tfrc_avg_int
+	exec ../tools/map trace/tfrc_avg_int.tr tfrc_avg_int
 }
 
 proc tfwc_results {} {
@@ -559,25 +559,25 @@ proc tfwc_results {} {
 	exec awk -f awk/total_avg_thru.awk cutoff=$cutoff \
 		t_sim=$t_sim trace/out.queue
 
-	exec ./add-on/indiv trace/out.queue TFWC
+	exec ../tools/indiv trace/out.queue TFWC
 	set ff [expr 2.0 * $rtt_in_sec]
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
         exec awk -f awk/thru_indiv.awk option=tfwc ix=$i granul=$granul \
             cutoff=$cutoff trace/tfwc_indiv_$i.tr
-		exec ./add-on/ewma tfwc thru $i $freq $cutoff \
+		exec ../tools/ewma tfwc thru $i $freq $cutoff \
 			trace/tfwc_indiv_$i.tr
-		exec ./add-on/anti-alias tfwc thru $i $ff $cutoff \
+		exec ../tools/anti-alias tfwc thru $i $ff $cutoff \
 			trace/tfwc_ewma_thru_$i.xg
 	}
 
 	# Average Throughput for CoV plot
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
-		exec ./add-on/average_i tfwc $i trace/tfwc_thru_$i.xg
+		exec ../tools/average_i tfwc $i trace/tfwc_thru_$i.xg
 	}
 
 	# CoV per flow
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
-		exec ./add-on/cov tfwc $i trace/tfwc_thru_avg_$i.dat \
+		exec ../tools/cov tfwc $i trace/tfwc_thru_avg_$i.dat \
 		trace/tfwc_thru_$i.dat $numeric_bottleneck_bandwidth
 		set cov($i) [exec cat trace/tfwc_cov_$i.dat]
 	}
@@ -589,7 +589,7 @@ proc tfwc_results {} {
 	}
 	#set avgCoV [expr $totCoV / $tfwc_src_num]
 	#puts "average CoV	$avgCoV"
-	exec ./add-on/avg_cov tfwc $totCoV $tfwc_src_num \
+	exec ../tools/avg_cov tfwc $totCoV $tfwc_src_num \
 		$numeric_bottleneck_bandwidth
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
@@ -620,30 +620,30 @@ proc tfwc_results {} {
 			trace/tfwc_by_equation.tr
 		exec rm trace/tfwc_by_equation.tmp
 	}
-	exec ./add-on/loss_by_eq trace/tfwc_by_equation.tr tfwc
-	exec ./add-on/thru_by_eq trace/tfwc_by_equation.tr tfwc
+	exec ../tools/loss_by_eq trace/tfwc_by_equation.tr tfwc
+	exec ../tools/thru_by_eq trace/tfwc_by_equation.tr tfwc
 
 	# Loss rate calculated by TCP equation (using ALI)
 	exec grep loss_by_cal temp > trace/tfwc_loss_by_cal.tr
-	exec ./add-on/map trace/tfwc_loss_by_cal.tr tfwc_loss_by_cal
+	exec ../tools/map trace/tfwc_loss_by_cal.tr tfwc_loss_by_cal
 
 	# CWND
 	exec grep cwnd_ temp > trace/tfwc_cwnd.1
 	exec sed \$d trace/tfwc_cwnd.1 > trace/tfwc_cwnd.tr
 	exec rm trace/tfwc_cwnd.1
-	exec ./add-on/map trace/tfwc_cwnd.tr tfwc_cwnd
+	exec ../tools/map trace/tfwc_cwnd.tr tfwc_cwnd
 
 	# Avg Loss Interval
 	exec grep avg_interval_ temp > trace/tfwc_avg_int.1
 	exec sed \$d trace/tfwc_avg_int.1 > trace/tfwc_avg_int.tr
 	exec rm trace/tfwc_avg_int.1
 	exec grep pkt_drop_in_avg_hist temp > trace/tfwc_loss_in_hist.tr
-	exec ./add-on/map trace/tfwc_avg_int.tr tfwc_avg_int
-	exec ./add-on/map trace/tfwc_loss_in_hist.tr tfwc_loss_in_hist
+	exec ../tools/map trace/tfwc_avg_int.tr tfwc_avg_int
+	exec ../tools/map trace/tfwc_loss_in_hist.tr tfwc_loss_in_hist
 
 	# TFWC Smoother
 	exec grep num_inf temp > trace/tfwc_smoothing.tr
-	exec ./add-on/s_ratio trace/tfwc_smoothing.tr
+	exec ../tools/s_ratio trace/tfwc_smoothing.tr
 
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
         exec awk -f awk/smoother_indiv.awk option=tfwc ix=$i granul=$granul \
@@ -652,17 +652,17 @@ proc tfwc_results {} {
 
 	# TIMEOUT
 	exec grep TIMEOUT temp > trace/tfwc_timeout.tr
-	exec ./add-on/timeout trace/tfwc_timeout.tr
+	exec ../tools/timeout trace/tfwc_timeout.tr
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
 		for {set j 1} {$j <= $tfwc_src_num} {incr j} {
-			exec ./add-on/paste $j $tfwc_src_num $cutoff \
+			exec ../tools/paste $j $tfwc_src_num $cutoff \
 				trace/tfwc_to_$i.tr trace/tfwc_cwnd_$j.tr
 		}
 	}
 	
 	# Estimated Timeout
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
-		exec ./add-on/estimated_t0 $i $cutoff \
+		exec ../tools/estimated_t0 $i $cutoff \
 			trace/tfwc_to_$i.tr trace/tfwc_thru_$i.xg
 	}
 }
