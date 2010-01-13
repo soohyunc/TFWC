@@ -1,5 +1,5 @@
 #
-# Copyright(c) 2005-2009 University College London
+# Copyright(c) 2005-2010 University College London
 # All rights reserved.
 #
 # AUTHOR: Soo-Hyun Choi <s.choi@cs.ucl.ac.uk>
@@ -35,10 +35,13 @@
 # $Id$
 
 set	reverse_app_num	[expr $src_num / 2]
+
 set	r_app_with_tcp	[expr $reverse_app_num - \
 	($tfrc_node_num + $tfwc_node_num) / 2]
+
 set	r_app_with_tfrc	[expr $reverse_app_num - \
 	($tcp_node_num + $tfwc_node_num) / 2]
+
 set	r_app_with_tfwc	[expr $reverse_app_num - \
 	($tcp_node_num + $tfrc_node_num) / 2]
 
@@ -47,54 +50,77 @@ set	r_app_with_tfwc	[expr $reverse_app_num - \
 #
 for {set i 1} {$i <= $reverse_app_num} {incr i} {
         set reverse_tcp_src($i) [new Agent/TCP/Sack1]
-        $ns attach-agent $n(3) $reverse_tcp_src($i)
+        $ns attach-agent \
+			$n(3) \
+			$reverse_tcp_src($i)
 }
 
 #
 # Backward TCP Sink Agent
 #
-for {set i 1} {$i <= $r_app_with_tcp} {incr i} {
+for {set i 1} {$i <= $r_app_with_tcp} \
+	{incr i} {
         set reverse_tcp_sink($i) [new Agent/TCPSink/Sack1]
-        $ns attach-agent $tcp_node($i) $reverse_tcp_sink($i)
+        $ns attach-agent \
+			$tcp_node($i) \
+			$reverse_tcp_sink($i)
 }
 
 for {set i [expr $r_app_with_tcp + 1]} \
-	{$i <= [expr $r_app_with_tcp + $r_app_with_tfrc]} {incr i} {
-	set reverse_tcp_sink($i) [new Agent/TCPSink/Sack1]
-	$ns attach-agent $tfrc_node([expr $i - $r_app_with_tcp]) \
-		$reverse_tcp_sink($i)
+	{$i <= [expr $r_app_with_tcp + $r_app_with_tfrc]} \
+	{incr i} {
+		set reverse_tcp_sink($i) [new Agent/TCPSink/Sack1]
+		$ns attach-agent \
+			$tfrc_node([expr $i - $r_app_with_tcp]) \
+			$reverse_tcp_sink($i)
 }
 
 for {set i [expr $r_app_with_tcp + $r_app_with_tfrc + 1]} \
-	{$i <= $reverse_app_num} {incr i} {
-	set reverse_tcp_sink($i) [new Agent/TCPSink/Sack1]
-	$ns attach-agent $tfwc_node([expr $i - \
-		($r_app_with_tcp + $r_app_with_tfrc)]) $reverse_tcp_sink($i)
+	{$i <= $reverse_app_num} \
+	{incr i} {
+		set reverse_tcp_sink($i) [new Agent/TCPSink/Sack1]
+		$ns attach-agent \
+			$tfwc_node([expr $i - \
+			($r_app_with_tcp + $r_app_with_tfrc)]) \
+			$reverse_tcp_sink($i)
 }
 
 #
 # connections
 #
 for {set i 1} {$i <= $reverse_app_num} {incr i} {
-        $ns connect $reverse_tcp_src($i) $reverse_tcp_sink($i)
+        $ns connect \
+			$reverse_tcp_src($i) \
+			$reverse_tcp_sink($i)
 }
 
 #
 # Queue Size Setting
 #
 for {set i 1} {$i <= $r_app_with_tcp} {incr i} {
-        $ns queue-limit $n(2) $tcp_node($i)    2
+        $ns queue-limit \
+			$n(2) \
+			$tcp_node($i) \
+			2
 }
 
 for {set i [expr $r_app_with_tcp + 1]} \
-	{$i <= [expr $r_app_with_tcp + $r_app_with_tfrc]} {incr i} {
-	$ns queue-limit $n(2) $tfrc_node([expr $i - $r_app_with_tcp])    2
+	{$i <= [expr $r_app_with_tcp + $r_app_with_tfrc]} \
+	{incr i} {
+		$ns queue-limit \
+			$n(2) \
+			$tfrc_node([expr $i - $r_app_with_tcp]) \
+			2
 }
 
 for {set i [expr $r_app_with_tcp + $r_app_with_tfrc + 1]} \
-	{$i <= $reverse_app_num} {incr i} {
-	$ns queue-limit $n(2) $tfwc_node([expr $i - \
-		($r_app_with_tcp + $r_app_with_tfrc)])    2
+	{$i <= $reverse_app_num} \
+	{incr i} {
+		$ns queue-limit \
+			$n(2) \
+			$tfwc_node([expr $i - \
+			($r_app_with_tcp + $r_app_with_tfrc)]) \
+			2
 }
 
 #
