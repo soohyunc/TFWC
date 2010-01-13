@@ -1,5 +1,5 @@
 #
-# Copyright(c) 2005-2008 University College London
+# Copyright(c) 2005-2010 University College London
 # All rights reserved.
 #
 # AUTHOR: Soo-Hyun Choi <s.choi@cs.ucl.ac.uk>
@@ -40,12 +40,23 @@
 #
 # Compute delay-bandwidth product
 #
-set rtt1	[expr 2.0 * ($numeric_bottleneck_delay + $min_dly) * 0.001]
-set rtt2	[expr 2.0 * ($numeric_bottleneck_delay + $max_dly) * 0.001]
-set rtt		[expr ($rtt1 + $rtt2) / 2.0]
+set rtt1 \
+	[expr 2.0 * ($numeric_bottleneck_delay + $min_dly) * 0.001]
+
+set rtt2 \
+	[expr 2.0 * ($numeric_bottleneck_delay + $max_dly) * 0.001]
+
+set rtt \
+	[expr ($rtt1 + $rtt2) / 2.0]
+
 puts " rtt		$rtt"
-set t_dlyBW	[expr 1000000 * ($rtt * $numeric_bottleneck_bandwidth)]
-set dlyBW	[expr ($t_dlyBW / 8000)]
+
+set t_dlyBW	\
+	[expr 1000000 * ($rtt * $numeric_bottleneck_bandwidth)]
+
+set dlyBW	[\
+	expr ($t_dlyBW / (8 * 1500))]
+
 puts " dly x BW	$dlyBW in packets "
 
 #
@@ -53,8 +64,10 @@ puts " dly x BW	$dlyBW in packets "
 #
 for {set p 0.00001} {$p < 1.0} {set p [expr ($p + 0.00001)]} {
 
-	set f_p 	{[expr sqrt((2.0/3.0) * $p)] + \
-		[expr 12.0 * $p * (1.0 + 32.0 * pow($p, 2.0)) * sqrt((3.0/8.0) * $p)]}
+	set f_p \
+		{[expr sqrt((2.0/3.0) * $p)] + \
+		[expr 12.0 * $p * (1.0 + 32.0 * pow($p, 2.0)) \
+			* sqrt((3.0/8.0) * $p)]}
 
 	set t_win 	[expr (1.0 / $f_p)]
 	#puts "t_win	$t_win"
