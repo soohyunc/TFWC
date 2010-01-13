@@ -1125,8 +1125,9 @@ void TfwcAgent::new_rto(double rtt) {
 	double term2 = tmp1 * tmp2;
 
 	rto_ = (term1 + term2) * sqrt(rtt)/sqrtrtt_;
+	rto_ = .8 * rto_;
 
-	double Tx = 8000.0 / rto_;
+	double Tx = 8 * pktSize_ / rto_;
 	printf(" %f tfwcTx: %.4f rto_: %f t0_: %.4f rtt: %.5f p_: %.4f %p\n", 
 			now(), Tx, rto_, t0_, rtt, p_, this);
 }
