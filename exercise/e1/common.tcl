@@ -318,14 +318,20 @@ for {set i 1} {$i <= $tcp_app_num } {incr i} {
         $ftp($i) attach-agent $tcp_src($i)
 }
 
-for {set i [expr $tcp_app_num + 1]} {$i <= [expr $tcp_app_num + $tfrc_app_num]} {incr i} {
-	set ftp($i) [new Application/FTP]
-	$ftp($i) attach-agent $tfrc_src([expr $i - $tcp_app_num])
+for {set i [expr $tcp_app_num + 1]} \
+	{$i <= [expr $tcp_app_num + $tfrc_app_num]} \
+	{incr i} {
+		set ftp($i) [new Application/FTP]
+		$ftp($i) attach-agent \
+		$tfrc_src([expr $i - $tcp_app_num])
 }
 
-for {set i [expr $tcp_app_num + $tfrc_app_num + 1]} {$i <= $app_num} {incr i} {
-	set ftp($i) [new Application/FTP]
-	$ftp($i) attach-agent $tfwc_src([expr $i - $tcp_app_num - $tfrc_app_num])
+for {set i [expr $tcp_app_num + $tfrc_app_num + 1]} \
+	{$i <= $app_num} \
+	{incr i} {
+		set ftp($i) [new Application/FTP]
+		$ftp($i) attach-agent \
+		$tfwc_src([expr $i - $tcp_app_num - $tfrc_app_num])
 }
 
 #
