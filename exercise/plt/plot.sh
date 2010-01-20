@@ -53,6 +53,7 @@ file_count=`find . -name "$1_$2_*.xg" -type f  -exec ls {} + | wc -l`
 
 # determine the number of flows to plot
 if [ "$8" -gt 0 ]
+then
 	num_src=$8
 else
 	num_src=$file_count
