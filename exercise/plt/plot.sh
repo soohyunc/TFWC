@@ -41,7 +41,7 @@ if [ $# -lt 1 ];
 then
 	echo "Usage:"
 	echo "./plot.sh <tcp/tfrc/tfwc> <thru/loss/...> <fifo/red> \
-<x-range from> <x-range to> <y-range from> <y-range to>"
+<x-range from> <x-range to> <y-range from> <y-range to> <max no. of sources>"
 	exit
 fi
 var=$PWD
@@ -51,7 +51,15 @@ file_count=`find . -name "$1_$2_*.xg" -type f  -exec ls {} + | wc -l`
 #file_list=`find . -name "$1_$2_*.xg" -type f  -exec ls {} +`
 #for filename in $filelist ; do
 
-for i in `seq 1 $file_count`
+# determine the number of flows to plot
+if [ "$8" -gt 0 ]
+	num_src=$8
+else
+	num_src=$file_count
+fi 2> /dev/null
+
+# for loop for plotting
+for i in `seq 1 $num_src`
 do
 	if [ $i -eq "1" ];
 	then
