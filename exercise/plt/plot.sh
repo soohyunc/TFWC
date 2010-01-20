@@ -47,7 +47,13 @@ fi
 var=$PWD
 
 # count the number of files that we're plotting
-file_count=`find . -name "$1_$2_*.xg" -type f  -exec ls {} + | wc -l`
+# it can count up to 999 sources per tcp/tfrc/tfwc
+# (e.g., each tcp/tfrc/tfwc can be counted up to 999 sources.)
+tmp1=`find . -name "$1_$2_[0-9].xg" -type f  -exec ls {} + | wc -l`
+tmp2=`find . -name "$1_$2_[0-9][0-9].xg" -type f  -exec ls {} + | wc -l`
+tmp3=`find . -name "$1_$2_[0-9][0-9][0-9].xg" -type f  -exec ls {} + | wc -l`
+file_count=`expr $tmp1 + $tmp2 + $tmp3`
+
 #file_list=`find . -name "$1_$2_*.xg" -type f  -exec ls {} +`
 #for filename in $filelist ; do
 
