@@ -391,7 +391,7 @@ proc common_files {} {
 
 proc red_plots {} {
 	global tcp_src_num tfrc_src_num tfwc_src_num app_num
-	global cutoff rtt_in_sec curr_dir
+	global cutoff rtt_in_sec curr_dir t_sim
 
 	# THROUGHPUT PLOT
 	exec ../plt/red.thru.sh $curr_dir 2> /dev/null
@@ -406,16 +406,36 @@ proc red_plots {} {
 	exec ../plt/red.loss.sh $curr_dir 2> /dev/null
 
 	if {$tcp_src_num > 0} {
+		exec ../plt/plot.sh tcp thru red $cutoff $t_sim
+		exec ../plt/plot.sh tcp ewma_thru red $cutoff $t_sim
+		exec ../plt/plot.sh tcp loss red $cutoff $t_sim
+		exec ../plt/plot.sh tcp cwnd red $cutoff $t_sim
+		exec ../plt/plot.sh tcp q red $cutoff $t_sim
 	}
 	if {$tfrc_src_num > 0} {
+		exec ../plt/plot.sh tfrc thru red $cutoff $t_sim
+		exec ../plt/plot.sh tfrc ewma_thru red $cutoff $t_sim
+		exec ../plt/plot.sh tfrc loss red $cutoff $t_sim
+		exec ../plt/plot.sh tfrc cwnd red $cutoff $t_sim
+		exec ../plt/plot.sh tfrc q red $cutoff $t_sim
+		exec ../plt/plot.sh tfrc avg_int red $cutoff $t_sim
 	}
 	if {$tfwc_src_num > 0} {
+		exec ../plt/plot.sh tfwc thru red $cutoff $t_sim
+		exec ../plt/plot.sh tfwc ant_thru red $cutoff $t_sim
+		exec ../plt/plot.sh tfwc ewma_thru red $cutoff $t_sim
+		exec ../plt/plot.sh tfwc loss red $cutoff $t_sim
+		exec ../plt/plot.sh tfwc loss_by_cal red $cutoff $t_sim
+		exec ../plt/plot.sh tfwc cwnd red $cutoff $t_sim
+		exec ../plt/plot.sh tfwc q red $cutoff $t_sim
+		exec ../plt/plot.sh tfwc sr red $cutoff $t_sim
+		exec ../plt/plot.sh tfwc avg_int red $cutoff $t_sim
 	}
 }
 
 proc fifo_plots {} {
 	global tcp_src_num tfrc_src_num tfwc_src_num app_num
-	global cutoff rtt_in_sec curr_dir
+	global cutoff rtt_in_sec curr_dir t_sim 
 
 	# THROUGHPUT PLOT
 	exec ../plt/fifo.thru.sh $curr_dir 2> /dev/null
@@ -427,10 +447,30 @@ proc fifo_plots {} {
 	exec ../plt/fifo.loss.sh $curr_dir 2> /dev/null
 
 	if {$tcp_src_num > 0} {
+		exec ../plt/plot.sh tcp thru fifo $cutoff $t_sim
+		exec ../plt/plot.sh tcp ewma_thru fifo $cutoff $t_sim
+		exec ../plt/plot.sh tcp loss fifo $cutoff $t_sim
+		exec ../plt/plot.sh tcp cwnd fifo $cutoff $t_sim
+		exec ../plt/plot.sh tcp q fifo $cutoff $t_sim
 	}
 	if {$tfrc_src_num > 0} {
+		exec ../plt/plot.sh tfrc thru fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfrc ewma_thru fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfrc loss fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfrc cwnd fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfrc q fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfrc avg_int fifo $cutoff $t_sim
 	}
 	if {$tfwc_src_num > 0} {
+		exec ../plt/plot.sh tfwc thru fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfwc ant_thru fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfwc ewma_thru fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfwc loss fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfwc loss_by_cal fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfwc cwnd fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfwc q fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfwc sr fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfwc avg_int fifo $cutoff $t_sim
 	}
 }
 
