@@ -68,7 +68,8 @@ int main (int argc, char *argv[]) {
 	double prevthru = 0.0;
 	double time = 0.0;
 	int bits = 0;
-	double a = 0.025;
+	double a = 0.2;
+	bool isFirst = true;
 
 	if (fin.is_open()) {
 		// preparing for the output file
@@ -84,9 +85,17 @@ int main (int argc, char *argv[]) {
 		while (getline(fin, items)) {
 			istringstream is(items);
 			is >> stat >> currtime >> psize;
+
 			// when only received status
 			if(!strcmp(stat.c_str(), "r")) {
+				// is this the very first packet?
+				if (isFirst) {
+					time = currtime;
+					isFirst = false;
+				}
+
 				bits += psize * 8;
+
 				if (currtime-time > granul) {
 					time += granul;
 					currthru = (double)bits/1000000.0/granul;
@@ -98,7 +107,7 @@ int main (int argc, char *argv[]) {
 					}
 					prevthru = currthru;
 					currthru = 0.0; bits = 0;
-				}
+				} 
 			}
 		}
 		fin.close();
