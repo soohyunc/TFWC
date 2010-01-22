@@ -48,7 +48,7 @@ using namespace std;
 int main (int argc, char *argv[]) {
 
 	if (argc < 5) {
-		cout << "Usage: ./ewma [tcp|tfrc|tfwc] [thru|loss|...] [index] [granul] [cutoff] [trace_file]" << endl;
+		cout << "Usage: ./ewma [tcp|tfrc|tfwc] [thru|loss|...] [index] [granul] [scaling factor] [cutoff] [trace_file]" << endl;
 		exit (0);
 	}
 
@@ -56,8 +56,9 @@ int main (int argc, char *argv[]) {
 	string signal = argv[2];
 	int index = atoi(argv[3]);
 	double granul = atof(argv[4]);
-	double cutoff = atof(argv[5]);
-	ifstream fin (argv[6]); 
+	int scale = atoi(argv[5]);
+	double cutoff = atof(argv[6]);
+	ifstream fin (argv[7]); 
 	ofstream fout_xg, fout_tr;
 
 	// variables
@@ -68,8 +69,7 @@ int main (int argc, char *argv[]) {
 	double prevthru = 0.0;
 	double time = 0.0;
 	int bits = 0;
-	double a = 0.2;
-	bool isFirst = true;
+	double a = 0.1;
 
 	if (fin.is_open()) {
 		// preparing for the output file
@@ -88,26 +88,28 @@ int main (int argc, char *argv[]) {
 
 			// when only received status
 			if(!strcmp(stat.c_str(), "r")) {
-				// is this the very first packet?
-				if (isFirst) {
-					time = currtime;
-					isFirst = false;
-				}
-
+				// add bits
 				bits += psize * 8;
-
 				if (currtime-time > granul) {
-					time += granul;
-					currthru = (double)bits/1000000.0/granul;
+					// timestamp
+					time = currtime + granul;
+
+					// thru = bits/second
+					// but, it needs to be divided by the scaling factor
+					// (remember that we have oversampled!)
+					currthru = (double)bits/1000000/granul/scale;
+
+					// EWMA equation
 					currthru = a * currthru + (1-a) * prevthru;
+
 					if (currtime > cutoff)  {
 						fout_xg << time << " " << currthru << endl;
 						fout_tr << stat << " " << time << " " 
 							<< psize << endl;
-					}
+					} // cutoff
 					prevthru = currthru;
 					currthru = 0.0; bits = 0;
-				} 
+				}
 			}
 		}
 		fin.close();
