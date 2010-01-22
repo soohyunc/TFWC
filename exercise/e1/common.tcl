@@ -104,7 +104,7 @@ set delbw		[expr $delbw_in_bits / (8 * $pkt_size)]
 set cutoff	20
 
 # gnuplot sampling granularity
-set granul [expr 4.0 * $rtt_in_sec]
+set granul [expr $rtt_in_sec]
 
 puts ""
 puts " Bandwidth-Delay Product		$delbw	packets"
@@ -291,11 +291,12 @@ if {$queuetype =="RED"} {
 }
 
 # frequence variables
-if { $granul < 1 } {
-	set granul	1; # if granul is too small, we use 1 sec granularity
-}
+#if { $granul < 1 } {
+#	set granul	1; # if granul is too small, we use 1 sec granularity
+#}
 set tcl_precision 6
-set freq [expr $rtt_in_sec/8.0]
+set factor 10;	# over sampling factor
+set freq [expr $rtt_in_sec/$factor]
 puts " sampling freq: $freq"
 set tcl_precision 16
 #
@@ -408,6 +409,7 @@ proc red_plots {} {
 	if {$tcp_src_num > 0} {
 		exec ../plt/plot.sh tcp thru red $cutoff $t_sim
 		exec ../plt/plot.sh tcp ewma_thru red $cutoff $t_sim
+		exec ../plt/plot.sh tcp ant_thru red $cutoff $t_sim
 		exec ../plt/plot.sh tcp loss red $cutoff $t_sim
 		exec ../plt/plot.sh tcp cwnd red $cutoff $t_sim
 		exec ../plt/plot.sh tcp q red $cutoff $t_sim
@@ -415,6 +417,7 @@ proc red_plots {} {
 	if {$tfrc_src_num > 0} {
 		exec ../plt/plot.sh tfrc thru red $cutoff $t_sim
 		exec ../plt/plot.sh tfrc ewma_thru red $cutoff $t_sim
+		exec ../plt/plot.sh tfrc ant_thru red $cutoff $t_sim
 		exec ../plt/plot.sh tfrc loss red $cutoff $t_sim
 		exec ../plt/plot.sh tfrc cwnd red $cutoff $t_sim
 		exec ../plt/plot.sh tfrc q red $cutoff $t_sim
@@ -422,8 +425,8 @@ proc red_plots {} {
 	}
 	if {$tfwc_src_num > 0} {
 		exec ../plt/plot.sh tfwc thru red $cutoff $t_sim
-		exec ../plt/plot.sh tfwc ant_thru red $cutoff $t_sim
 		exec ../plt/plot.sh tfwc ewma_thru red $cutoff $t_sim
+		exec ../plt/plot.sh tfwc ant_thru red $cutoff $t_sim
 		exec ../plt/plot.sh tfwc loss red $cutoff $t_sim
 		exec ../plt/plot.sh tfwc loss_by_cal red $cutoff $t_sim
 		exec ../plt/plot.sh tfwc cwnd red $cutoff $t_sim
@@ -449,6 +452,7 @@ proc fifo_plots {} {
 	if {$tcp_src_num > 0} {
 		exec ../plt/plot.sh tcp thru fifo $cutoff $t_sim
 		exec ../plt/plot.sh tcp ewma_thru fifo $cutoff $t_sim
+		exec ../plt/plot.sh tcp ant_thru fifo $cutoff $t_sim
 		exec ../plt/plot.sh tcp loss fifo $cutoff $t_sim
 		exec ../plt/plot.sh tcp cwnd fifo $cutoff $t_sim
 		exec ../plt/plot.sh tcp q fifo $cutoff $t_sim
@@ -456,6 +460,7 @@ proc fifo_plots {} {
 	if {$tfrc_src_num > 0} {
 		exec ../plt/plot.sh tfrc thru fifo $cutoff $t_sim
 		exec ../plt/plot.sh tfrc ewma_thru fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfrc ant_thru fifo $cutoff $t_sim
 		exec ../plt/plot.sh tfrc loss fifo $cutoff $t_sim
 		exec ../plt/plot.sh tfrc cwnd fifo $cutoff $t_sim
 		exec ../plt/plot.sh tfrc q fifo $cutoff $t_sim
@@ -463,8 +468,8 @@ proc fifo_plots {} {
 	}
 	if {$tfwc_src_num > 0} {
 		exec ../plt/plot.sh tfwc thru fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfwc ant_thru fifo $cutoff $t_sim
 		exec ../plt/plot.sh tfwc ewma_thru fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfwc ant_thru fifo $cutoff $t_sim
 		exec ../plt/plot.sh tfwc loss fifo $cutoff $t_sim
 		exec ../plt/plot.sh tfwc loss_by_cal fifo $cutoff $t_sim
 		exec ../plt/plot.sh tfwc cwnd fifo $cutoff $t_sim
@@ -478,7 +483,7 @@ proc tcp_results {} {
 	global queuetype tcp_src_num
 	global cutoff t_sim src_num granul 
 	global numeric_bottleneck_bandwidth
-	global freq rtt_in_sec
+	global freq factor rtt_in_sec
 
 	# THROUGHPUT
 	exec awk -f ../awk/tcp_thru.awk \
@@ -491,7 +496,7 @@ proc tcp_results {} {
 
 	exec ../tools/indiv trace/out.queue tcp
 
-	set ff [expr 2.0 * $rtt_in_sec]
+	set ff [expr $rtt_in_sec/2.0]
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
         exec awk -f ../awk/thru_indiv.awk \
 					option=tcp \
@@ -502,6 +507,7 @@ proc tcp_results {} {
 		exec ../tools/ewma tcp thru \
 				$i \
 				$freq \
+				$factor \
 				$cutoff \
 				trace/tcp_indiv_$i.tr
 		exec ../tools/anti-alias tcp thru \
@@ -588,7 +594,7 @@ proc tfrc_results {} {
 	global queuetype tfrc_src_num
 	global cutoff t_sim src_num granul 
 	global numeric_bottleneck_bandwidth
-	global freq rtt_in_sec
+	global freq factor rtt_in_sec
 
 	# THROUGHPUT
 	exec awk -f ../awk/tfrc_thru.awk \
@@ -601,7 +607,7 @@ proc tfrc_results {} {
 
 	exec ../tools/indiv trace/out.queue tcpFriend
 
-	set ff [expr 2.0 * $rtt_in_sec]
+	set ff [expr $rtt_in_sec/2.0]
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
         exec awk -f ../awk/thru_indiv.awk \
 					option=tfrc \
@@ -612,6 +618,7 @@ proc tfrc_results {} {
 		exec ../tools/ewma tfrc thru \
 				$i \
 				$freq \
+				$factor \
 				$cutoff \
 				trace/tfrc_indiv_$i.tr
 		exec ../tools/anti-alias tfrc thru \
@@ -701,7 +708,7 @@ proc tfwc_results {} {
 	global queuetype tfwc_src_num
 	global cutoff t_sim src_num granul
 	global numeric_bottleneck_bandwidth
-	global freq rtt_in_sec
+	global freq factor rtt_in_sec
 
 	# THROUGHPUT
 	exec awk -f ../awk/tfwc_thru.awk \
@@ -713,7 +720,7 @@ proc tfwc_results {} {
 				trace/out.queue
 
 	exec ../tools/indiv trace/out.queue TFWC
-	set ff [expr 2.0 * $rtt_in_sec]
+	set ff [expr $rtt_in_sec/2.0]
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
         exec awk -f ../awk/thru_indiv.awk \
 					option=tfwc \
@@ -724,6 +731,7 @@ proc tfwc_results {} {
 		exec ../tools/ewma tfwc thru \
 				$i \
 				$freq \
+				$factor \
 				$cutoff \
 				trace/tfwc_indiv_$i.tr
 		exec ../tools/anti-alias tfwc thru \
