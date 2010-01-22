@@ -65,7 +65,6 @@ int main (int argc, char *argv[]) {
 	double currtime;
 	double currthru = 0.0;
 	double time = 0.0;
-	bool isFirst = true;
 
 	if (fin.is_open()) {
 		// preparing for the output file
@@ -79,14 +78,8 @@ int main (int argc, char *argv[]) {
 			istringstream is(items);
 			is >> currtime >> currthru;
 
-			// is this the very first packet?
-			if (isFirst) {
-				time = currtime;
-				isFirst = false;
-			}
-
 			if (currtime-time > granul) {
-				time += granul;
+				time = currtime + granul;
 				if (currtime > cutoff)
 					fout << time << " " << currthru << endl;
 			}
