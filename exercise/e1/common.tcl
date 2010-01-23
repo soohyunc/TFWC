@@ -828,7 +828,7 @@ proc tfwc_results {} {
 					trace/tfwc_indiv_$i.tr
 		exec ../tools/ewma tfwc thru \
 				$i \
-				$freq \
+				$freq($i) \
 				$factor($i) \
 				$cutoff \
 				trace/tfwc_indiv_$i.tr
