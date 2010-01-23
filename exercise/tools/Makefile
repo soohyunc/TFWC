@@ -27,8 +27,10 @@ all: $(SRCS)
 	$(CPP) $(CFLAGS) estimated_t0.cc -o estimated_t0
 	$(CPP) $(CFLAGS) anti-alias.cc -o anti-alias
 	$(CPP) $(CFLAGS) ewma.cc -o ewma
+	$(CPP) $(CFLAGS) ipa.cc -o ipa
 
 clean:
 	$(RM) minmax fairness round breakline cov average map indiv timeout ewma \
-loss_by_eq thru_by_eq s_ratio paste average_i estimated_t0 avg_cov anti-alias
+loss_by_eq thru_by_eq s_ratio paste average_i estimated_t0 avg_cov anti-alias \
+ipa
 
