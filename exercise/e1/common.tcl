@@ -525,7 +525,7 @@ proc tcp_results {} {
 	# get back to the default Tcl precision
 	set tcl_precision 16
 
-	set ff [expr $rtt_in_sec]
+	set ff [expr 2 * $rtt_in_sec]
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
         exec awk -f ../awk/thru_indiv.awk \
 					option=tcp \
@@ -669,7 +669,7 @@ proc tfrc_results {} {
 	# get back to the default Tcl precision
 	set tcl_precision 16
 
-	set ff [expr $rtt_in_sec]
+	set ff [expr 2 * $rtt_in_sec]
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
         exec awk -f ../awk/thru_indiv.awk \
 					option=tfrc \
@@ -818,7 +818,7 @@ proc tfwc_results {} {
 	# get back to the default Tcl precision
 	set tcl_precision 16
 
-	set ff [expr $rtt_in_sec]
+	set ff [expr 2 * $rtt_in_sec]
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
         exec awk -f ../awk/thru_indiv.awk \
 					option=tfwc \
