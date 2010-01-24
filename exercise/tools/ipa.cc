@@ -70,7 +70,7 @@ int main (int argc, char *argv[]) {
 	double tot = 0.0;
 	double avg = 0.0;		// arithmetic average
 	double median = 0.0;	// median
-	double div = 0.0;		// standard diviation
+	//double div = 0.0;		// standard diviation
 	int count = 0;			// total number of intervals
 	int vsize = 0;			// vector size (should be equal to count)
 
