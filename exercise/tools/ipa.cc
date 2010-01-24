@@ -33,13 +33,14 @@
  * $Id$
  */
 
-// EWMA Low-pass Filter
-// Usage: ./ewma [tcp|tfrc|tfwc] [index] [granul] [cutoff] [trace_file] 
+// inter-packet interval calculator
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <algorithm>
+#include <vector>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -66,7 +67,16 @@ int main (int argc, char *argv[]) {
 	double currtime = 0.0;
 	double prevtime = 0.0;
 	double diff = 0.0;
-	int count = 0;
+	double tot = 0.0;
+	double avg = 0.0;		// arithmetic average
+	double median = 0.0;	// median
+	double div = 0.0;		// standard diviation
+	int count = 0;			// total number of intervals
+	int vsize = 0;			// vector size (should be equal to count)
+
+	// inter-arrival vector
+	vector<double> iav;
+	vector<double>::iterator itr;
 
 	if (fin.is_open()) {
 		// preparing for the output file
@@ -82,14 +92,38 @@ int main (int argc, char *argv[]) {
 			// when only received status
 			if(!strcmp(stat.c_str(), "r")) {
 				if (currtime > cutoff) {
-					diff += (currtime - prevtime);
+					diff = currtime - prevtime;
+
+					iav.push_back(diff);
+					tot += diff;
 					count++;
+
+					cout << count << " " << diff << endl;
 				}
 				prevtime = currtime;
 			}
 		}
-		diff = diff/count;
-		fout << diff << endl;
+
+		// sort inter-arrival time
+		sort (iav.begin(), iav.end());
+		vsize = iav.size();
+
+		if (vsize%2) {
+			// vsize is odd number
+			median = iav.at((vsize + 1)/2);	
+		} else {
+			// vsize is even number
+			median = iav.at(vsize/2) +iav.at(vsize/2 + 1);
+			median /= 2;
+		}
+
+		// median
+		fout << median << endl;
+
+		// arithmetic average
+		avg = tot/count;
+		//cout << avg << endl;
+		//fout << avg << endl;
 
 		fin.close();
 		fout.close();
