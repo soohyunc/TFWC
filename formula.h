@@ -57,7 +57,7 @@ static double p_to_b(double p, double rtt, double tzero, int psize, int bval)
 
 	double now = Scheduler::instance().clock();
 	double Tx = 8.0 * res;	// unit of Tx is "bits" per second
-	printf (" %f tfrcTx: %.4f temp: %f rtt: %.5f tzero: %.4f p: %.4f", 
+	printf (" %f tfrcTx: %.4f temp: %f rtt: %.5f tzero: %.4f p: %.4f\n", 
 			now, Tx, temp, rtt, tzero, p);
 
 	return res;
