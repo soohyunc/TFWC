@@ -64,7 +64,9 @@ int main (int argc, char *argv[]) {
 	string items, stat;
 	double currtime;
 	double currthru = 0.0;
+	double tot = 0.0;
 	double time = 0.0;
+	int count = 0;
 
 	if (fin.is_open()) {
 		// preparing for the output file
@@ -77,11 +79,13 @@ int main (int argc, char *argv[]) {
 		while (getline(fin, items)) {
 			istringstream is(items);
 			is >> currtime >> currthru;
-
+			tot += currthru;
+			count++;
 			if (currtime-time > granul) {
 				time = currtime + granul;
 				if (currtime > cutoff)
-					fout << time << " " << currthru << endl;
+					fout << time << " " << tot/count << endl;
+				tot = 0.0; count = 0;
 			}
 		}
 		fin.close();
