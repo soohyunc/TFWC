@@ -51,7 +51,8 @@ BEGIN {
 
 		if (($2 - time) > granul) {
 			time = time + granul;
-			rate = ((bits-last_bits)/1000000)/granul;
+			rate = (bits-last_bits)/granul;
+			rate /= 1000000;
 
 			if ($2 > cutoff) 
 				print time, rate >> "trace/tcp_thru.xg";

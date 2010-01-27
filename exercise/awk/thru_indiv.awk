@@ -15,8 +15,11 @@ BEGIN{
 		bits += $3 * 8;
 
 		if (($2 - time) > granul) {
+			# bits/sec
 			time += granul;
-			thru = ((bits-last_bits)/1000000)/granul;
+			thru = (bits-last_bits)/granul;
+			# convert to Mb/s
+			thru /= 1000000;
 
 			if ($2 > cutoff)
 				print time,thru >> "trace/"option"_thru_"ix".xg";
@@ -34,7 +37,6 @@ BEGIN{
 			time += granul;
 		} # end of while
 	} #end of if ($1 == "r")
-
 }
 
 END{}
