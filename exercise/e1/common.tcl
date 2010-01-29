@@ -493,7 +493,8 @@ proc tcp_results {} {
 	#this will generate per flow trace files
 	exec ../tools/indiv trace/out.queue tcp
 
-	# capture inter-packet arrival time (rough average)
+	# capture inter-packet arrival time
+	# (this is median value instead of arithmetic average)
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
 		exec ../tools/ipa tcp ipa \
 				$i \
@@ -504,28 +505,43 @@ proc tcp_results {} {
 	# avoid unnecessary long floating point value
 	set tcl_precision 6
 	# set over-sampling frequency for EWMA
-	set max_factor 10;	# maximum over sampling factor
-	for {set i 1} {$i <= $tcp_src_num} {incr i} {
-		set max_freq($i) [expr $rtt_in_sec/$max_factor]
-		
-		# inter-packet arrival (IPA) time per flow
-		set ipa($i) [exec cat trace/tcp_ipa_$i.dat]
-	
-		# the over-sampling frequency shouldn't go beyond IPA time
-		if {$ipa($i) > $max_freq($i)} {
-			set freq($i) $ipa($i)
-			set factor($i) [expr $rtt_in_sec/$freq($i)]
-		} else {
-			set freq($i) $max_freq($i)
-			set factor($i) $max_factor
-		}
-		puts " tcp ewma sampling freq($i): $freq($i)"
-		puts " tcp ewma sampling factor($i): $factor($i)"
+	if {$rtt_in_sec < 0.05} {
+		set max_factor .1
+	} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
+		set max_factor .25
+	} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
+		set max_factor .5
+	} else {
+		set max_factor 4
 	}
-	# get back to the default Tcl precision
+	set freq [expr $rtt_in_sec/$max_factor]
+	if {$freq > 0.5} {
+		set freq 0.5
+	}
+	set ff [expr 10 * $rtt_in_sec]
+	if {$ff > 0.5} {
+		set ff 0.5
+	}
 	set tcl_precision 16
 
-	set ff [expr 2 * $rtt_in_sec]
+#	for {set i 1} {$i <= $tcp_src_num} {incr i} {
+#		set max_freq($i) [expr $rtt_in_sec/$max_factor]
+#		
+#		# inter-packet arrival (IPA) time per flow
+#		set ipa($i) [exec cat trace/tcp_ipa_$i.dat]
+#	
+#		# the over-sampling frequency shouldn't go beyond IPA time
+#		if {$ipa($i) > $max_freq($i)} {
+#			set freq($i) $ipa($i)
+#			set factor($i) [expr $rtt_in_sec/$freq($i)]
+#		} else {
+#			set freq($i) $max_freq($i)
+#			set factor($i) $max_factor
+#		}
+#		puts " tcp ewma sampling freq($i): $freq($i)"
+#		puts " tcp ewma sampling factor($i): $factor($i)"
+#	}
+
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
         exec awk -f ../awk/thru_indiv.awk \
 					option=tcp \
@@ -535,8 +551,7 @@ proc tcp_results {} {
 					trace/tcp_indiv_$i.tr
 		exec ../tools/ewma tcp thru \
 				$i \
-				$freq($i) \
-				$factor($i) \
+				$freq \
 				$cutoff \
 				trace/tcp_indiv_$i.tr
 		exec ../tools/anti-alias tcp thru \
@@ -637,7 +652,8 @@ proc tfrc_results {} {
 	#this will generate per flow trace files
 	exec ../tools/indiv trace/out.queue tcpFriend
 
-	# capture inter-packet arrival time (rough average)
+	# capture inter-packet arrival time
+	# (this is median value instead of arithmetic average)
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
 		exec ../tools/ipa tfrc ipa \
 				$i \
@@ -648,28 +664,37 @@ proc tfrc_results {} {
 	# avoid unnecessary long floating point value
 	set tcl_precision 6
 	# set over-sampling frequency for EWMA
-	set max_factor 10;	# maximum over sampling factor
-	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
-		set max_freq($i) [expr $rtt_in_sec/$max_factor]
-		
-		# inter-packet arrival (IPA) time per flow
-		set ipa($i) [exec cat trace/tfrc_ipa_$i.dat]
-	
-		# the over-sampling frequency shouldn't go beyond IPA time
-		if {$ipa($i) > $max_freq($i)} {
-			set freq($i) $ipa($i)
-			set factor($i) [expr $rtt_in_sec/$freq($i)]
-		} else {
-			set freq($i) $max_freq($i)
-			set factor($i) $max_factor
-		}
-		puts " tfrc ewma sampling freq($i): $freq($i)"
-		puts " tfrc ewma sampling factor($i): $factor($i)"
+	if {$rtt_in_sec < 0.05} {
+		set max_factor .1
+	} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
+		set max_factor .5
+	} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
+		set max_factor 1
+	} else {
+		set max_factor 4
 	}
-	# get back to the default Tcl precision
+	set freq [expr $rtt_in_sec/$max_factor]
+	set ff [expr 4 * $rtt_in_sec]
 	set tcl_precision 16
 
-	set ff [expr 2 * $rtt_in_sec]
+#	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
+#		set max_freq($i) [expr $rtt_in_sec/$max_factor]
+#		
+#		# inter-packet arrival (IPA) time per flow
+#		set ipa($i) [exec cat trace/tfrc_ipa_$i.dat]
+#	
+#		# the over-sampling frequency shouldn't go beyond IPA time
+#		if {$ipa($i) > $max_freq($i)} {
+#			set freq($i) $ipa($i)
+#			set factor($i) [expr $rtt_in_sec/$freq($i)]
+#		} else {
+#			set freq($i) $max_freq($i)
+#			set factor($i) $max_factor
+#		}
+#		puts " tfrc ewma sampling freq($i): $freq($i)"
+#		puts " tfrc ewma sampling factor($i): $factor($i)"
+#	}
+
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
         exec awk -f ../awk/thru_indiv.awk \
 					option=tfrc \
@@ -679,8 +704,7 @@ proc tfrc_results {} {
 					trace/tfrc_indiv_$i.tr
 		exec ../tools/ewma tfrc thru \
 				$i \
-				$freq($i) \
-				$factor($i) \
+				$freq \
 				$cutoff \
 				trace/tfrc_indiv_$i.tr
 		exec ../tools/anti-alias tfrc thru \
@@ -786,7 +810,8 @@ proc tfwc_results {} {
 	#this will generate per flow trace files
 	exec ../tools/indiv trace/out.queue TFWC
 
-	# capture inter-packet arrival time (rough average)
+	# capture inter-packet arrival time
+	# (this is median value instead of arithmetic average)
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
 		exec ../tools/ipa tfwc ipa \
 				$i \
@@ -797,28 +822,43 @@ proc tfwc_results {} {
 	# avoid unnecessary long floating point value
 	set tcl_precision 6
 	# set over-sampling frequency for EWMA
-	set max_factor 10;	# maximum over sampling factor
-	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
-		set max_freq($i) [expr $rtt_in_sec/$max_factor]
-		
-		# inter-packet arrival (IPA) time per flow
-		set ipa($i) [exec cat trace/tfwc_ipa_$i.dat]
-	
-		# the over-sampling frequency shouldn't go beyond IPA time
-		if {$ipa($i) > $max_freq($i)} {
-			set freq($i) $ipa($i)
-			set factor($i) [expr $rtt_in_sec/$freq($i)]
-		} else {
-			set freq($i) $max_freq($i)
-			set factor($i) $max_factor
-		}
-		puts " tfwc ewma sampling freq($i): $freq($i)"
-		puts " tfwc ewma sampling factor($i): $factor($i)"
+	if {$rtt_in_sec < 0.05} {
+		set max_factor .1
+	} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
+		set max_factor .25
+	} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
+		set max_factor .5
+	} else {
+		set max_factor 4
 	}
-	# get back to the default Tcl precision
+	set freq [expr $rtt_in_sec/$max_factor]
+	if {$freq > 0.5 } {
+		set freq 0.5
+	}
+	set ff [expr 10 * $rtt_in_sec]
+	if {$ff > 0.5} {
+		set ff 0.5
+	}
 	set tcl_precision 16
 
-	set ff [expr 2 * $rtt_in_sec]
+#	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
+#		set max_freq($i) [expr $rtt_in_sec/$max_factor]
+#		
+#		# inter-packet arrival (IPA) time per flow
+#		set ipa($i) [exec cat trace/tfwc_ipa_$i.dat]
+#	
+#		# the over-sampling frequency shouldn't go beyond IPA time
+#		if {$ipa($i) > $max_freq($i)} {
+#			set freq($i) $ipa($i)
+#			set factor($i) [expr $rtt_in_sec/$freq($i)]
+#		} else {
+#			set freq($i) $max_freq($i)
+#			set factor($i) $max_factor
+#		}
+#		puts " tfwc ewma sampling freq($i): $freq($i)"
+#		puts " tfwc ewma sampling factor($i): $factor($i)"
+#	}
+
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
         exec awk -f ../awk/thru_indiv.awk \
 					option=tfwc \
@@ -828,8 +868,7 @@ proc tfwc_results {} {
 					trace/tfwc_indiv_$i.tr
 		exec ../tools/ewma tfwc thru \
 				$i \
-				$freq($i) \
-				$factor($i) \
+				$freq \
 				$cutoff \
 				trace/tfwc_indiv_$i.tr
 		exec ../tools/anti-alias tfwc thru \
