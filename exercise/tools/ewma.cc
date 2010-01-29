@@ -68,7 +68,7 @@ int main (int argc, char *argv[]) {
 	double prevthru = 0.0;
 	double time = 0.0;
 	int bits = 0;
-	double a = 0.2;
+	double a = 0.05;
 
 	if (fin.is_open()) {
 		// preparing for the output file
