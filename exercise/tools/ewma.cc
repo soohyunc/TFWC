@@ -48,7 +48,7 @@ using namespace std;
 int main (int argc, char *argv[]) {
 
 	if (argc < 5) {
-		cout << "Usage: ./ewma [tcp|tfrc|tfwc] [thru|loss|...] [index] [granul] [scaling factor] [cutoff] [trace_file]" << endl;
+		cout << "Usage: ./ewma [tcp|tfrc|tfwc] [thru|loss|...] [index] [granul] [cutoff] [trace_file]" << endl;
 		exit (0);
 	}
 
@@ -56,9 +56,8 @@ int main (int argc, char *argv[]) {
 	string signal = argv[2];
 	int index = atoi(argv[3]);
 	double granul = atof(argv[4]);
-	int scale = atoi(argv[5]);
-	double cutoff = atof(argv[6]);
-	ifstream fin (argv[7]); 
+	double cutoff = atof(argv[5]);
+	ifstream fin (argv[6]); 
 	ofstream fout_xg, fout_tr;
 
 	// variables
@@ -69,7 +68,7 @@ int main (int argc, char *argv[]) {
 	double prevthru = 0.0;
 	double time = 0.0;
 	int bits = 0;
-	double a = 0.1;
+	double a = 0.2;
 
 	if (fin.is_open()) {
 		// preparing for the output file
@@ -89,15 +88,16 @@ int main (int argc, char *argv[]) {
 			// when only received status
 			if(!strcmp(stat.c_str(), "r")) {
 				// add bits
-				bits += psize * 8;
+				if (currtime-time <= granul)
+					bits += psize * 8;
+
 				if (currtime-time > granul) {
 					// timestamp
-					time = currtime + granul;
-
-					// thru = bits/second
-					// but, it needs to be divided by the scaling factor
-					// (remember that we have oversampled!)
-					currthru = (double)bits/1000000/granul/scale;
+					time += granul;
+					// currthru = bits/second
+					currthru = (double)bits/granul;
+					// Mb/s
+					currthru /= 1000000.0;
 
 					// EWMA equation
 					currthru = a * currthru + (1-a) * prevthru;
@@ -106,17 +106,37 @@ int main (int argc, char *argv[]) {
 						fout_xg << time << " " << currthru << endl;
 						fout_tr << stat << " " << time << " " 
 							<< psize << endl;
-					} // cutoff
+					}
 					prevthru = currthru;
-					currthru = 0.0; bits = 0;
+					bits = psize * 8;
 				}
-			}
-		}
+
+				// we still need do EWMA while this condition is met
+				while (currtime-time > 2 * granul) {
+					// move timestamp
+					time += granul;
+					// leftover bits
+					currthru = (double)bits/granul;
+					currthru /= 1000000.0;
+					// EWMA
+					currthru = a * currthru + (1-a) * prevthru;
+
+					if (currtime > cutoff)
+						fout_xg << time << " " << currthru << endl;
+
+					// store currthru
+					prevthru = currthru;
+					// init bits
+					bits = 0.0;
+				}
+			} // if received
+		} // while
+
 		fin.close();
 		fout_xg.close();
 		fout_tr.close();
 	} else {
-		cout << "Unable to open file!: " << argv[5] << endl;
+			cout << "Unable to open file!: " << argv[6] << endl;
 	}
 
 	return 0;
