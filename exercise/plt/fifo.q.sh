@@ -36,6 +36,27 @@
 #
 # $Id$
 
+if [ -f "$1/trace/tcp_q.xg" ];
+then
+    echo ""
+else
+    echo "20 0" > "$1/trace/tcp_q.xg"
+fi
+
+if [ -f "$1/trace/tfrc_q.xg" ];
+then
+    echo ""
+else
+    echo "20 0" > "$1/trace/tfrc_q.xg"
+fi
+
+if [ -f "$1/trace/tfwc_q.xg" ];
+then
+    echo ""
+else
+    echo "20 0" > "$1/trace/tfwc_q.xg"
+fi
+
 gnuplot -persist << EOF
 	set     terminal        png
 	set     output          "$1/graph/aggr_fifo_q.png"
