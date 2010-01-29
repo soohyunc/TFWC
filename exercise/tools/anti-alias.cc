@@ -82,7 +82,7 @@ int main (int argc, char *argv[]) {
 			tot += currthru;
 			count++;
 			if (currtime-time > granul) {
-				time = currtime + granul;
+				time += granul;
 				if (currtime > cutoff)
 					fout << time << " " << tot/count << endl;
 				tot = 0.0; count = 0;
