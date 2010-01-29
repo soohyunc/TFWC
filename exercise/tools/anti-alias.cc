@@ -79,13 +79,22 @@ int main (int argc, char *argv[]) {
 		while (getline(fin, items)) {
 			istringstream is(items);
 			is >> currtime >> currthru;
-			tot += currthru;
-			count++;
-			if (currtime-time > granul) {
+
+			if (currtime-time < granul){
+				tot += currthru;
+				count++;
+			}
+
+			if (currtime-time >= granul) {
 				time += granul;
 				if (currtime > cutoff)
 					fout << time << " " << tot/count << endl;
 				tot = 0.0; count = 0;
+			}
+			while (currtime-time >= 2 * granul) {
+				time += granul;
+				//if (currtime > cutoff)
+				//	fout << time << " " << gap << endl;
 			}
 		}
 		fin.close();
