@@ -127,7 +127,7 @@ int main (int argc, char *argv[]) {
 					// store currthru
 					prevthru = currthru;
 					// init bits
-					bits = 0.0;
+					bits = 0;
 				}
 			} // if received
 		} // while
