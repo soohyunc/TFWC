@@ -48,7 +48,7 @@ using namespace std;
 int main (int argc, char *argv[]) {
 
 	if (argc < 5) {
-		cout << "Usage: ./ewma [tcp|tfrc|tfwc] [thru|loss|...] [index] [granul] [cutoff] [trace_file]" << endl;
+		cout << "Usage: ./ewma [tcp|tfrc|tfwc] [thru|loss|...] [index] [granul] [coefficient] [cutoff] [trace_file]" << endl;
 		exit (0);
 	}
 
@@ -56,8 +56,9 @@ int main (int argc, char *argv[]) {
 	string signal = argv[2];
 	int index = atoi(argv[3]);
 	double granul = atof(argv[4]);
-	double cutoff = atof(argv[5]);
-	ifstream fin (argv[6]); 
+	double a = atof(argv[5]);
+	double cutoff = atof(argv[6]);
+	ifstream fin (argv[7]); 
 	ofstream fout_xg, fout_tr;
 
 	// variables
@@ -68,7 +69,6 @@ int main (int argc, char *argv[]) {
 	double prevthru = 0.0;
 	double time = 0.0;
 	int bits = 0;
-	double a = 0.05;
 
 	if (fin.is_open()) {
 		// preparing for the output file
