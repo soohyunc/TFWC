@@ -36,6 +36,27 @@
 #
 # $Id$
 
+if [ -f "$1/trace/tcp_red_avg.xg" ];
+then
+    echo ""
+else
+    echo "20 0" > "$1/trace/tcp_red_avg.xg"
+fi
+
+if [ -f "$1/trace/tfrc_red_avg.xg" ];
+then
+    echo ""
+else
+    echo "20 0" > "$1/trace/tfrc_red_avg.xg"
+fi
+
+if [ -f "$1/trace/tfwc_red_avg.xg" ];
+then
+    echo ""
+else
+    echo "20 0" > "$1/trace/tfwc_red_avg.xg"
+fi
+
 gnuplot -persist << EOF
 set     terminal        png
 set     output          "$1/graph/aggr_red_avg.png"
