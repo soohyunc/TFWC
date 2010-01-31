@@ -552,6 +552,7 @@ proc tcp_results {} {
 		exec ../tools/ewma tcp thru \
 				$i \
 				$freq \
+				0.05 \
 				$cutoff \
 				trace/tcp_indiv_$i.tr
 		exec ../tools/anti-alias tcp thru \
@@ -705,6 +706,7 @@ proc tfrc_results {} {
 		exec ../tools/ewma tfrc thru \
 				$i \
 				$freq \
+				0.05 \
 				$cutoff \
 				trace/tfrc_indiv_$i.tr
 		exec ../tools/anti-alias tfrc thru \
@@ -869,6 +871,7 @@ proc tfwc_results {} {
 		exec ../tools/ewma tfwc thru \
 				$i \
 				$freq \
+				0.05 \
 				$cutoff \
 				trace/tfwc_indiv_$i.tr
 		exec ../tools/anti-alias tfwc thru \
