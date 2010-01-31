@@ -36,6 +36,27 @@
 #
 # $Id$
 
+if [ -f "$1/trace/tcp_thru.xg" ];
+then
+    echo ""
+else
+    echo "20 0" > "$1/trace/tcp_thru.xg"
+fi
+
+if [ -f "$1/trace/tfrc_thru.xg" ];
+then
+    echo ""
+else
+    echo "20 0" > "$1/trace/tfrc_thru.xg"
+fi
+
+if [ -f "$1/trace/tfwc_thru.xg" ];
+then
+    echo ""
+else
+    echo "20 0" > "$1/trace/tfwc_thru.xg"
+fi
+
 gnuplot -persist << EOF
 set     terminal        png
 set     output          "$1/graph/aggr_red_thru.png"
