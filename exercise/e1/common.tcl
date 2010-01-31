@@ -505,15 +505,28 @@ proc tcp_results {} {
 	# avoid unnecessary long floating point value
 	set tcl_precision 6
 	# set over-sampling frequency for EWMA
-	if {$rtt_in_sec < 0.05} {
-		set max_factor .1
-	} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
-		set max_factor .25
-	} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
-		set max_factor .5
+	if {$queuetype == "RED"} {
+		if {$rtt_in_sec < 0.05} {
+			set max_factor .5
+		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
+			set max_factor 1
+		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
+			set max_factor 2
+		} else {
+			set max_factor 4
+		}
 	} else {
-		set max_factor 4
+		if {$rtt_in_sec < 0.05} {
+			set max_factor .1
+		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
+			set max_factor .25
+		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
+			set max_factor .5
+		} else {
+			set max_factor 4
+		}
 	}
+
 	set freq [expr $rtt_in_sec/$max_factor]
 	if {$freq > 0.5} {
 		set freq 0.5
@@ -665,15 +678,28 @@ proc tfrc_results {} {
 	# avoid unnecessary long floating point value
 	set tcl_precision 6
 	# set over-sampling frequency for EWMA
-	if {$rtt_in_sec < 0.05} {
-		set max_factor .1
-	} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
-		set max_factor .5
-	} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
-		set max_factor 1
+	if {$queuetype == "RED"} {
+		if {$rtt_in_sec < 0.05} {
+			set max_factor .5
+		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
+			set max_factor 1
+		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
+			set max_factor 2
+		} else {
+			set max_factor 4
+		}
 	} else {
-		set max_factor 4
+		if {$rtt_in_sec < 0.05} {
+			set max_factor .1
+		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
+			set max_factor .5
+		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
+			set max_factor 1
+		} else {
+			set max_factor 4
+		}
 	}
+
 	set freq [expr $rtt_in_sec/$max_factor]
 	set ff [expr 4 * $rtt_in_sec]
 	set tcl_precision 16
@@ -824,15 +850,28 @@ proc tfwc_results {} {
 	# avoid unnecessary long floating point value
 	set tcl_precision 6
 	# set over-sampling frequency for EWMA
-	if {$rtt_in_sec < 0.05} {
-		set max_factor .1
-	} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
-		set max_factor .25
-	} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
-		set max_factor .5
+	if {$queuetype == "RED"} {
+		if {$rtt_in_sec < 0.05} {
+			set max_factor .5
+		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
+			set max_factor 1
+		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
+			set max_factor 2
+		} else {
+			set max_factor 4
+		}
 	} else {
-		set max_factor 4
+		if {$rtt_in_sec < 0.05} {
+			set max_factor .1
+		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
+			set max_factor .25
+		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
+			set max_factor .5
+		} else {
+			set max_factor 4
+		}
 	}
+
 	set freq [expr $rtt_in_sec/$max_factor]
 	if {$freq > 0.5 } {
 		set freq 0.5
