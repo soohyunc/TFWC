@@ -55,7 +55,7 @@ set t_dlyBW	\
 	[expr 1000000 * ($rtt * $numeric_bottleneck_bandwidth)]
 
 set dlyBW	[\
-	expr ($t_dlyBW / (8 * 1500))]
+	expr ($t_dlyBW / (8 * 1000))]
 
 puts " dly x BW	$dlyBW in packets "
 

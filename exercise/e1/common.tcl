@@ -97,7 +97,7 @@ set bottleneckBW_in_Bps \
 set delbw_in_bits	\
 	[expr $rtt_in_sec * $bottleneckBW_in_Bps]
 
-set pkt_size	1500; # packet size is 1500 bytes
+set pkt_size	1000; # packet size is 1000 bytes
 set delbw		[expr $delbw_in_bits / (8 * $pkt_size)]
 
 # initial cutoff time
@@ -190,7 +190,7 @@ for {set i 1} {$i <= $tfwc_node_num} {incr i} {
 # create TCP/Sack1, TFRC, and TFWC Agent
 #
 Agent/TCP/Sack1 set window_ 10000
-Agent/TCP/Sack1 set packetSize_ 1460
+Agent/TCP/Sack1 set packetSize_ 960
 for {set i 1} {$i <= $tcp_src_num} {incr i} {
 	set tcp_src($i) [new Agent/TCP/Sack1]
 	set tcpwin($i) [open trace/tcp_cwnd_$i.tr w]
@@ -199,7 +199,7 @@ for {set i 1} {$i <= $tcp_src_num} {incr i} {
 	$ns attach-agent $tcp_node($i) $tcp_src($i)
 }
 
-Agent/TFRC set packetSize_ 1468
+Agent/TFRC set packetSize_ 1000
 Agent/TFRC set conservative_ 1
 for {set i 1} {$i <= $tfrc_src_num} {incr i} {
         set tfrc_src($i) [new Agent/TFRC]
