@@ -507,7 +507,7 @@ proc tcp_results {} {
 	# set over-sampling frequency for EWMA
 	if {$queuetype == "RED"} {
 		if {$rtt_in_sec < 0.05} {
-			set max_factor .5
+			set max_factor .25
 		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
 			set max_factor .75
 		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
@@ -680,7 +680,7 @@ proc tfrc_results {} {
 	# set over-sampling frequency for EWMA
 	if {$queuetype == "RED"} {
 		if {$rtt_in_sec < 0.05} {
-			set max_factor .5
+			set max_factor .25
 		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
 			set max_factor .75
 		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
@@ -852,7 +852,7 @@ proc tfwc_results {} {
 	# set over-sampling frequency for EWMA
 	if {$queuetype == "RED"} {
 		if {$rtt_in_sec < 0.05} {
-			set max_factor .5
+			set max_factor .25
 		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
 			set max_factor .75
 		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
