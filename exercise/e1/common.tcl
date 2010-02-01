@@ -509,9 +509,9 @@ proc tcp_results {} {
 		if {$rtt_in_sec < 0.05} {
 			set max_factor .5
 		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
-			set max_factor 1
+			set max_factor .75
 		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
-			set max_factor 2
+			set max_factor 1
 		} else {
 			set max_factor 4
 		}
@@ -682,9 +682,9 @@ proc tfrc_results {} {
 		if {$rtt_in_sec < 0.05} {
 			set max_factor .5
 		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
-			set max_factor 1
+			set max_factor .75
 		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
-			set max_factor 2
+			set max_factor 1
 		} else {
 			set max_factor 4
 		}
@@ -854,9 +854,9 @@ proc tfwc_results {} {
 		if {$rtt_in_sec < 0.05} {
 			set max_factor .5
 		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
-			set max_factor 1
+			set max_factor .75
 		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
-			set max_factor 2
+			set max_factor 1
 		} else {
 			set max_factor 4
 		}
