@@ -259,9 +259,11 @@ void TfwcAgent::recv(Packet* pkt, Handler*) {
 	isLoss_ = isHole(tfwcah, margin_[NUMDUPACK-1]-1, ackofack_);
 
 	// print Average Loss Interval whenever a packet loss occurs
-	if(isLoss_)
-		printf(" [.] pkt_drop_in_avg_hist %f %.1f %p\n",
-				now(), avg_interval_, this); 
+	if(isLoss_) {
+		fprintf(stderr, 
+		" [.] pkt_drop_in_avg_hist %f %.1f %p\n",
+		now(), avg_interval_, this); 
+	}
 
 	/*
 	 * Main TFWC Reception Path
@@ -314,8 +316,8 @@ bool TfwcAgent::isHole(hdr_tfwc_ack* tfwcah, int end, int begin) {
 	 * begin: ackofack_
 	 * (note: tempvec is an expected packet sequence from the receiver)
 	 */
-	//printf(" [.] begin (ackofack_) = %d,", begin);
-	//printf(" end (margin_[2] - 1) = %d\n", end);
+	//fprintf(stderr, " [.] begin (ackofack_) = %d,", begin);
+	//fprintf(stderr, " end (margin_[2] - 1) = %d\n", end);
 
 	numVec = (end - begin < 0 ) ? 0 : end - begin; 
 	int tempvec[numVec];
@@ -359,8 +361,8 @@ void TfwcAgent::marginvec(hdr_tfwc_ack* tfwcah) {
 		/* wrap up margin_[] to -1 if it is less than 0 */
 		margin_[i] = (margin_[i] < 0) ? -1 : margin_[i];
 	}
-	//printf(" [.] margin --(%d %d %d)--\n", 
-	//		margin_[0], margin_[1], margin_[2]);
+	//fprintf(stderr, " [.] margin --(%d %d %d)--\n", 
+	//margin_[0], margin_[1], margin_[2]);
 }
 
 /*
@@ -376,7 +378,8 @@ void TfwcAgent::newack(hdr_tfwc_ack* tfwcah) {
  */
 void TfwcAgent::output(int seqno) {
 
-	printf("   [.] cwnd_	%f	%d	%p\n", now(), cwnd_, this);
+	fprintf(stderr, 
+	"   [.] cwnd_	%f	%d	%p\n", now(), cwnd_, this);
 
 	assert (seqno != -1);	// invalid sequence number
 	seqno_ = seqno;
@@ -408,9 +411,9 @@ void TfwcAgent::output(int seqno) {
 			// send a packet as long as the cwnd+last_ack allows to
 			// send the next available packets.
 			while (seqno_ <= last_ack_ + cwnd_) {
-				//printf("\n seqno: %d\n",	seqno_);
-				//printf(" last_ack: %d\n",	last_ack_);
-				//printf(" cwnd: %d\n\n",	cwnd_);
+				//fprintf(stderr, "\n seqno: %d\n",	seqno_);
+				//fprintf(stderr, " last_ack: %d\n",	last_ack_);
+				//fprintf(stderr, " cwnd: %d\n\n",	cwnd_);
 
 				send_more(seqno_);
 				seqno_++;
@@ -517,8 +520,10 @@ void TfwcAgent::send_more(int seqno) {
 	} else {
 		// normal TFWC send method
 		send(pkt, 0);
-		//printf(" ==> sending data seqno: %d", tfwch->seqno_);
-		//printf(" ==> appending ackofack : %d\n", tfwch->ackofack_);
+		//fprintf(stderr, 
+		//" ==> sending data seqno: %d", tfwch->seqno_);
+		//fprintf(stderr, 
+		//" ==> appending ackofack : %d\n", tfwch->ackofack_);
 	}
 
 	ndatapkt_++;  // increase the number of data pkt sent
@@ -872,8 +877,9 @@ int TfwcAgent::smoother (int window) {
 		window = force_inflate (cwnd_);
 		tvrec_ = timevec_[(numvec_-1)%TSZ];
 
-		printf(" num_inf: %d total: %d startRTT: %f now: %f %p\n", 
-				num_infl_, num_total, timevec_[0], now(), this);
+		fprintf(stderr, 
+		" num_inf: %d total: %d startRTT: %f now: %f %p\n", 
+		num_infl_, num_total, timevec_[0], now(), this);
 
 		reset_smoother();
 	} 
@@ -1030,39 +1036,44 @@ void TfwcAgent::avg_loss_interval(){
 	tot_weight_ = 0;
 
 	/* make a decision whether to include the most recent loss interval */
-	//printf(" HIST_0 [");
+	//fprintf(stderr, " HIST_0 [");
 	for(int i = 0; i < hsz_; i++){
 		I_tot0_ += weight_[i] * history_[i];
 		tot_weight_ += weight_[i];
 
 		//print_history_element(i);
 	}
-	//printf("]\n");
+	//fprintf(stderr, "]\n");
 
-	//printf(" HIST_1 [");
+	//fprintf(stderr, " HIST_1 [");
 	for(int i = 1; i < hsz_+1; i++){
 		I_tot1_ += weight_[i-1] * history_[i];
 
 		//print_history_element(i);
 	}
-	//printf("]\n");
+	//fprintf(stderr, "]\n");
 
-	//printf("\n I_tot0_: %.1f I_tot1_: %.1f\n", I_tot0_, I_tot1_);
+	//fprintf(stderr, 
+	//"\n I_tot0_: %.1f I_tot1_: %.1f\n", I_tot0_, I_tot1_);
 
 	/* compare I_tot0_ with I_tot1_, and return the large one */
 	if (I_tot0_ < I_tot1_)
 		I_tot_ = I_tot1_;
 	else
 		I_tot_ = I_tot0_;
-	//printf("\n   [.] I_tot_: %.1f %f %p\n", I_tot_, now(), this);
+	//fprintf(stderr, 
+	//"\n   [.] I_tot_: %.1f %f %p\n", I_tot_, now(), this);
 
 	/* average loss interval <- I_tot_ / tot_weight_ */
 	avg_interval_ = I_tot_ / tot_weight_;
 
-	//printf("\n   [.] tot_weight_ %f %f %p\n", tot_weight_, now(), this);
-	printf("\n   [.] avg_interval_ %f %.1f %p\n", now(), avg_interval_, this);
+	//fprintf(stderr, 
+	//"\n   [.] tot_weight_ %f %f %p\n", tot_weight_, now(), this);
+	fprintf(stderr, 
+	"\n   [.] avg_interval_ %f %.1f %p\n", now(), avg_interval_, this);
 	/* printing loss rate seen by TCP Eq. */
-	printf("\t[.] loss_by_cal %f %f %p\n", now(), (1.0/avg_interval_), this);
+	fprintf(stderr, 
+	"\t[.] loss_by_cal %f %f %p\n", now(), (1.0/avg_interval_), this);
 }
 
 /*
@@ -1070,7 +1081,8 @@ void TfwcAgent::avg_loss_interval(){
  */
 void TfwcAgent::set_rtx_timer() {
 	rtx_timer_.resched(rto_);
-	//printf("\n XXX rto_ 	%f 	rtt_	%f\n", rto_, srtt_);
+	//fprintf(stderr, 
+	//"\n XXX rto_ 	%f 	rtt_	%f\n", rto_, srtt_);
 }
 
 /*
@@ -1097,7 +1109,7 @@ void TfwcAgent::backoff_timer() {
 }
 
 void TfwcAgent::timeout(int tno) {
-	printf("\n TIMEOUT 	%f	%p\n", now(), this);
+	fprintf(stderr, "\n TIMEOUT 	%f	%p\n", now(), this);
 
 	/* retransmit timer */
 	if (tno == TFWC_TIMER_RTX) {
@@ -1128,17 +1140,18 @@ void TfwcAgent::new_rto(double rtt) {
 	rto_ = .8 * rto_;
 
 	double Tx = 8 * pktSize_ / rto_;
-	printf(" %f tfwcTx: %.4f rto_: %f t0_: %.4f rtt: %.5f p_: %.4f %p\n", 
-			now(), Tx, rto_, t0_, rtt, p_, this);
+	fprintf(stderr, 
+	" %f tfwcTx: %.4f rto_: %f t0_: %.4f rtt: %.5f p_: %.4f %p\n", 
+	now(), Tx, rto_, t0_, rtt, p_, this);
 }
 
 /*
  * Printing Received AckVec
  */
 void TfwcAgent::print_ackvec(hdr_tfwc_ack* tfwcah) {
-	printf(" [.] received AckVec");
+	fprintf(stderr, " [.] received AckVec");
 	tfwcah->tfwcAV.ackv_print();
-	printf(" [.] current AckofAck = %d\n", ackofack_);
+	fprintf(stderr, " [.] current AckofAck = %d\n", ackofack_);
 }
 
 /*
@@ -1146,25 +1159,25 @@ void TfwcAgent::print_ackvec(hdr_tfwc_ack* tfwcah) {
  * (this packet is sending packet)
  */
 void TfwcAgent::print_timestamp(hdr_tfwc* tfwch) {
-	printf("   [.] seqno = %d, tsvec_[%d] = %f \n", 
-			tfwch->seqno_, tfwch->seqno_, tfwch->ts_);
+	fprintf(stderr, "   [.] seqno = %d, tsvec_[%d] = %f \n", 
+	tfwch->seqno_, tfwch->seqno_, tfwch->ts_);
 }
 
 /* 
  * printing history information  
  */
 void TfwcAgent::print_history() {
-	printf(" HISTORY [");
+	fprintf(stderr, " HISTORY [");
 	for(int i = 0; i < HSZ; i++){
-		printf("%d", history_[i]);
-		if(i < HSZ - 1) printf(", ");
+		fprintf(stderr, "%d", history_[i]);
+		if(i < HSZ - 1) fprintf(stderr, ", ");
 	}
-	printf("]\n");
+	fprintf(stderr, "]\n");
 }
 
 void TfwcAgent::print_history_element(int i) {
-	printf("%d", history_[i]);
-	if(i < hsz_ - 1) printf(", ");
+	fprintf(stderr, "%d", history_[i]);
+	if(i < hsz_ - 1) fprintf(stderr, ", ");
 }
 
 /*
