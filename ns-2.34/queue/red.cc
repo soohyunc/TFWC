@@ -404,7 +404,8 @@ double REDQueue::estimator(int nqueued, int m, double ave, double q_w)
 	}
 
 	// print out average red queue size
-	printf(" [.] avg_redq   %f  %.1f    %p\n", now, new_ave, this);
+	fprintf(stderr, 
+	" [.] avg_redq   %f  %.1f    %p\n", now, new_ave, this);
 	return new_ave;
 }
 
