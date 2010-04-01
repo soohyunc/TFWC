@@ -49,15 +49,15 @@ BEGIN {
                                                                                 
 {
 	if (($1 == "r" && $5 == "tcp") && $2 > cutoff) {
-		tcp_bits = tcp_bits + $6*8;
+	tcp_bits = tcp_bits + $6*8;
 	}
 
     if (($1 == "r" && $5 == "tcpFriend") && $2 > cutoff) {
-		tfrc_bits = tfrc_bits + $6*8;
+	tfrc_bits = tfrc_bits + $6*8;
     }
 
     if (($1 == "r" && $5 == "TFWC") && $2 > cutoff) {
-		tfwc_bits = tfwc_bits + $6*8;
+	tfwc_bits = tfwc_bits + $6*8;
     }
 
 

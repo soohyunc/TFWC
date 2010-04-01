@@ -63,9 +63,8 @@ BEGIN {
 		}
 
 		while (($2 - time) > 2* granul) {
-
 			if ($2 > cutoff) 
-				print time, 0 >> "trace/tfrc_thru.xg";
+			print time, 0 >> "trace/tfrc_thru.xg";
 
 			bits = 0;
 			last_bits = 0;
@@ -75,4 +74,4 @@ BEGIN {
 }
 
 END {
-	}
+}

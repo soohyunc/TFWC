@@ -49,20 +49,20 @@ BEGIN {
 
 {
 	if (in_q == 0 && out_q == 0)
-		in_q = $5;
+	in_q = $5;
 	else
-		out_q = $5;
+	out_q = $5;
 
 	if ($5 == in_q) {
 		if(($4 - time) > granul) {
 
-			if ($4 > cutoff) 
-				print $4 , $3 >> "trace/tcp_red_avg.xg"
+		if ($4 > cutoff) 
+		print $4 , $3 >> "trace/tcp_red_avg.xg"
 
-			time += granul;
+		time += granul;
 		}
 	}
 }
 
 END {
-	}
+}

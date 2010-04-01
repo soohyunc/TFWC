@@ -14,13 +14,13 @@ BEGIN{
 		time += granul;
 
 		if ($1 > cutoff)
-			print time,$2 >> "trace/"option"_sr_"ix".xg";
+		print time,$2 >> "trace/"option"_sr_"ix".xg";
 	}
 
 	while (($1 - time) > 2 * granul) {
 
 		if ($1 > cutoff)
-			print time,0 >> "trace/"option"_sr_"ix".xg";
+		print time,0 >> "trace/"option"_sr_"ix".xg";
 		time += granul;
 	} # end of while
 }

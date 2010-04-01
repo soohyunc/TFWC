@@ -48,16 +48,16 @@ BEGIN {
 {
 	if ($1 > cutoff) {
 		if (($1 - time) > granul) {
-			time += granul;
-			print $1,$7
+		time += granul;
+		print $1,$7
 		}
 
 		while (($1 - time) > 2 * granul) {
-			time += granul;
+		time += granul;
 		}
 	} # end of if($1 > cutoff)
 } # end of body
 
 END {
-	}
+}
 

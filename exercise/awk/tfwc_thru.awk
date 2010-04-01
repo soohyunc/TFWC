@@ -50,24 +50,24 @@ BEGIN {
 		bits = bits + $6*8;
 
 		if (($2 - time) > granul) {
-			time = time + granul;
-			rate = (bits-last_bits)/granul;
-			rate /= 1000000;
+		time = time + granul;
+		rate = (bits-last_bits)/granul;
+		rate /= 1000000;
 
-			if ($2 > cutoff) 
-				print time, rate >> "trace/tfwc_thru.xg";
+		if ($2 > cutoff) 
+		print time, rate >> "trace/tfwc_thru.xg";
 
-			last_bits = bits;
+		last_bits = bits;
 		}
 
 		while (($2 - time) > 2* granul) {
 
-			if ($2 > cutoff) 
-				print time, 0 >> "trace/tfwc_thru.xg";
+		if ($2 > cutoff) 
+		print time, 0 >> "trace/tfwc_thru.xg";
 
-			bits = 0;
-			last_bits = 0;
-			time = time + granul;
+		bits = 0;
+		last_bits = 0;
+		time = time + granul;
 		}
 	}
 }

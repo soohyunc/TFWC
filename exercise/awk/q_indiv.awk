@@ -13,20 +13,20 @@ BEGIN {
 	if ($1 == "+") {
 		count++;
 		if (($2 - time) > granul) {
-			time += granul;
+		time += granul;
 
-			if ($2 > cutoff)
-				print time , count >> "trace/"option"_q_"ix".xg";
+		if ($2 > cutoff)
+		print time , count >> "trace/"option"_q_"ix".xg";
 		}
 	} 
 	
 	if ($1 == "-" || $1 == "d") {
 		count--;
 		if (($2 - time) > granul) {
-			time += granul;
+		time += granul;
 
-			if ($2 > cutoff)
-				print time , count >> "trace/"option"_q_"ix".xg";
+		if ($2 > cutoff)
+		print time , count >> "trace/"option"_q_"ix".xg";
 		}
 	}
 }

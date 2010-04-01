@@ -59,13 +59,13 @@ BEGIN {
 	if ($1 == "+" && $5 == "tcpFriend") {
 		tf_count++;
 		if ($2 > cutoff) 
-			print $2 , tf_count >> "trace/tfrc_q.xg";
+		print $2 , tf_count >> "trace/tfrc_q.xg";
 	}
 
 	if (($1 == "-" || $1 == "d") && $5 == "tcpFriend") {
 		tf_count--;
 		if ($2 > cutoff) 
-			print $2 , tf_count >> "trace/tfrc_q.xg";
+		print $2 , tf_count >> "trace/tfrc_q.xg";
 	}
 
 }

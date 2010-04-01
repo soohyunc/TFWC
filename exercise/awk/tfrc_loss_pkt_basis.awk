@@ -43,19 +43,18 @@ BEGIN {
 	if ((($1 == "+" || $1 == "d") && $5 == "tcpFriend") && $2 > cutoff) {
 		if (lines < 80) {
 
-			if ( $1 == "+") {
-				sent++;
-			} 
+		if ( $1 == "+") {
+			sent++;
+		} 
 
-			if ( $1 == "d") {
-				drop++;
-			}
-
-			lines++;
+		if ( $1 == "d") {
+			drop++;
 		}
 
+		lines++;
+		}
 		else {
-			rate = drop/sent;
+		rate = drop/sent;
 		print $2, rate >> "trace/tfrc_loss.xg"; 
 
 		lines = sent = drop = 0;
@@ -64,5 +63,5 @@ BEGIN {
 }
 
 END {
-	}
+}
 

@@ -9,22 +9,22 @@ BEGIN {
 
 {
     if ($1 == "a") {
-        if (($2 - time) > granul) {
-            time += granul;
+		if (($2 - time) > granul) {
+		time += granul;
 
-            if ($2 > cutoff)
-                print time, $3 >> "trace/"option"_red_avg.xg";
-        }
-    }
+		if ($2 > cutoff)
+		print time, $3 >> "trace/"option"_red_avg.xg";
+		}
+	}
 
-    if ($1 == "Q") {
-        if (($2 - time) > granul) {
-            time += granul;
+	if ($1 == "Q") {
+		if (($2 - time) > granul) {
+		time += granul;
 
-            if ($2 > cutoff)
-                print time, $3 >> "trace/"option"_red_inst.xg";
-        }
-    }
+		if ($2 > cutoff)
+		print time, $3 >> "trace/"option"_red_inst.xg";
+		}
+	}
 }
 END {
 }

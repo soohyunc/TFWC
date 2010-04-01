@@ -50,7 +50,7 @@ BEGIN {
 
 {
 	if (($1 == "r" && $5 == "tcp") && $2 > cutoff) {
-		bits = bits + $6*8;
+	bits = bits + $6*8;
 	}
 }
 
