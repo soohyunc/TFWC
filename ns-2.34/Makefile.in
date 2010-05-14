@@ -385,7 +385,7 @@ SUBDIRS=\
 
 BUILD_NSE = @build_nse@
 
-all: $(NS) $(BUILD_NSE) $(NSTK) all-recursive Makefile
+all: $(NS) $(BUILD_NSE) $(NSTK) all-recursive Makefile exercise
 
 
 all-recursive:
@@ -609,3 +609,6 @@ test:	force
 makefile.vc:	Makefile.in
 	$(PERL) bin/gen-vcmake.pl < Makefile.in > makefile.vc
 #	$(PERL) -pe 's/^# (\!include)/\!include/o' < Makefile.in > makefile.vc
+
+exercise: $(wildcard *.cc)
+	@(cd ../exercise/tools; $(MAKE))
