@@ -327,6 +327,13 @@ do
 	if [ $integer_bw -gt $integer_accessBW ]
 	then
 		bw=$accessBW
+		pbw=$integer_accessBW
+
+		# don't need to run same simulation
+		if [ "$integer_bw" -eq "$pbw" ]
+		then
+			break
+		fi
 	fi
 
 	# calculate bottleneck queue size
@@ -422,6 +429,13 @@ do
 	if [ $integer_bw -gt $integer_accessBW ]
 	then
 		bw=$accessBW
+		pbw=$integer_accessBW
+
+		# don't need to run same simulation
+		if [ "$integer_bw" -eq "$pbw" ]
+		then
+			break
+		fi
 	fi
 
 	# calculate bottleneck queue size
@@ -516,6 +530,13 @@ do
 	if [ $integer_bw -gt $integer_accessBW ]
 	then
 		bw=$accessBW
+		pbw=$integer_accessBW
+
+		# don't need to run same simulation
+		if [ "$integer_bw" -eq "$pbw" ]
+		then
+			break
+		fi
 	fi
 
 	# calculate bottleneck queue size
@@ -633,6 +654,13 @@ do
 	if [ $integer_bw -gt $integer_accessBW ]
 	then
 		bw=$accessBW
+		pbw=$integer_accessBW
+
+		# don't need to run same simulation
+		if [ "$integer_bw" -eq "$pbw" ]
+		then
+			break
+		fi
 	fi
 
 	# calculate bottleneck queue size
@@ -727,6 +755,13 @@ do
 	if [ $integer_bw -gt $integer_accessBW ]
 	then
 		bw=$accessBW
+		pbw=$integer_accessBW
+
+		# don't need to run same simulation
+		if [ "$integer_bw" -eq "$pbw" ]
+		then
+			break
+		fi
 	fi
 
 	# calculate bottleneck queue size
@@ -821,6 +856,13 @@ do
 	if [ $integer_bw -gt $integer_accessBW ]
 	then
 		bw=$accessBW
+		pbw=$integer_accessBW
+
+		# don't need to run same simulation
+		if [ "$integer_bw" -eq "$pbw" ]
+		then
+			break
+		fi
 	fi
 
 	# calculate bottleneck queue size
