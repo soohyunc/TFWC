@@ -102,10 +102,12 @@ do
   tfwc=0
   src=$tcp
   echo ""
-  echo $i
+  echo "number of sources: $i"
   echo ""
 
+  #------------------------------------------------------------------
   # queue size is set to .5 * BDP
+  #------------------------------------------------------------------
   factor=`echo ".5" | bc -l`
   # initial bottleneck bw
   bw=$5
@@ -164,7 +166,7 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
-	#$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
+	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
 	$CAT trace/tcp_avg_cov.xg >> trace/tcp_cov.xg
@@ -188,7 +190,284 @@ do
 	$TOOLS/breakline trace/tcp_${factor}_cov.xg
 	$TOOLS/breakline trace/tfrc_${factor}_cov.xg
   fi
+  echo ""
 
+  $RM trace/tcp_cov.xg
+  $RM trace/tfrc_cov.xg
+  #------------------------------------------------------------------
+
+  #------------------------------------------------------------------
+  # queue size is set to 1.0 * BDP
+  #------------------------------------------------------------------
+  factor=`echo "1.0" | bc -l`
+  # initial bottleneck bw
+  bw=$5
+
+  for i in `seq 1 20`
+  do
+	if [ $i -le "5" ]
+	then
+	  if [ $i -eq "1" ]
+	  then
+		bw=$bw
+	  elif [ $i -ge "2" ] && [ $i -le "4" ]
+	  then
+		bw=`echo $bw \* $a2 | bc -l`
+	  else
+		bw=`echo $bw + $a1 | bc -l`
+	  fi
+	elif [ $i -ge "5" ] && [ $i -le "10" ]
+	then
+	  if [ $i -eq "6" ]
+	  then
+		bw=`echo $bw \* $a2 | bc -l`
+	  else
+		bw=`echo $bw + $a2 | bc -l`
+	  fi
+	elif [ $i -gt "10" ]
+	then
+	  bw=`echo $bw + $a3 | bc -l`
+	fi
+
+	# bottleneck bw should be always less than the half of access bw
+	ibw=`$TOOLS/round $bw`
+	accessbw2=`echo "scale=4; $accessbw/2" | bc -l`
+	iaccessbw=`$TOOLS/round $accessbw2`
+	if [ "$ibw" -ge "$iaccessbw" ]
+	then
+	  bw=$accessbw2
+	  pbw=$iaccessbw
+
+	  # don't need to run same simulation, so quit
+	  if [ "$iaccessbw" -eq "$pbw" ]
+	  then
+	    break
+	  fi
+	fi
+
+	# calculate bottleneck queue size
+	qsize=`echo "$factor * $rtt * $bw * 10^6 / 8000" | bc -l`
+	qsize=`$TOOLS/round $qsize`
+
+	# queue size is always greater than 5 packets
+	if [ $qsize -lt "5" ]
+	then
+	  qsize=5
+	fi
+
+	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
+	echo ""
+	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
+
+	# CoV computation
+	$CAT trace/tcp_avg_cov.xg >> trace/tcp_cov.xg
+	$CAT trace/tfrc_avg_cov.xg >> trace/tfrc_cov.xg
+
+	# archive throughput and fairness
+	$CP graph/aggr_fifo_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+	$TOOLS/fairness tcp-tfrc $toq $bw $src trace/tcp_thru_tot.dat trace/tfrc_thru_tot.dat
+	$CAT trace/tcp-tfrc_${queue}_fairness.xg >> trace/tcp-tfrc_${queue}x${factor}_fairness.xg
+	$RM trace/tcp-tfrc_${queue}_fairness.xg
+
+  done # for i in `seq 1 20`
+
+  $CAT trace/tcp_cov.xg >> trace/tcp_${factor}_cov.xg
+  $CAT trace/tfrc_cov.xg >> trace/tfrc_${factor}_cov.xg
+
+  # make a line break for 3D plot for each of these cases
+  if [ -f trace/tcp-tfrc_${queue}x${factor}_fairness.xg ]
+  then
+	$TOOLS/breakline trace/tcp-tfrc_${queue}x${factor}_fairness.xg
+	$TOOLS/breakline trace/tcp_${factor}_cov.xg
+	$TOOLS/breakline trace/tfrc_${factor}_cov.xg
+  fi
+  echo ""
+
+  $RM trace/tcp_cov.xg
+  $RM trace/tfrc_cov.xg
+  #------------------------------------------------------------------
+
+  #------------------------------------------------------------------
+  # queue size is set to 2.0 * BDP
+  #------------------------------------------------------------------
+  factor=`echo "2.0" | bc -l`
+  # initial bottleneck bw
+  bw=$5
+
+  for i in `seq 1 20`
+  do
+	if [ $i -le "5" ]
+	then
+	  if [ $i -eq "1" ]
+	  then
+		bw=$bw
+	  elif [ $i -ge "2" ] && [ $i -le "4" ]
+	  then
+		bw=`echo $bw \* $a2 | bc -l`
+	  else
+		bw=`echo $bw + $a1 | bc -l`
+	  fi
+	elif [ $i -ge "5" ] && [ $i -le "10" ]
+	then
+	  if [ $i -eq "6" ]
+	  then
+		bw=`echo $bw \* $a2 | bc -l`
+	  else
+		bw=`echo $bw + $a2 | bc -l`
+	  fi
+	elif [ $i -gt "10" ]
+	then
+	  bw=`echo $bw + $a3 | bc -l`
+	fi
+
+	# bottleneck bw should be always less than the half of access bw
+	ibw=`$TOOLS/round $bw`
+	accessbw2=`echo "scale=4; $accessbw/2" | bc -l`
+	iaccessbw=`$TOOLS/round $accessbw2`
+	if [ "$ibw" -ge "$iaccessbw" ]
+	then
+	  bw=$accessbw2
+	  pbw=$iaccessbw
+
+	  # don't need to run same simulation, so quit
+	  if [ "$iaccessbw" -eq "$pbw" ]
+	  then
+	    break
+	  fi
+	fi
+
+	# calculate bottleneck queue size
+	qsize=`echo "$factor * $rtt * $bw * 10^6 / 8000" | bc -l`
+	qsize=`$TOOLS/round $qsize`
+
+	# queue size is always greater than 5 packets
+	if [ $qsize -lt "5" ]
+	then
+	  qsize=5
+	fi
+
+	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
+	echo ""
+	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
+
+	# CoV computation
+	$CAT trace/tcp_avg_cov.xg >> trace/tcp_cov.xg
+	$CAT trace/tfrc_avg_cov.xg >> trace/tfrc_cov.xg
+
+	# archive throughput and fairness
+	$CP graph/aggr_fifo_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+	$TOOLS/fairness tcp-tfrc $toq $bw $src trace/tcp_thru_tot.dat trace/tfrc_thru_tot.dat
+	$CAT trace/tcp-tfrc_${queue}_fairness.xg >> trace/tcp-tfrc_${queue}x${factor}_fairness.xg
+	$RM trace/tcp-tfrc_${queue}_fairness.xg
+
+  done # for i in `seq 1 20`
+
+  $CAT trace/tcp_cov.xg >> trace/tcp_${factor}_cov.xg
+  $CAT trace/tfrc_cov.xg >> trace/tfrc_${factor}_cov.xg
+
+  # make a line break for 3D plot for each of these cases
+  if [ -f trace/tcp-tfrc_${queue}x${factor}_fairness.xg ]
+  then
+	$TOOLS/breakline trace/tcp-tfrc_${queue}x${factor}_fairness.xg
+	$TOOLS/breakline trace/tcp_${factor}_cov.xg
+	$TOOLS/breakline trace/tfrc_${factor}_cov.xg
+  fi
+  echo ""
+
+  $RM trace/tcp_cov.xg
+  $RM trace/tfrc_cov.xg
+  #------------------------------------------------------------------
+
+  #------------------------------------------------------------------
+  # queue size is set to 4.0 * BDP
+  #------------------------------------------------------------------
+  factor=`echo "4.0" | bc -l`
+  # initial bottleneck bw
+  bw=$5
+
+  for i in `seq 1 20`
+  do
+	if [ $i -le "5" ]
+	then
+	  if [ $i -eq "1" ]
+	  then
+		bw=$bw
+	  elif [ $i -ge "2" ] && [ $i -le "4" ]
+	  then
+		bw=`echo $bw \* $a2 | bc -l`
+	  else
+		bw=`echo $bw + $a1 | bc -l`
+	  fi
+	elif [ $i -ge "5" ] && [ $i -le "10" ]
+	then
+	  if [ $i -eq "6" ]
+	  then
+		bw=`echo $bw \* $a2 | bc -l`
+	  else
+		bw=`echo $bw + $a2 | bc -l`
+	  fi
+	elif [ $i -gt "10" ]
+	then
+	  bw=`echo $bw + $a3 | bc -l`
+	fi
+
+	# bottleneck bw should be always less than the half of access bw
+	ibw=`$TOOLS/round $bw`
+	accessbw2=`echo "scale=4; $accessbw/2" | bc -l`
+	iaccessbw=`$TOOLS/round $accessbw2`
+	if [ "$ibw" -ge "$iaccessbw" ]
+	then
+	  bw=$accessbw2
+	  pbw=$iaccessbw
+
+	  # don't need to run same simulation, so quit
+	  if [ "$iaccessbw" -eq "$pbw" ]
+	  then
+	    break
+	  fi
+	fi
+
+	# calculate bottleneck queue size
+	qsize=`echo "$factor * $rtt * $bw * 10^6 / 8000" | bc -l`
+	qsize=`$TOOLS/round $qsize`
+
+	# queue size is always greater than 5 packets
+	if [ $qsize -lt "5" ]
+	then
+	  qsize=5
+	fi
+
+	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
+	echo ""
+	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
+
+	# CoV computation
+	$CAT trace/tcp_avg_cov.xg >> trace/tcp_cov.xg
+	$CAT trace/tfrc_avg_cov.xg >> trace/tfrc_cov.xg
+
+	# archive throughput and fairness
+	$CP graph/aggr_fifo_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+	$TOOLS/fairness tcp-tfrc $toq $bw $src trace/tcp_thru_tot.dat trace/tfrc_thru_tot.dat
+	$CAT trace/tcp-tfrc_${queue}_fairness.xg >> trace/tcp-tfrc_${queue}x${factor}_fairness.xg
+	$RM trace/tcp-tfrc_${queue}_fairness.xg
+
+  done # for i in `seq 1 20`
+
+  $CAT trace/tcp_cov.xg >> trace/tcp_${factor}_cov.xg
+  $CAT trace/tfrc_cov.xg >> trace/tfrc_${factor}_cov.xg
+
+  # make a line break for 3D plot for each of these cases
+  if [ -f trace/tcp-tfrc_${queue}x${factor}_fairness.xg ]
+  then
+	$TOOLS/breakline trace/tcp-tfrc_${queue}x${factor}_fairness.xg
+	$TOOLS/breakline trace/tcp_${factor}_cov.xg
+	$TOOLS/breakline trace/tfrc_${factor}_cov.xg
+  fi
+  echo ""
+
+  $RM trace/tcp_cov.xg
+  $RM trace/tfrc_cov.xg
+  #------------------------------------------------------------------
 done
 
 #####################################################################
@@ -205,69 +484,371 @@ do
   tfwc=$i
   src=$tcp
   echo ""
-  echo $i
+  echo "number of sources: $i"
   echo ""
 
+  #------------------------------------------------------------------
   # queue size is set to .5 * BDP
+  #------------------------------------------------------------------
   factor=`echo ".5" | bc -l`
   # initial bottleneck bw
   bw=$5
 
   for i in `seq 1 20`
   do
-    if [ $i -le "5" ]
-    then
-      if [ $i -eq "1" ]
-      then
-        bw=$bw
-      elif [ $i -ge "2" ] && [ $i -le "4" ]
-      then
-        bw=`echo $bw \* $a2 | bc -l`
-      else
-        bw=`echo $bw + $a1 | bc -l`
-      fi
-    elif [ $i -ge "5" ] && [ $i -le "10" ]
-    then
-      if [ $i -eq "6" ]
-      then
-        bw=`echo $bw \* $a2 | bc -l`
-      else
-        bw=`echo $bw + $a2 | bc -l`
-      fi
-    elif [ $i -gt "10" ]
-    then
-      bw=`echo $bw + $a3 | bc -l`
-    fi
+	if [ $i -le "5" ]
+	then
+	  if [ $i -eq "1" ]
+	  then
+		bw=$bw
+	  elif [ $i -ge "2" ] && [ $i -le "4" ]
+	  then
+		bw=`echo $bw \* $a2 | bc -l`
+	  else
+		bw=`echo $bw + $a1 | bc -l`
+	  fi
+	elif [ $i -ge "5" ] && [ $i -le "10" ]
+	then
+	  if [ $i -eq "6" ]
+	  then
+		bw=`echo $bw \* $a2 | bc -l`
+	  else
+		bw=`echo $bw + $a2 | bc -l`
+	  fi
+	elif [ $i -gt "10" ]
+	then
+	  bw=`echo $bw + $a3 | bc -l`
+	fi
 
-    # bottleneck bw should be always less than the half of access bw
-    ibw=`$TOOLS/round $bw`
-    accessbw2=`echo "scale=4; $accessbw/2" | bc -l`
-    iaccessbw=`$TOOLS/round $accessbw2`
-    if [ "$ibw" -ge "$iaccessbw" ]
-    then
-      bw=$accessbw2
-      pbw=$iaccessbw
+	# bottleneck bw should be always less than the half of access bw
+	ibw=`$TOOLS/round $bw`
+	accessbw2=`echo "scale=4; $accessbw/2" | bc -l`
+	iaccessbw=`$TOOLS/round $accessbw2`
+	if [ "$ibw" -ge "$iaccessbw" ]
+	then
+	  bw=$accessbw2
+	  pbw=$iaccessbw
 
-      # don't need to run same simulation, so quit
-      if [ "$iaccessbw" -eq "$pbw" ]
-      then
-        break
-      fi
-    fi
-    echo "bw: $bw"
+	  # don't need to run same simulation, so quit
+	  if [ "$iaccessbw" -eq "$pbw" ]
+	  then
+	    break
+	  fi
+	fi
 
-    # calculate bottleneck queue size
-    qsize=`echo "$factor * $rtt * $bw * 10^6 / 8000" | bc -l`
-    qsize=`$TOOLS/round $qsize`
+	# calculate bottleneck queue size
+	qsize=`echo "$factor * $rtt * $bw * 10^6 / 8000" | bc -l`
+	qsize=`$TOOLS/round $qsize`
 
-    # queue size is always greater than 5 packets
-    if [ $qsize -lt "5" ]
-    then
-      qsize=5
-    fi
+	# queue size is always greater than 5 packets
+	if [ $qsize -lt "5" ]
+	then
+	  qsize=5
+	fi
 
-    echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
-  done
+	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
+	echo ""
+	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
+
+	# CoV computation
+	$CAT trace/tcp_avg_cov.xg >> trace/tcp_cov.xg
+	$CAT trace/tfwc_avg_cov.xg >> trace/tfwc_cov.xg
+
+	# archive throughput and fairness
+	$CP graph/aggr_fifo_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+	$TOOLS/fairness tcp-tfwc $toq $bw $src trace/tcp_thru_tot.dat trace/tfwc_thru_tot.dat
+	$CAT trace/tcp-tfwc_${queue}_fairness.xg >> trace/tcp-tfwc_${queue}x${factor}_fairness.xg
+	$RM trace/tcp-tfwc_${queue}_fairness.xg
+
+  done # for i in `seq 1 20`
+
+  $CAT trace/tcp_cov.xg >> trace/tcp_${factor}_cov.xg
+  $CAT trace/tfwc_cov.xg >> trace/tfwc_${factor}_cov.xg
+
+  # make a line break for 3D plot for each of these cases
+  if [ -f trace/tcp-tfwc_${queue}x${factor}_fairness.xg ]
+  then
+	$TOOLS/breakline trace/tcp-tfwc_${queue}x${factor}_fairness.xg
+	$TOOLS/breakline trace/tcp_${factor}_cov.xg
+	$TOOLS/breakline trace/tfwc_${factor}_cov.xg
+  fi
   echo ""
+
+  $RM trace/tcp_cov.xg
+  $RM trace/tfwc_cov.xg
+  #------------------------------------------------------------------
+
+  #------------------------------------------------------------------
+  # queue size is set to 1.0 * BDP
+  #------------------------------------------------------------------
+  factor=`echo "1.0" | bc -l`
+  # initial bottleneck bw
+  bw=$5
+
+  for i in `seq 1 20`
+  do
+	if [ $i -le "5" ]
+	then
+	  if [ $i -eq "1" ]
+	  then
+		bw=$bw
+	  elif [ $i -ge "2" ] && [ $i -le "4" ]
+	  then
+		bw=`echo $bw \* $a2 | bc -l`
+	  else
+		bw=`echo $bw + $a1 | bc -l`
+	  fi
+	elif [ $i -ge "5" ] && [ $i -le "10" ]
+	then
+	  if [ $i -eq "6" ]
+	  then
+		bw=`echo $bw \* $a2 | bc -l`
+	  else
+		bw=`echo $bw + $a2 | bc -l`
+	  fi
+	elif [ $i -gt "10" ]
+	then
+	  bw=`echo $bw + $a3 | bc -l`
+	fi
+
+	# bottleneck bw should be always less than the half of access bw
+	ibw=`$TOOLS/round $bw`
+	accessbw2=`echo "scale=4; $accessbw/2" | bc -l`
+	iaccessbw=`$TOOLS/round $accessbw2`
+	if [ "$ibw" -ge "$iaccessbw" ]
+	then
+	  bw=$accessbw2
+	  pbw=$iaccessbw
+
+	  # don't need to run same simulation, so quit
+	  if [ "$iaccessbw" -eq "$pbw" ]
+	  then
+	    break
+	  fi
+	fi
+
+	# calculate bottleneck queue size
+	qsize=`echo "$factor * $rtt * $bw * 10^6 / 8000" | bc -l`
+	qsize=`$TOOLS/round $qsize`
+
+	# queue size is always greater than 5 packets
+	if [ $qsize -lt "5" ]
+	then
+	  qsize=5
+	fi
+
+	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
+	echo ""
+	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
+
+	# CoV computation
+	$CAT trace/tcp_avg_cov.xg >> trace/tcp_cov.xg
+	$CAT trace/tfwc_avg_cov.xg >> trace/tfwc_cov.xg
+
+	# archive throughput and fairness
+	$CP graph/aggr_fifo_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+	$TOOLS/fairness tcp-tfwc $toq $bw $src trace/tcp_thru_tot.dat trace/tfwc_thru_tot.dat
+	$CAT trace/tcp-tfwc_${queue}_fairness.xg >> trace/tcp-tfwc_${queue}x${factor}_fairness.xg
+	$RM trace/tcp-tfwc_${queue}_fairness.xg
+
+  done # for i in `seq 1 20`
+
+  $CAT trace/tcp_cov.xg >> trace/tcp_${factor}_cov.xg
+  $CAT trace/tfwc_cov.xg >> trace/tfwc_${factor}_cov.xg
+
+  # make a line break for 3D plot for each of these cases
+  if [ -f trace/tcp-tfwc_${queue}x${factor}_fairness.xg ]
+  then
+	$TOOLS/breakline trace/tcp-tfwc_${queue}x${factor}_fairness.xg
+	$TOOLS/breakline trace/tcp_${factor}_cov.xg
+	$TOOLS/breakline trace/tfwc_${factor}_cov.xg
+  fi
+  echo ""
+
+  $RM trace/tcp_cov.xg
+  $RM trace/tfwc_cov.xg
+  #------------------------------------------------------------------
+
+  #------------------------------------------------------------------
+  # queue size is set to 2.0 * BDP
+  #------------------------------------------------------------------
+  factor=`echo "2.0" | bc -l`
+  # initial bottleneck bw
+  bw=$5
+
+  for i in `seq 1 20`
+  do
+	if [ $i -le "5" ]
+	then
+	  if [ $i -eq "1" ]
+	  then
+		bw=$bw
+	  elif [ $i -ge "2" ] && [ $i -le "4" ]
+	  then
+		bw=`echo $bw \* $a2 | bc -l`
+	  else
+		bw=`echo $bw + $a1 | bc -l`
+	  fi
+	elif [ $i -ge "5" ] && [ $i -le "10" ]
+	then
+	  if [ $i -eq "6" ]
+	  then
+		bw=`echo $bw \* $a2 | bc -l`
+	  else
+		bw=`echo $bw + $a2 | bc -l`
+	  fi
+	elif [ $i -gt "10" ]
+	then
+	  bw=`echo $bw + $a3 | bc -l`
+	fi
+
+	# bottleneck bw should be always less than the half of access bw
+	ibw=`$TOOLS/round $bw`
+	accessbw2=`echo "scale=4; $accessbw/2" | bc -l`
+	iaccessbw=`$TOOLS/round $accessbw2`
+	if [ "$ibw" -ge "$iaccessbw" ]
+	then
+	  bw=$accessbw2
+	  pbw=$iaccessbw
+
+	  # don't need to run same simulation, so quit
+	  if [ "$iaccessbw" -eq "$pbw" ]
+	  then
+	    break
+	  fi
+	fi
+
+	# calculate bottleneck queue size
+	qsize=`echo "$factor * $rtt * $bw * 10^6 / 8000" | bc -l`
+	qsize=`$TOOLS/round $qsize`
+
+	# queue size is always greater than 5 packets
+	if [ $qsize -lt "5" ]
+	then
+	  qsize=5
+	fi
+
+	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
+	echo ""
+	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
+
+	# CoV computation
+	$CAT trace/tcp_avg_cov.xg >> trace/tcp_cov.xg
+	$CAT trace/tfwc_avg_cov.xg >> trace/tfwc_cov.xg
+
+	# archive throughput and fairness
+	$CP graph/aggr_fifo_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+	$TOOLS/fairness tcp-tfwc $toq $bw $src trace/tcp_thru_tot.dat trace/tfwc_thru_tot.dat
+	$CAT trace/tcp-tfwc_${queue}_fairness.xg >> trace/tcp-tfwc_${queue}x${factor}_fairness.xg
+	$RM trace/tcp-tfwc_${queue}_fairness.xg
+
+  done # for i in `seq 1 20`
+
+  $CAT trace/tcp_cov.xg >> trace/tcp_${factor}_cov.xg
+  $CAT trace/tfwc_cov.xg >> trace/tfwc_${factor}_cov.xg
+
+  # make a line break for 3D plot for each of these cases
+  if [ -f trace/tcp-tfwc_${queue}x${factor}_fairness.xg ]
+  then
+	$TOOLS/breakline trace/tcp-tfwc_${queue}x${factor}_fairness.xg
+	$TOOLS/breakline trace/tcp_${factor}_cov.xg
+	$TOOLS/breakline trace/tfwc_${factor}_cov.xg
+  fi
+  echo ""
+
+  $RM trace/tcp_cov.xg
+  $RM trace/tfwc_cov.xg
+  #------------------------------------------------------------------
+
+  #------------------------------------------------------------------
+  # queue size is set to 4.0 * BDP
+  #------------------------------------------------------------------
+  factor=`echo "4.0" | bc -l`
+  # initial bottleneck bw
+  bw=$5
+
+  for i in `seq 1 20`
+  do
+	if [ $i -le "5" ]
+	then
+	  if [ $i -eq "1" ]
+	  then
+		bw=$bw
+	  elif [ $i -ge "2" ] && [ $i -le "4" ]
+	  then
+		bw=`echo $bw \* $a2 | bc -l`
+	  else
+		bw=`echo $bw + $a1 | bc -l`
+	  fi
+	elif [ $i -ge "5" ] && [ $i -le "10" ]
+	then
+	  if [ $i -eq "6" ]
+	  then
+		bw=`echo $bw \* $a2 | bc -l`
+	  else
+		bw=`echo $bw + $a2 | bc -l`
+	  fi
+	elif [ $i -gt "10" ]
+	then
+	  bw=`echo $bw + $a3 | bc -l`
+	fi
+
+	# bottleneck bw should be always less than the half of access bw
+	ibw=`$TOOLS/round $bw`
+	accessbw2=`echo "scale=4; $accessbw/2" | bc -l`
+	iaccessbw=`$TOOLS/round $accessbw2`
+	if [ "$ibw" -ge "$iaccessbw" ]
+	then
+	  bw=$accessbw2
+	  pbw=$iaccessbw
+
+	  # don't need to run same simulation, so quit
+	  if [ "$iaccessbw" -eq "$pbw" ]
+	  then
+	    break
+	  fi
+	fi
+
+	# calculate bottleneck queue size
+	qsize=`echo "$factor * $rtt * $bw * 10^6 / 8000" | bc -l`
+	qsize=`$TOOLS/round $qsize`
+
+	# queue size is always greater than 5 packets
+	if [ $qsize -lt "5" ]
+	then
+	  qsize=5
+	fi
+
+	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
+	echo ""
+	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
+
+	# CoV computation
+	$CAT trace/tcp_avg_cov.xg >> trace/tcp_cov.xg
+	$CAT trace/tfwc_avg_cov.xg >> trace/tfwc_cov.xg
+
+	# archive throughput and fairness
+	$CP graph/aggr_fifo_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+	$TOOLS/fairness tcp-tfwc $toq $bw $src trace/tcp_thru_tot.dat trace/tfwc_thru_tot.dat
+	$CAT trace/tcp-tfwc_${queue}_fairness.xg >> trace/tcp-tfwc_${queue}x${factor}_fairness.xg
+	$RM trace/tcp-tfwc_${queue}_fairness.xg
+
+  done # for i in `seq 1 20`
+
+  $CAT trace/tcp_cov.xg >> trace/tcp_${factor}_cov.xg
+  $CAT trace/tfwc_cov.xg >> trace/tfwc_${factor}_cov.xg
+
+  # make a line break for 3D plot for each of these cases
+  if [ -f trace/tcp-tfwc_${queue}x${factor}_fairness.xg ]
+  then
+	$TOOLS/breakline trace/tcp-tfwc_${queue}x${factor}_fairness.xg
+	$TOOLS/breakline trace/tcp_${factor}_cov.xg
+	$TOOLS/breakline trace/tfwc_${factor}_cov.xg
+  fi
+  echo ""
+
+  $RM trace/tcp_cov.xg
+  $RM trace/tfwc_cov.xg
+  #------------------------------------------------------------------
 done
 fi
