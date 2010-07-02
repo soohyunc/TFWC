@@ -45,6 +45,9 @@ $ns trace-all $output
 
 set queue_out [open trace/out.queue w]
 
+# sim env
+#set simenv [open trace/THIS w]
+
 # hostname
 set hn [info hostname]
 
@@ -52,6 +55,8 @@ set hn [info hostname]
 set curr_dir [pwd]
 puts ""
 puts " $hn:$curr_dir"
+puts $simenv ""
+puts $simenv " $hn:$curr_dir"
 
 # simulation parameters
 #set tcl_precision	6
@@ -111,6 +116,12 @@ puts " Bandwidth-Delay Product		$delbw	packets"
 puts " Approximated e2e delay (RTT)	$rtt_in_sec	(sec)"
 puts " Approximated e2e delay (RTT)	$rtt_in_msec (msec)"
 puts ""
+puts $simenv ""
+puts $simenv " Bandwidth-Delay Product		$delbw	packets"
+puts $simenv " Approximated e2e delay (RTT)	$rtt_in_sec	(sec)"
+puts $simenv " Approximated e2e delay (RTT)	$rtt_in_msec (msec)"
+puts $simenv ""
+
 
 #
 # create a random generator for FTP and Link Delay
@@ -144,6 +155,7 @@ $RVdly use-rng $dlyRNG
 for {set i 1} {$i <= $app_num} {incr i} {
 	set dly($i) [expr [$RVdly value]]
 	puts " dly($i)          $dly($i)"
+	puts $simenv " dly($i)          $dly($i)"
 }
 
 #
@@ -153,12 +165,16 @@ if {$queuetype == "RED"} {
 	if {$max_p == "auto"} {
 		source max_p.tcl
 		puts " max_p            $max_p"
+		puts $simenv " max_p            $max_p"
 		set max_p_inv   [expr (1.0/$max_p)]
 		puts " max_p_inv        $max_p_inv"
+		puts $simenv " max_p_inv        $max_p_inv"
 	} else {
 		puts " max_p            $max_p"
+		puts $simenv " max_p            $max_p"
 		set max_p_inv   [expr (1.0/$max_p)]
 		puts " max_p_inv        $max_p_inv"
+		puts $simenv " max_p_inv        $max_p_inv"
 	}
 }
 
@@ -174,16 +190,19 @@ set n(3) [$ns node]
 for {set i 1} {$i <= $tcp_node_num} {incr i} {
 	set tcp_node($i) [$ns node]
 	puts " creating...	tcp_node($i)"
+	puts $simenv " creating...	tcp_node($i)"
 }
 
 for {set i 1} {$i <= $tfrc_node_num} {incr i} {
 	set tfrc_node($i) [$ns node]
 	puts " creating...	tfrc_node($i)"
+	puts $simenv " creating...	tfrc_node($i)"
 }
 
 for {set i 1} {$i <= $tfwc_node_num} {incr i} {
 	set tfwc_node($i) [$ns node]
 	puts " creating...	tfwc_node($i)"
+	puts $simenv " creating...	tfwc_node($i)"
 }
 
 #
@@ -332,13 +351,19 @@ for {set i [expr $tcp_app_num + $tfrc_app_num + 1]} \
 for {set i 1} {$i <= $app_num} {incr i} {
 	$ns at $startT($i) "$ftp($i) start"
 	puts " startT($i)       $startT($i)"
+	puts $simenv " startT($i)       $startT($i)"
 }
 puts ""
 puts ""
+puts $simenv ""
+puts $simenv ""
 #
 # Make a queue trace
 #
 $ns trace-queue $n(2) $n(3) $queue_out
+
+# close file descriptor
+close $simenv
 
 proc finish {} {
 	global tcp_src_num tfrc_src_num tfwc_src_num
