@@ -517,11 +517,11 @@ proc tcp_results {} {
 		}
 	} else {
 		if {$rtt_in_sec < 0.05} {
-			set max_factor .1
-		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
-			set max_factor .25
-		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
 			set max_factor .5
+		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
+			set max_factor 1
+		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
+			set max_factor 2
 		} else {
 			set max_factor 4
 		}
@@ -690,11 +690,11 @@ proc tfrc_results {} {
 		}
 	} else {
 		if {$rtt_in_sec < 0.05} {
-			set max_factor .1
-		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
 			set max_factor .5
-		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
+		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
 			set max_factor 1
+		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
+			set max_factor 2
 		} else {
 			set max_factor 4
 		}
@@ -862,11 +862,11 @@ proc tfwc_results {} {
 		}
 	} else {
 		if {$rtt_in_sec < 0.05} {
-			set max_factor .1
+			set max_factor .2
 		} elseif {$rtt_in_sec >= 0.05 && $rtt_in_sec < 0.1} {
-			set max_factor .25
+			set max_factor .4
 		} elseif {$rtt_in_sec >= 0.1 && $rtt_in_sec < 0.5} {
-			set max_factor .5
+			set max_factor .8
 		} else {
 			set max_factor 4
 		}
