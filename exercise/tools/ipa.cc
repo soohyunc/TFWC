@@ -98,7 +98,7 @@ int main (int argc, char *argv[]) {
 					tot += diff;
 					count++;
 
-					cout << count << " " << diff << endl;
+					//cout << count << " " << diff << endl;
 				}
 				prevtime = currtime;
 			}
