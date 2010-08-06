@@ -78,56 +78,55 @@ int main (int argc, char *argv[]) {
 	vector<double> iav;
 	vector<double>::iterator itr;
 
-	if (fin.is_open()) {
-		// preparing for the output file
-		stringstream ssxg, sstr;
-		ssxg << "trace/" << option << "_" << signal 
-			<< "_" << index << ".dat";
-		fout.open(ssxg.str().c_str());
+    if (fin.is_open()) {
+      // preparing for the output file
+      stringstream ssxg, sstr;
+      ssxg << "trace/" << option << "_" << signal 
+          << "_" << index << ".dat";
+      fout.open(ssxg.str().c_str());
 
-		// get input file stream
-		while (getline(fin, items)) {
-			istringstream is(items);
-			is >> stat >> currtime >> psize;
-			// when only received status
-			if(!strcmp(stat.c_str(), "r")) {
-				if (currtime > cutoff) {
-					diff = currtime - prevtime;
+      // get input file stream
+      while (getline(fin, items)) {
+        istringstream is(items);
+        is >> stat >> currtime >> psize;
+        // when only received status
+        if(!strcmp(stat.c_str(), "r")) {
+          if (currtime > cutoff) {
+            diff = currtime - prevtime;
 
-					iav.push_back(diff);
-					tot += diff;
-					count++;
+            iav.push_back(diff);
+            tot += diff;
+            count++;
+            //cout << count << " " << diff << endl;
+          }
+          prevtime = currtime;
+        }
+      } 
 
-					//cout << count << " " << diff << endl;
-				}
-				prevtime = currtime;
-			}
-		}
+      // sort inter-arrival time
+      sort (iav.begin(), iav.end());
+      vsize = iav.size();
 
-		// sort inter-arrival time
-		sort (iav.begin(), iav.end());
-		vsize = iav.size();
+      if (vsize%2) {
+        // vsize is odd number
+        median = iav.at((vsize + 1)/2);	
+      } else {
+        // vsize is even number
+        median = iav.at(vsize/2) +iav.at(vsize/2 + 1);
+        median /= 2;
+      }
 
-		if (vsize%2) {
-			// vsize is odd number
-			median = iav.at((vsize + 1)/2);	
-		} else {
-			// vsize is even number
-			median = iav.at(vsize/2) +iav.at(vsize/2 + 1);
-			median /= 2;
-		}
+      // median
+      fout << median << endl;
 
-		// median
-		fout << median << endl;
+      // arithmetic average
+      avg = tot/count;
+      //cout << avg << endl;
+      //fout << avg << endl;
 
-		// arithmetic average
-		avg = tot/count;
-		//cout << avg << endl;
-		//fout << avg << endl;
+      fin.close();
+    } // if(fin.is_open())
 
-		fin.close();
-		fout.close();
-	}
-
+    fout.close();
 	return 0;
 }
