@@ -427,6 +427,13 @@ proc red_plots {} {
 	# LOSS RATE PLOT
 	exec ../plt/red.loss.sh $curr_dir 2> /dev/null
 
+    # 30 secs from the half of the sim time
+    set from [expr ($t_sim / 2.0)]
+    set to   [expr ($from + 30)]
+    set cutoff $from
+    set t_sim $to
+
+
 	if {$tcp_src_num > 0} {
 		exec ../plt/plot.sh tcp thru red $cutoff $t_sim
 		exec ../plt/plot.sh tcp ewma_thru red $cutoff $t_sim
@@ -469,6 +476,12 @@ proc fifo_plots {} {
 
 	# LOSS RATE PLOT
 	exec ../plt/fifo.loss.sh $curr_dir 2> /dev/null
+
+    # 30 secs from the half of the sim time
+    set from [expr ($t_sim / 2.0)]
+    set to   [expr ($from + 30)]
+    set cutoff $from
+    set t_sim $to
 
 	if {$tcp_src_num > 0} {
 		exec ../plt/plot.sh tcp thru fifo $cutoff $t_sim
