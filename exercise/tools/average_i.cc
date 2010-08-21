@@ -44,7 +44,9 @@ int main (int argc, char *argv[]) {
 
 	string option = argv[1];
 	int index = atoi(argv[2]);
-	ifstream fin (argv[3]);
+    double cutoff = atof(argv[3]);
+    double until = atof(argv[4]);
+	ifstream fin (argv[5]);
 	ofstream fout_thru, fout_avg;
 	int k = 0;      // index number
 	double avg, item, time, total=0;
@@ -54,9 +56,11 @@ int main (int argc, char *argv[]) {
 		ss_thru << "trace/" << option << "_thru_" << index << ".dat";
 		fout_thru.open(ss_thru.str().c_str());
 		while (fin >> time >> item) {
-			total += item;
-			k++;
-			fout_thru << item << endl;
+            if(time > cutoff && time < until) {
+			  total += item;
+			  k++;
+			  fout_thru << item << endl;
+            }
 		}
 		fout_thru.close();
 		fin.close();

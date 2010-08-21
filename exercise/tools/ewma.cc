@@ -48,7 +48,7 @@ using namespace std;
 int main (int argc, char *argv[]) {
 
 	if (argc < 5) {
-		cout << "Usage: ./ewma [tcp|tfrc|tfwc] [thru|loss|...] [index] [granul] [coefficient] [cutoff] [trace_file]" << endl;
+		cout << "Usage: ./ewma [tcp|tfrc|tfwc] [thru|loss|...] [index] [granul] [coefficient] [cutoff] [until] [trace_file]" << endl;
 		exit (0);
 	}
 
@@ -58,7 +58,8 @@ int main (int argc, char *argv[]) {
 	double granul = atof(argv[4]);
 	double a = atof(argv[5]);
 	double cutoff = atof(argv[6]);
-	ifstream fin (argv[7]); 
+	double until = atof(argv[7]);
+	ifstream fin (argv[8]); 
 	ofstream fout_xg, fout_tr;
 
 	// variables
@@ -102,7 +103,7 @@ int main (int argc, char *argv[]) {
 					// EWMA equation
 					currthru = a * currthru + (1-a) * prevthru;
 
-					if (currtime > cutoff)  {
+					if (currtime > cutoff && currtime < until)  {
 						fout_xg << time << " " << currthru << endl;
 						fout_tr << stat << " " << time << " " 
 							<< psize << endl;
@@ -121,7 +122,7 @@ int main (int argc, char *argv[]) {
 					// EWMA
 					currthru = a * currthru + (1-a) * prevthru;
 
-					if (currtime > cutoff)
+					if (currtime > cutoff && currtime < until)
 						fout_xg << time << " " << currthru << endl;
 
 					// store currthru

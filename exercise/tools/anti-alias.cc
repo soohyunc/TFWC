@@ -48,7 +48,7 @@ using namespace std;
 int main (int argc, char *argv[]) {
 
 	if (argc < 5) {
-		cout << "Usage: ./anti-alias [tcp|tfrc|tfwc] [thru|loss|...] [index] [granul] [cutoff] [trace_file]" << endl;
+		cout << "Usage: ./anti-alias [tcp|tfrc|tfwc] [thru|loss|...] [index] [granul] [cutoff] [until] [trace_file]" << endl;
 		exit (0);
 	}
 
@@ -57,7 +57,8 @@ int main (int argc, char *argv[]) {
 	int index = atoi(argv[3]);
 	double granul = atof(argv[4]);
 	double cutoff = atof(argv[5]);
-	ifstream fin (argv[6]); 
+	double until = atof(argv[6]);
+	ifstream fin (argv[7]); 
 	ofstream fout;
 
 	// variables
@@ -87,7 +88,7 @@ int main (int argc, char *argv[]) {
 
 			if (currtime-time >= granul) {
 				time += granul;
-				if (currtime > cutoff)
+				if (currtime > cutoff && currtime < until)
 					fout << time << " " << tot/count << endl;
 				tot = 0.0; count = 0;
 			}

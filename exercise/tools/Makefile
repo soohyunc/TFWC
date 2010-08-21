@@ -3,7 +3,7 @@
 CPP	:= g++
 SRCS	:= $(wildcard *.cc)
 OBJS	:= $(SRCS:.cc=.o)
-CFLAGS	:= -Wall -g -O2
+CFLAGS	:= -Wall -g -O2 -lstdc++
 RM	:= rm -f
 
 .PHONY:	all clean distclean
