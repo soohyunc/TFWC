@@ -27,3 +27,9 @@ for i in $( ls $PWD/trace/*.eps ); do
 	rm -f $i
 done 2> /dev/null
 
+delenv=$PWD/trace/SIMENV
+if [ -s $delenv ];
+then
+echo "deleting: $delenv"
+rm -f $delenv
+fi

@@ -430,37 +430,34 @@ proc red_plots {} {
     # 30 secs from the half of the sim time
     set from [expr ($t_sim / 2.0)]
     set to   [expr ($from + 30)]
-    set cutoff $from
-    set t_sim $to
-
 
 	if {$tcp_src_num > 0} {
-		exec ../plt/plot.sh tcp thru red $cutoff $t_sim
-		exec ../plt/plot.sh tcp ewma_thru red $cutoff $t_sim
-		exec ../plt/plot.sh tcp ant_thru red $cutoff $t_sim
-		exec ../plt/plot.sh tcp loss red $cutoff $t_sim
-		exec ../plt/plot.sh tcp cwnd red $cutoff $t_sim
-		exec ../plt/plot.sh tcp q red $cutoff $t_sim
+		exec ../plt/plot.sh tcp thru red $from $to
+		exec ../plt/plot.sh tcp ewma_thru red $from $to
+		exec ../plt/plot.sh tcp ant_thru red $from $to
+		exec ../plt/plot.sh tcp loss red $from $to
+		exec ../plt/plot.sh tcp cwnd red $from $to
+		exec ../plt/plot.sh tcp q red $from $to
 	}
 	if {$tfrc_src_num > 0} {
-		exec ../plt/plot.sh tfrc thru red $cutoff $t_sim
-		exec ../plt/plot.sh tfrc ewma_thru red $cutoff $t_sim
-		exec ../plt/plot.sh tfrc ant_thru red $cutoff $t_sim
-		exec ../plt/plot.sh tfrc loss red $cutoff $t_sim
-		exec ../plt/plot.sh tfrc cwnd red $cutoff $t_sim
-		exec ../plt/plot.sh tfrc q red $cutoff $t_sim
-		exec ../plt/plot.sh tfrc avg_int red $cutoff $t_sim
+		exec ../plt/plot.sh tfrc thru red $from $to
+		exec ../plt/plot.sh tfrc ewma_thru red $from $to
+		exec ../plt/plot.sh tfrc ant_thru red $from $to
+		exec ../plt/plot.sh tfrc loss red $from $to
+		exec ../plt/plot.sh tfrc cwnd red $from $to
+		exec ../plt/plot.sh tfrc q red $from $to
+		exec ../plt/plot.sh tfrc avg_int red $from $to
 	}
 	if {$tfwc_src_num > 0} {
-		exec ../plt/plot.sh tfwc thru red $cutoff $t_sim
-		exec ../plt/plot.sh tfwc ewma_thru red $cutoff $t_sim
-		exec ../plt/plot.sh tfwc ant_thru red $cutoff $t_sim
-		exec ../plt/plot.sh tfwc loss red $cutoff $t_sim
-		exec ../plt/plot.sh tfwc loss_by_cal red $cutoff $t_sim
-		exec ../plt/plot.sh tfwc cwnd red $cutoff $t_sim
-		exec ../plt/plot.sh tfwc q red $cutoff $t_sim
-		exec ../plt/plot.sh tfwc sr red $cutoff $t_sim
-		exec ../plt/plot.sh tfwc avg_int red $cutoff $t_sim
+		exec ../plt/plot.sh tfwc thru red $from $to
+		exec ../plt/plot.sh tfwc ewma_thru red $from $to
+		exec ../plt/plot.sh tfwc ant_thru red $from $to
+		exec ../plt/plot.sh tfwc loss red $from $to
+		exec ../plt/plot.sh tfwc loss_by_cal red $from $to
+		exec ../plt/plot.sh tfwc cwnd red $from $to
+		exec ../plt/plot.sh tfwc q red $from $to
+		exec ../plt/plot.sh tfwc sr red $from $to
+		exec ../plt/plot.sh tfwc avg_int red $from $to
 	}
 }
 
@@ -480,36 +477,34 @@ proc fifo_plots {} {
     # 30 secs from the half of the sim time
     set from [expr ($t_sim / 2.0)]
     set to   [expr ($from + 30)]
-    set cutoff $from
-    set t_sim $to
 
 	if {$tcp_src_num > 0} {
-		exec ../plt/plot.sh tcp thru fifo $cutoff $t_sim
-		exec ../plt/plot.sh tcp ewma_thru fifo $cutoff $t_sim
-		exec ../plt/plot.sh tcp ant_thru fifo $cutoff $t_sim
-		exec ../plt/plot.sh tcp loss fifo $cutoff $t_sim
-		exec ../plt/plot.sh tcp cwnd fifo $cutoff $t_sim
-		exec ../plt/plot.sh tcp q fifo $cutoff $t_sim
+		exec ../plt/plot.sh tcp thru fifo $from $to
+		exec ../plt/plot.sh tcp ewma_thru fifo $from $to
+		exec ../plt/plot.sh tcp ant_thru fifo $from $to
+		exec ../plt/plot.sh tcp loss fifo $from $to
+		exec ../plt/plot.sh tcp cwnd fifo $from $to
+		exec ../plt/plot.sh tcp q fifo $from $to
 	}
 	if {$tfrc_src_num > 0} {
-		exec ../plt/plot.sh tfrc thru fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfrc ewma_thru fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfrc ant_thru fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfrc loss fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfrc cwnd fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfrc q fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfrc avg_int fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfrc thru fifo $from $to
+		exec ../plt/plot.sh tfrc ewma_thru fifo $from $to
+		exec ../plt/plot.sh tfrc ant_thru fifo $from $to
+		exec ../plt/plot.sh tfrc loss fifo $from $to
+		exec ../plt/plot.sh tfrc cwnd fifo $from $to
+		exec ../plt/plot.sh tfrc q fifo $from $to
+		exec ../plt/plot.sh tfrc avg_int fifo $from $to
 	}
 	if {$tfwc_src_num > 0} {
-		exec ../plt/plot.sh tfwc thru fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfwc ewma_thru fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfwc ant_thru fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfwc loss fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfwc loss_by_cal fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfwc cwnd fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfwc q fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfwc sr fifo $cutoff $t_sim
-		exec ../plt/plot.sh tfwc avg_int fifo $cutoff $t_sim
+		exec ../plt/plot.sh tfwc thru fifo $from $to
+		exec ../plt/plot.sh tfwc ewma_thru fifo $from $to
+		exec ../plt/plot.sh tfwc ant_thru fifo $from $to
+		exec ../plt/plot.sh tfwc loss fifo $from $to
+		exec ../plt/plot.sh tfwc loss_by_cal fifo $from $to
+		exec ../plt/plot.sh tfwc cwnd fifo $from $to
+		exec ../plt/plot.sh tfwc q fifo $from $to
+		exec ../plt/plot.sh tfwc sr fifo $from $to
+		exec ../plt/plot.sh tfwc avg_int fifo $from $to
 	}
 }
 
@@ -519,14 +514,18 @@ proc tcp_results {} {
 	global numeric_bottleneck_bandwidth
 	global rtt_in_sec
 
+    # 30 secs from the half of the sim time
+    set from [expr ($t_sim / 2.0)]
+    set to   [expr ($from + 30)]
+
 	# THROUGHPUT
 	exec awk -f ../awk/tcp_thru.awk \
-				cutoff=$cutoff \
-                until=$t_sim
+				cutoff=$from \
+                until=$to \
 				trace/out.queue
 	exec awk -f ../awk/total_avg_thru.awk \
-				cutoff=$cutoff \
-				t_sim=$t_sim \
+				cutoff=$from \
+				t_sim=$to \
 				trace/out.queue
 
 	#this will generate per flow trace files
@@ -537,7 +536,7 @@ proc tcp_results {} {
 	#for {set i 1} {$i <= $tcp_src_num} {incr i} {
 	#	exec ../tools/ipa tcp ipa \
 	#			$i \
-	#			$cutoff \
+	#			$from \
 	#			trace/tcp_indiv_$i.tr
 	#}
 
@@ -599,21 +598,21 @@ proc tcp_results {} {
 					option=tcp \
 					ix=$i \
 					granul=$granul \
-					cutoff=$cutoff \
-                    until=$t_sim \
+					cutoff=$from \
+                    until=$to \
 					trace/tcp_indiv_$i.tr
 		exec ../tools/ewma tcp thru \
 				$i \
 				$freq \
 				0.085 \
-				$cutoff \
-                $t_sim \
+				$from \
+                $to \
 				trace/tcp_indiv_$i.tr
 		exec ../tools/anti-alias tcp thru \
 				$i \
 				$ff \
-				$cutoff \
-                $t_sim \
+				$from \
+                $to \
 				trace/tcp_ewma_thru_$i.xg
 	}
 
@@ -621,8 +620,8 @@ proc tcp_results {} {
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
 		exec ../tools/average_i tcp \
 				$i \
-                $cutoff \
-                $t_sim \
+                $from \
+                $to \
 				trace/tcp_thru_$i.xg
 	}
 
@@ -649,14 +648,14 @@ proc tcp_results {} {
 			$numeric_bottleneck_bandwidth
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
-	exec awk -f ../awk/tcp_q.awk cutoff=$cutoff trace/out.queue
+	exec awk -f ../awk/tcp_q.awk cutoff=$from trace/out.queue
     for {set i 1} {$i <= $tcp_src_num} {incr i} {
         exec awk -f ../awk/q_indiv.awk \
 					option=tcp \
 					ix=$i \
 					granul=$granul \
-					cutoff=$cutoff \
-                    until=$t_sim \
+					cutoff=$from \
+                    until=$to \
 					trace/tcp_indiv_$i.tr
     }
 
@@ -665,20 +664,20 @@ proc tcp_results {} {
 		exec awk -f ../awk/q_red.awk \
 					option=tcp \
 					granul=$granul \
-					cutoff=$cutoff \
-                    until=$t_sim \
+					cutoff=$from \
+                    until=$to \
 					trace/red_q.tr
 	}
 
 	# LOSS RATE
-	exec awk -f ../awk/tcp_loss.awk cutoff=$cutoff trace/out.queue
+	exec awk -f ../awk/tcp_loss.awk cutoff=$from trace/out.queue
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
         exec awk -f ../awk/loss_indiv.awk \
 					option=tcp \
 					ix=$i \
 					granul=$granul \
-					cutoff=$cutoff \
-                    until=$t_sim \
+					cutoff=$from \
+                    until=$to \
 					trace/tcp_indiv_$i.tr
 	}
 
@@ -686,8 +685,8 @@ proc tcp_results {} {
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
 		exec awk -f ../awk/tcp_cwnd.awk \
 					granul=$granul \
-					cutoff=$cutoff \
-                    until=$t_sim \
+					cutoff=$from \
+                    until=$to \
 					trace/tcp_cwnd_$i.tr > trace/tcp_cwnd_$i.tmp
 
 		# delete the last line of a file
@@ -702,14 +701,18 @@ proc tfrc_results {} {
 	global numeric_bottleneck_bandwidth
 	global rtt_in_sec
 
+    # 30 secs from the half of the sim time
+    set from [expr ($t_sim / 2.0)]
+    set to   [expr ($from + 30)]
+
 	# THROUGHPUT
 	exec awk -f ../awk/tfrc_thru.awk \
-				cutoff=$cutoff \
-                until=$t_sim \
+				cutoff=$from \
+                until=$to \
 				trace/out.queue
 	exec awk -f ../awk/total_avg_thru.awk \
-				cutoff=$cutoff \
-				t_sim=$t_sim \
+				cutoff=$from \
+				t_sim=$to \
 				trace/out.queue
 
 	#this will generate per flow trace files
@@ -720,7 +723,7 @@ proc tfrc_results {} {
 	#for {set i 1} {$i <= $tfrc_src_num} {incr i} {
 	#	exec ../tools/ipa tfrc ipa \
 	#			$i \
-	#			$cutoff \
+	#			$from \
 	#			trace/tfrc_indiv_$i.tr
 	#}
 
@@ -776,21 +779,21 @@ proc tfrc_results {} {
 					option=tfrc \
 					ix=$i \
 					granul=$granul \
-					cutoff=$cutoff \
-                    until=$t_sim \
+					cutoff=$from \
+                    until=$to \
 					trace/tfrc_indiv_$i.tr
 		exec ../tools/ewma tfrc thru \
 				$i \
 				$freq \
 				0.085 \
-				$cutoff \
-                $t_sim \
+				$from \
+                $to \
 				trace/tfrc_indiv_$i.tr
 		exec ../tools/anti-alias tfrc thru \
 				$i \
 				$ff \
-				$cutoff \
-                $t_sim \
+				$from \
+                $to \
 				trace/tfrc_ewma_thru_$i.xg
 	}
 
@@ -798,8 +801,8 @@ proc tfrc_results {} {
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
 		exec ../tools/average_i tfrc \
 				$i \
-                $cutoff \
-                $t_sim \
+                $from \
+                $to \
 				trace/tfrc_thru_$i.xg
 	}
 
@@ -827,15 +830,15 @@ proc tfrc_results {} {
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
 	exec awk -f ../awk/tfrc_inst_q.awk \
-				cutoff=$cutoff \
+				cutoff=$from \
 				trace/out.queue
     for {set i 1} {$i <= $tfrc_src_num} {incr i} {
         exec awk -f ../awk/q_indiv.awk \
 					option=tfrc \
 					ix=$i \
 					granul=$granul \
-					cutoff=$cutoff \
-                    until=$t_sim \
+					cutoff=$from \
+                    until=$to \
 					trace/tfrc_indiv_$i.tr
     }
 
@@ -844,20 +847,20 @@ proc tfrc_results {} {
         exec awk -f ../awk/q_red.awk \
 					option=tfrc \
 					granul=$granul \
-					cutoff=$cutoff \
-                    until=$t_sim \
+					cutoff=$from \
+                    until=$to \
 					trace/red_q.tr
 	}
 
 	# LOSS RATE
-	exec awk -f ../awk/tfrc_loss.awk cutoff=$cutoff trace/out.queue
+	exec awk -f ../awk/tfrc_loss.awk cutoff=$from trace/out.queue
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
         exec awk -f ../awk/loss_indiv.awk \
 					option=tfrc \
 					ix=$i \
 					granul=$granul \
-					cutoff=$cutoff \
-                    until=$t_sim \
+					cutoff=$from \
+                    until=$to \
 					trace/tfrc_indiv_$i.tr
 	}
 	if {[catch {exec grep tfrcTx temp > \
@@ -883,14 +886,18 @@ proc tfwc_results {} {
 	global numeric_bottleneck_bandwidth
 	global rtt_in_sec
 
+    # 30 secs from the half of the sim time
+    set from [expr ($t_sim / 2.0)]
+    set to   [expr ($from + 30)]
+
 	# THROUGHPUT
 	exec awk -f ../awk/tfwc_thru.awk \
-				cutoff=$cutoff \
-                until=$t_sim \
+				cutoff=$from \
+                until=$to \
 				trace/out.queue
 	exec awk -f ../awk/total_avg_thru.awk \
-				cutoff=$cutoff \
-				t_sim=$t_sim \
+				cutoff=$from \
+				t_sim=$to \
 				trace/out.queue
 
 	#this will generate per flow trace files
@@ -901,7 +908,7 @@ proc tfwc_results {} {
 	#for {set i 1} {$i <= $tfwc_src_num} {incr i} {
 	#	exec ../tools/ipa tfwc ipa \
 	#			$i \
-	#			$cutoff \
+	#			$from \
 	#			trace/tfwc_indiv_$i.tr
 	#}
 
@@ -963,21 +970,21 @@ proc tfwc_results {} {
 					option=tfwc \
 					ix=$i \
 					granul=$granul \
-					cutoff=$cutoff \
-                    until=$t_sim \
+					cutoff=$from \
+                    until=$to \
 					trace/tfwc_indiv_$i.tr
 		exec ../tools/ewma tfwc thru \
 				$i \
 				$freq \
 				0.085 \
-				$cutoff \
-                $t_sim \
+				$from \
+                $to \
 				trace/tfwc_indiv_$i.tr
 		exec ../tools/anti-alias tfwc thru \
 				$i \
 				$ff \
-				$cutoff \
-                $t_sim \
+				$from \
+                $to \
 				trace/tfwc_ewma_thru_$i.xg
 	}
 
@@ -985,8 +992,8 @@ proc tfwc_results {} {
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
 		exec ../tools/average_i tfwc \
 				$i \
-                $cutoff \
-                $t_sim \
+                $from \
+                $to \
 				trace/tfwc_thru_$i.xg
 	}
 
@@ -1014,15 +1021,15 @@ proc tfwc_results {} {
 
 	# INSTANTANEOUS QUEUE SIZE (individual plot)
 	exec awk -f ../awk/tfwc_inst_q.awk \
-				cutoff=$cutoff \
+				cutoff=$from \
 				trace/out.queue
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
         exec awk -f ../awk/q_indiv.awk \
 					option=tfwc \
 					ix=$i \
 					granul=$granul \
-					cutoff=$cutoff \
-                    until=$t_sim \
+					cutoff=$from \
+                    until=$to \
 					trace/tfwc_indiv_$i.tr
 	}
 
@@ -1031,23 +1038,23 @@ proc tfwc_results {} {
         exec awk -f ../awk/q_red.awk \
 					option=tfwc \
 					granul=$granul \
-					cutoff=$cutoff \
-                    until=$t_sim \
+					cutoff=$from \
+                    until=$to \
 					trace/red_q.tr
 	}
 
 	# LOSS RATE
 	exec awk -f ../awk/tfwc_loss.awk \
-				cutoff=$cutoff \
-                until=$t_sim \
+				cutoff=$from \
+                until=$to \
 				trace/out.queue
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
         exec awk -f ../awk/loss_indiv.awk \
 					option=tfwc \
 					ix=$i \
 					granul=$granul \
-					cutoff=$cutoff \
-                    until=$t_sim \
+					cutoff=$from \
+                    until=$to \
 					trace/tfwc_indiv_$i.tr
 	}
 	if {[catch {exec grep tfwcTx temp > \
@@ -1091,8 +1098,8 @@ proc tfwc_results {} {
 					option=tfwc \
 					ix=$i \
 					granul=$granul \
-					cutoff=$cutoff \
-                    until=$t_sim \
+					cutoff=$from \
+                    until=$to \
 					trace/tfwc_sr_$i.tr
 	}
 
@@ -1110,7 +1117,7 @@ proc tfwc_results {} {
 				exec ../tools/paste \
 				$j \
 				$tfwc_src_num \
-				$cutoff \
+				$from \
 				trace/tfwc_to_$i.tr \
 				trace/tfwc_cwnd_$j.tr
 			}
@@ -1120,7 +1127,7 @@ proc tfwc_results {} {
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
 		exec ../tools/estimated_t0 \
 				$i \
-				$cutoff \
+				$from \
 				trace/tfwc_to_$i.tr \
 				trace/tfwc_thru_$i.xg
 	}
