@@ -124,13 +124,13 @@ puts ""
 puts " ----------------------------------------------------------------------"
 puts " ns main.tcl $tcp_src_num $tfrc_src_num $tfwc_src_num $accessBW\
 	$accessMinDel $accessMaxDel $bottleneckBW $bottleneckDel\
-	$q_len $duration $seedno $isReverse $queue_type > temp 2&>1 "
+	$q_len $duration $seedno $isReverse $queue_type > temp 2>&1 "
 puts " ----------------------------------------------------------------------"
 puts $simenv ""
 puts $simenv " ----------------------------------------------------------------------"
 puts $simenv " ns main.tcl $tcp_src_num $tfrc_src_num $tfwc_src_num $accessBW\
 	$accessMinDel $accessMaxDel $bottleneckBW $bottleneckDel\
-	$q_len $duration $seedno $isReverse $queue_type > temp 2&>1 "
+	$q_len $duration $seedno $isReverse $queue_type > temp 2>&1 "
 puts $simenv " ----------------------------------------------------------------------"
 
 source common.tcl
