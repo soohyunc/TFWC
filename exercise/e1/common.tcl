@@ -533,12 +533,12 @@ proc tcp_results {} {
 
 	# capture inter-packet arrival time
 	# (this is median value instead of arithmetic average)
-	for {set i 1} {$i <= $tcp_src_num} {incr i} {
-		exec ../tools/ipa tcp ipa \
-				$i \
-				$cutoff \
-				trace/tcp_indiv_$i.tr
-	}
+	#for {set i 1} {$i <= $tcp_src_num} {incr i} {
+	#	exec ../tools/ipa tcp ipa \
+	#			$i \
+	#			$cutoff \
+	#			trace/tcp_indiv_$i.tr
+	#}
 
 	# avoid unnecessary long floating point value
 	set tcl_precision 6
@@ -706,12 +706,12 @@ proc tfrc_results {} {
 
 	# capture inter-packet arrival time
 	# (this is median value instead of arithmetic average)
-	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
-		exec ../tools/ipa tfrc ipa \
-				$i \
-				$cutoff \
-				trace/tfrc_indiv_$i.tr
-	}
+	#for {set i 1} {$i <= $tfrc_src_num} {incr i} {
+	#	exec ../tools/ipa tfrc ipa \
+	#			$i \
+	#			$cutoff \
+	#			trace/tfrc_indiv_$i.tr
+	#}
 
 	# avoid unnecessary long floating point value
 	set tcl_precision 6
@@ -878,12 +878,12 @@ proc tfwc_results {} {
 
 	# capture inter-packet arrival time
 	# (this is median value instead of arithmetic average)
-	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
-		exec ../tools/ipa tfwc ipa \
-				$i \
-				$cutoff \
-				trace/tfwc_indiv_$i.tr
-	}
+	#for {set i 1} {$i <= $tfwc_src_num} {incr i} {
+	#	exec ../tools/ipa tfwc ipa \
+	#			$i \
+	#			$cutoff \
+	#			trace/tfwc_indiv_$i.tr
+	#}
 
 	# avoid unnecessary long floating point value
 	set tcl_precision 6
