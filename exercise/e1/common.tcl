@@ -522,6 +522,7 @@ proc tcp_results {} {
 	# THROUGHPUT
 	exec awk -f ../awk/tcp_thru.awk \
 				cutoff=$cutoff \
+                until=$t_sim
 				trace/out.queue
 	exec awk -f ../awk/total_avg_thru.awk \
 				cutoff=$cutoff \
@@ -599,17 +600,20 @@ proc tcp_results {} {
 					ix=$i \
 					granul=$granul \
 					cutoff=$cutoff \
+                    until=$t_sim \
 					trace/tcp_indiv_$i.tr
 		exec ../tools/ewma tcp thru \
 				$i \
 				$freq \
 				0.085 \
 				$cutoff \
+                $t_sim \
 				trace/tcp_indiv_$i.tr
 		exec ../tools/anti-alias tcp thru \
 				$i \
 				$ff \
 				$cutoff \
+                $t_sim \
 				trace/tcp_ewma_thru_$i.xg
 	}
 
@@ -617,6 +621,8 @@ proc tcp_results {} {
 	for {set i 1} {$i <= $tcp_src_num} {incr i} {
 		exec ../tools/average_i tcp \
 				$i \
+                $cutoff \
+                $t_sim \
 				trace/tcp_thru_$i.xg
 	}
 
@@ -650,6 +656,7 @@ proc tcp_results {} {
 					ix=$i \
 					granul=$granul \
 					cutoff=$cutoff \
+                    until=$t_sim \
 					trace/tcp_indiv_$i.tr
     }
 
@@ -659,6 +666,7 @@ proc tcp_results {} {
 					option=tcp \
 					granul=$granul \
 					cutoff=$cutoff \
+                    until=$t_sim \
 					trace/red_q.tr
 	}
 
@@ -670,6 +678,7 @@ proc tcp_results {} {
 					ix=$i \
 					granul=$granul \
 					cutoff=$cutoff \
+                    until=$t_sim \
 					trace/tcp_indiv_$i.tr
 	}
 
@@ -678,6 +687,7 @@ proc tcp_results {} {
 		exec awk -f ../awk/tcp_cwnd.awk \
 					granul=$granul \
 					cutoff=$cutoff \
+                    until=$t_sim \
 					trace/tcp_cwnd_$i.tr > trace/tcp_cwnd_$i.tmp
 
 		# delete the last line of a file
@@ -695,6 +705,7 @@ proc tfrc_results {} {
 	# THROUGHPUT
 	exec awk -f ../awk/tfrc_thru.awk \
 				cutoff=$cutoff \
+                until=$t_sim \
 				trace/out.queue
 	exec awk -f ../awk/total_avg_thru.awk \
 				cutoff=$cutoff \
@@ -766,17 +777,20 @@ proc tfrc_results {} {
 					ix=$i \
 					granul=$granul \
 					cutoff=$cutoff \
+                    until=$t_sim \
 					trace/tfrc_indiv_$i.tr
 		exec ../tools/ewma tfrc thru \
 				$i \
 				$freq \
 				0.085 \
 				$cutoff \
+                $t_sim \
 				trace/tfrc_indiv_$i.tr
 		exec ../tools/anti-alias tfrc thru \
 				$i \
 				$ff \
 				$cutoff \
+                $t_sim \
 				trace/tfrc_ewma_thru_$i.xg
 	}
 
@@ -784,6 +798,8 @@ proc tfrc_results {} {
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
 		exec ../tools/average_i tfrc \
 				$i \
+                $cutoff \
+                $t_sim \
 				trace/tfrc_thru_$i.xg
 	}
 
@@ -819,6 +835,7 @@ proc tfrc_results {} {
 					ix=$i \
 					granul=$granul \
 					cutoff=$cutoff \
+                    until=$t_sim \
 					trace/tfrc_indiv_$i.tr
     }
 
@@ -828,6 +845,7 @@ proc tfrc_results {} {
 					option=tfrc \
 					granul=$granul \
 					cutoff=$cutoff \
+                    until=$t_sim \
 					trace/red_q.tr
 	}
 
@@ -839,6 +857,7 @@ proc tfrc_results {} {
 					ix=$i \
 					granul=$granul \
 					cutoff=$cutoff \
+                    until=$t_sim \
 					trace/tfrc_indiv_$i.tr
 	}
 	if {[catch {exec grep tfrcTx temp > \
@@ -867,6 +886,7 @@ proc tfwc_results {} {
 	# THROUGHPUT
 	exec awk -f ../awk/tfwc_thru.awk \
 				cutoff=$cutoff \
+                until=$t_sim \
 				trace/out.queue
 	exec awk -f ../awk/total_avg_thru.awk \
 				cutoff=$cutoff \
@@ -944,17 +964,20 @@ proc tfwc_results {} {
 					ix=$i \
 					granul=$granul \
 					cutoff=$cutoff \
+                    until=$t_sim \
 					trace/tfwc_indiv_$i.tr
 		exec ../tools/ewma tfwc thru \
 				$i \
 				$freq \
 				0.085 \
 				$cutoff \
+                $t_sim \
 				trace/tfwc_indiv_$i.tr
 		exec ../tools/anti-alias tfwc thru \
 				$i \
 				$ff \
 				$cutoff \
+                $t_sim \
 				trace/tfwc_ewma_thru_$i.xg
 	}
 
@@ -962,6 +985,8 @@ proc tfwc_results {} {
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
 		exec ../tools/average_i tfwc \
 				$i \
+                $cutoff \
+                $t_sim \
 				trace/tfwc_thru_$i.xg
 	}
 
@@ -997,6 +1022,7 @@ proc tfwc_results {} {
 					ix=$i \
 					granul=$granul \
 					cutoff=$cutoff \
+                    until=$t_sim \
 					trace/tfwc_indiv_$i.tr
 	}
 
@@ -1006,12 +1032,14 @@ proc tfwc_results {} {
 					option=tfwc \
 					granul=$granul \
 					cutoff=$cutoff \
+                    until=$t_sim \
 					trace/red_q.tr
 	}
 
 	# LOSS RATE
 	exec awk -f ../awk/tfwc_loss.awk \
 				cutoff=$cutoff \
+                until=$t_sim \
 				trace/out.queue
 	for {set i 1} {$i <= $tfwc_src_num} {incr i} {
         exec awk -f ../awk/loss_indiv.awk \
@@ -1019,6 +1047,7 @@ proc tfwc_results {} {
 					ix=$i \
 					granul=$granul \
 					cutoff=$cutoff \
+                    until=$t_sim \
 					trace/tfwc_indiv_$i.tr
 	}
 	if {[catch {exec grep tfwcTx temp > \
@@ -1063,6 +1092,7 @@ proc tfwc_results {} {
 					ix=$i \
 					granul=$granul \
 					cutoff=$cutoff \
+                    until=$t_sim \
 					trace/tfwc_sr_$i.tr
 	}
 
