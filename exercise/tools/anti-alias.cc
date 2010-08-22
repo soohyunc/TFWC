@@ -58,6 +58,7 @@ int main (int argc, char *argv[]) {
 	double granul = atof(argv[4]);
 	double cutoff = atof(argv[5]);
 	double until = atof(argv[6]);
+	until = until;
 	ifstream fin (argv[7]); 
 	ofstream fout;
 
