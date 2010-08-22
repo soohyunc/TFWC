@@ -36,25 +36,28 @@
 #
 # $Id$
 
-if [ -f "$1/trace/tcp_q.xg" ];
+FROM=$2
+TO=$3
+
+if [ -s "$1/trace/tcp_q.xg" ];
 then
     echo ""
 else
-    echo "20 0" > "$1/trace/tcp_q.xg"
+    echo "$FROM 0" > "$1/trace/tcp_q.xg"
 fi
 
-if [ -f "$1/trace/tfrc_q.xg" ];
+if [ -s "$1/trace/tfrc_q.xg" ];
 then
     echo ""
 else
-    echo "20 0" > "$1/trace/tfrc_q.xg"
+    echo "$FROM 0" > "$1/trace/tfrc_q.xg"
 fi
 
-if [ -f "$1/trace/tfwc_q.xg" ];
+if [ -s "$1/trace/tfwc_q.xg" ];
 then
     echo ""
 else
-    echo "20 0" > "$1/trace/tfwc_q.xg"
+    echo "$FROM 0" > "$1/trace/tfwc_q.xg"
 fi
 
 gnuplot -persist << EOF
@@ -69,6 +72,8 @@ gnuplot -persist << EOF
 	set     title           "Aggregated Queue Size"
 	set     xlabel          "time"
 	set     ylabel          "queue size in packets"
+
+	set xrange [$FROM:$TO]
 
 	#set	key		180,2.0
 

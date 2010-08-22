@@ -36,25 +36,28 @@
 #
 # $Id$
 
-if [ -f "$1/trace/tcp_thru.xg" ];
+FROM=$2
+TO=$3
+
+if [ -s "$1/trace/tcp_thru.xg" ];
 then
     echo ""
 else
-    echo "20 0" > "$1/trace/tcp_thru.xg"
+    echo "$FROM 0" > "$1/trace/tcp_thru.xg"
 fi
 
-if [ -f "$1/trace/tfrc_thru.xg" ];
+if [ -s "$1/trace/tfrc_thru.xg" ];
 then
     echo ""
 else
-    echo "20 0" > "$1/trace/tfrc_thru.xg"
+    echo "$FROM 0" > "$1/trace/tfrc_thru.xg"
 fi
 
-if [ -f "$1/trace/tfwc_thru.xg" ];
+if [ -s "$1/trace/tfwc_thru.xg" ];
 then
     echo ""
 else
-    echo "20 0" > "$1/trace/tfwc_thru.xg"
+    echo "$FROM 0" > "$1/trace/tfwc_thru.xg"
 fi
 
 gnuplot -persist << EOF
@@ -63,7 +66,7 @@ set     output          "$1/graph/aggr_red_thru.png"
 #set     pointsize       0.4
 set     grid
 
-#set	xrange		[20:]
+#set	xrange		[$FROM:]
 set	yrange		[0:]
 
 set style line 1 linetype 1 linewidth 1
@@ -73,6 +76,8 @@ set style line 3 linetype 3 linewidth 1
 set     title           "Aggregated Throughput"
 set     xlabel          "time"
 set     ylabel          "rate (Mb/s)"
+
+set xrange [$FROM:$TO]
 
 plot    "$1/trace/tcp_thru.xg" title 'TCP Throughput' with lines, \
 		"$1/trace/tfrc_thru.xg" title 'TFRC Throughput' with lines, \

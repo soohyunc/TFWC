@@ -36,25 +36,28 @@
 #
 # $Id$
 
+FROM=$3
+TO=$2
+
 if [ -f "$1/trace/tcp_q.xg" ];
 then
     echo ""
 else
-    echo "20 0" > "$1/trace/tcp_q.xg"
+    echo "$FROM 0" > "$1/trace/tcp_q.xg"
 fi
 
 if [ -f "$1/trace/tfrc_q.xg" ];
 then
     echo ""
 else
-    echo "20 0" > "$1/trace/tfrc_q.xg"
+    echo "$FROM 0" > "$1/trace/tfrc_q.xg"
 fi
 
 if [ -f "$1/trace/tfwc_q.xg" ];
 then
     echo ""
 else
-    echo "20 0" > "$1/trace/tfwc_q.xg"
+    echo "$FROM 0" > "$1/trace/tfwc_q.xg"
 fi
 
 gnuplot -persist << EOF
@@ -69,6 +72,8 @@ set	yrange		[0:]
 set     title           "Aggregated Queue Size"
 set     xlabel          "time"
 set     ylabel          "queue size in packets"
+
+set xrange [$FROM:$TO]
 
 plot    "$1/trace/tcp_q.xg" title 'TCP Queue Dynamics' with lines, \
 		"$1/trace/tfrc_q.xg" title 'TFRC Queue Dynamics' with lines, \

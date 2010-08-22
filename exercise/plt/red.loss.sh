@@ -36,25 +36,28 @@
 #
 # $Id$
 
-if [ -f "$1/trace/tcp_loss.xg" ];
+FROM=$2
+TO=$3
+
+if [ -s "$1/trace/tcp_loss.xg" ];
 then
     echo ""
 else
-    echo "20 0" > "$1/trace/tcp_loss.xg"
+    echo "$FROM 0" > "$1/trace/tcp_loss.xg"
 fi
 
-if [ -f "$1/trace/tfrc_loss.xg" ];
+if [ -s "$1/trace/tfrc_loss.xg" ];
 then
     echo ""
 else
-    echo "20 0" > "$1/trace/tfrc_loss.xg"
+    echo "$FROM 0" > "$1/trace/tfrc_loss.xg"
 fi
 
-if [ -f "$1/trace/tfwc_loss.xg" ];
+if [ -s "$1/trace/tfwc_loss.xg" ];
 then
     echo ""
 else
-    echo "20 0" > "$1/trace/tfwc_loss.xg"
+    echo "$FROM 0" > "$1/trace/tfwc_loss.xg"
 fi
 
 gnuplot -persist << EOF
@@ -68,6 +71,8 @@ set	yrange		[0:]
 set     title           "Aggregated Loss Rate"
 set     xlabel          "time"
 set     ylabel          "loss rate"
+
+set xrange [$FROM:$TO]
 
 plot    "$1/trace/tcp_loss.xg" title 'TCP Loss Rate' with lines, \
 		"$1/trace/tfrc_loss.xg" title 'TFRC Loss Rate' with lines, \

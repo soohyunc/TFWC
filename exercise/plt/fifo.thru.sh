@@ -36,25 +36,28 @@
 #
 # $Id$
 
-if [ -f "$1/trace/tcp_thru.xg" ];
+FROM=$2
+TO=$3
+
+if [ -s "$1/trace/tcp_thru.xg" ];
 then
 	echo ""
 else
-	echo "20 0" > "$1/trace/tcp_thru.xg"
+	echo "$FROM 0" > "$1/trace/tcp_thru.xg"
 fi
 
-if [ -f "$1/trace/tfrc_thru.xg" ];
+if [ -s "$1/trace/tfrc_thru.xg" ];
 then
 	echo ""
 else
-	echo "20 0" > "$1/trace/tfrc_thru.xg"
+	echo "$FROM 0" > "$1/trace/tfrc_thru.xg"
 fi
 
-if [ -f "$1/trace/tfwc_thru.xg" ];
+if [ -s "$1/trace/tfwc_thru.xg" ];
 then
 	echo ""
 else
-	echo "20 0" > "$1/trace/tfwc_thru.xg"
+	echo "$FROM 0" > "$1/trace/tfwc_thru.xg"
 fi
 
 gnuplot -persist << EOF
@@ -73,6 +76,8 @@ gnuplot -persist << EOF
 	set     title           "Aggregated Throughput"
 	set     xlabel          "time"
 	set     ylabel          "rate (Mb/s)"
+
+	set xrange [$FROM:$TO]
 
 	#set	key	180,1.4
 
