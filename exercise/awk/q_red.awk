@@ -5,6 +5,7 @@ BEGIN {
     option  = ARGV[1];
     granul  = ARGV[2];
     cutoff  = ARGV[3];
+    until   = ARGV[4];
 }
 
 {
@@ -12,7 +13,7 @@ BEGIN {
 		if (($2 - time) > granul) {
 		time += granul;
 
-		if ($2 > cutoff)
+		if ($2 > cutoff && $2 < until)
 		print time, $3 >> "trace/"option"_red_avg.xg";
 		}
 	}
@@ -21,7 +22,7 @@ BEGIN {
 		if (($2 - time) > granul) {
 		time += granul;
 
-		if ($2 > cutoff)
+		if ($2 > cutoff && $2 < until)
 		print time, $3 >> "trace/"option"_red_inst.xg";
 		}
 	}

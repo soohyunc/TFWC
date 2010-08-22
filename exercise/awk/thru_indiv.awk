@@ -8,6 +8,7 @@ BEGIN{
 	ix			= ARGV[2];
 	granul      = ARGV[3];
 	cutoff      = ARGV[4];
+    until       = ARGV[5];
 }
 
 {
@@ -21,7 +22,7 @@ BEGIN{
 		# convert to Mb/s
 		thru /= 1000000;
 
-		if ($2 > cutoff)
+		if ($2 > cutoff && $2 < until)
 		print time,thru >> "trace/"option"_thru_"ix".xg";
 
 		last_bits = bits;
@@ -29,7 +30,7 @@ BEGIN{
 
 		while (($2 - time) > 2 * granul) {
 
-		if ($2 > cutoff)
+		if ($2 > cutoff && $2 < until)
 		print time,0 >> "trace/"option"_thru_"ix".xg";
 
 		bits = 0;

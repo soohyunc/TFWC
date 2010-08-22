@@ -48,6 +48,7 @@ BEGIN {
 	last_lbits	= 0;
 	loss		= 0;
 	cutoff		= ARGV[1];
+    until       = ARGV[2];
 
 	printf "" > "trace/tfwc_loss.xg";
 }
@@ -68,7 +69,7 @@ BEGIN {
 		loss = ((lbits - last_lbits)/1000000)/granul;
 
 		rate = loss/thru;
-		if ($2 > cutoff)
+		if ($2 > cutoff && $2 < until)
 		print time, rate >> "trace/tfwc_loss.xg";
 
 		last_bits	= bits;

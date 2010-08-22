@@ -43,10 +43,11 @@ BEGIN {
 	time	= 0;
 	granul	= ARGV[1];
 	cutoff	= ARGV[2];
+    until   = ARGV[3];
 }
 
 {
-	if ($1 > cutoff) {
+	if ($1 > cutoff && $1 < until) {
 		if (($1 - time) > granul) {
 		time += granul;
 		print $1,$7

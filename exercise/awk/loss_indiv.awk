@@ -9,6 +9,7 @@ BEGIN{
 	ix			= ARGV[2];
 	granul      = ARGV[3];
 	cutoff      = ARGV[4];
+    until       = ARGV[5];
 }
 
 {
@@ -27,7 +28,7 @@ BEGIN{
 
 		rate = loss/thru;
 
-		if ($2 > cutoff)
+		if ($2 > cutoff && $2 < until)
 			print time, rate >> "trace/"option"_loss_"ix".xg";
 
 		last_bits = bits;
