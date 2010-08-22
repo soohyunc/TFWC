@@ -17,30 +17,30 @@ BEGIN{
 		bits += $3 * 8;
 
 		if (($2 - time) > granul) {
-		# bits/sec
-		time += granul;
-		thru = (bits-last_bits)/granul;
-		# convert to Mb/s
-		thru /= 1000000;
+			# bits/sec
+			time += granul;
+			thru = (bits-last_bits)/granul;
+			# convert to Mb/s
+			thru /= 1000000;
 
-		if (($2 > cutoff) && ($2 < until)) {
-		print time,thru >> "trace/"option"_thru_"ix".xg";
-		k++;
-	}
+			if ((time > cutoff) && (time < until)) {
+				print time,thru >> "trace/"option"_thru_"ix".xg";
+				k++;
+			}
 
-		last_bits = bits;
+			last_bits = bits;
 		}
 
 		while (($2 - time) > 2 * granul) {
 
-		if (($2 > cutoff) && ($2 < until)) {
-		print time,0 >> "trace/"option"_thru_"ix".xg";
-		k++;
-		}
+			if ((time > cutoff) && (time < until)) {
+				print time,0 >> "trace/"option"_thru_"ix".xg";
+				k++;
+			}
 
-		bits = 0;
-		last_bits = 0;
-		time += granul;
+			bits = 0;
+			last_bits = 0;
+			time += granul;
 		} # end of while
 	} #end of if ($1 == "r")
 }
