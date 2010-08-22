@@ -47,7 +47,7 @@ BEGIN {
 }
 
 {
-	if ($1 > cutoff && $1 < until) {
+	if (($1 > cutoff) && ($1 < until)) {
 		if (($1 - time) > granul) {
 		time += granul;
 		print $1,$7

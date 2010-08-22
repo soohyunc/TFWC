@@ -69,7 +69,7 @@ BEGIN {
 		loss = ((lbits - last_lbits)/1000000)/granul;
 
 		rate = loss/thru;
-		if ($2 > cutoff && $2 < until)
+		if (($2 > cutoff) && ($2 < until))
 		print time, rate >> "trace/tfwc_loss.xg";
 
 		last_bits	= bits;

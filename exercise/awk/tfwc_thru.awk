@@ -55,7 +55,7 @@ BEGIN {
 		rate = (bits-last_bits)/granul;
 		rate /= 1000000;
 
-		if ($2 > cutoff && $2 < until) 
+		if (($2 > cutoff) && ($2 < until)) 
 		print time, rate >> "trace/tfwc_thru.xg";
 
 		last_bits = bits;
@@ -63,7 +63,7 @@ BEGIN {
 
 		while (($2 - time) > 2* granul) {
 
-		if ($2 > cutoff $$ $2 < until) 
+		if (($2 > cutoff) && ($2 < until)) 
 		print time, 0 >> "trace/tfwc_thru.xg";
 
 		bits = 0;

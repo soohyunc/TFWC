@@ -28,7 +28,7 @@ BEGIN{
 
 		rate = loss/thru;
 
-		if ($2 > cutoff && $2 < until)
+		if (($2 > cutoff) && ($2 < until))
 			print time, rate >> "trace/"option"_loss_"ix".xg";
 
 		last_bits = bits;
