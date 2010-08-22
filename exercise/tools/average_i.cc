@@ -56,7 +56,7 @@ int main (int argc, char *argv[]) {
 		ss_thru << "trace/" << option << "_thru_" << index << ".dat";
 		fout_thru.open(ss_thru.str().c_str());
 		while (fin >> time >> item) {
-            if(time > cutoff && time < until) {
+            if(time >= cutoff && time <= until) {
 			  total += item;
 			  k++;
 			  fout_thru << item << endl;

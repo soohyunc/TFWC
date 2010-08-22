@@ -91,6 +91,9 @@ int main (int argc, char *argv[]) {
 		cout << "Unable to open file!!!" << endl;
 	}
 
+	if (avg_thru == 0)
+	cov = 0;
+	else
 	cov = sqrt(term/k)/avg_thru;
 
 	stringstream ss;

@@ -88,7 +88,7 @@ int main (int argc, char *argv[]) {
 
 			if (currtime-time >= granul) {
 				time += granul;
-				if (currtime > cutoff && currtime < until)
+				if (currtime > cutoff)
 					fout << time << " " << tot/count << endl;
 				tot = 0.0; count = 0;
 			}
