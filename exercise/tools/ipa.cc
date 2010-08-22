@@ -120,9 +120,12 @@ int main (int argc, char *argv[]) {
       fout << median << endl;
 
       // arithmetic average
-      avg = tot/count;
-      //cout << avg << endl;
-      //fout << avg << endl;
+	  // (avoid zero division)
+	  if (count != 0) {
+		  avg = tot/count;
+		  //cout << avg << endl;
+		  //fout << avg << endl;
+	  }
 
       fin.close();
     } // if(fin.is_open())

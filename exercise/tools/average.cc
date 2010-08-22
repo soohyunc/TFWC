@@ -43,7 +43,8 @@ int main (int argc, char *argv[]) {
 	ifstream fin (argv[1]);
 	ofstream fout;
 	int k = 0;      // index number
-	double avg, item, total=0;
+	double avg = 0.0;
+	double item, total=0;
 
 	if(fin.is_open()) {
 		while (fin >> item) {
@@ -53,7 +54,11 @@ int main (int argc, char *argv[]) {
 		fin.close();
 	}
 
+	// avoid zero division
+	if (k != 0)
 	avg = total/k;
+
+	// print average
 	cout << avg << endl;
 
 	return 0;

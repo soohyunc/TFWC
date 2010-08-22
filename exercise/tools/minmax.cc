@@ -74,6 +74,8 @@ int main (int argc, char *argv[]) {
 		cout << "Unable to open file!!!" << endl;
 	}
 
+	// avoid zero division
+	if (count != 0)
 	avg = sum / count;
 
 	if (!strcmp(argv[1],"tcp")) {

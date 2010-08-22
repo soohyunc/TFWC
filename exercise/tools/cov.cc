@@ -64,7 +64,7 @@ int main (int argc, char *argv[]) {
 	bw = bw;
 
 	int	k = 0;		// index number
-	double cov;		// coefficient of variation
+	double cov = 0.0;		// coefficient of variation
 	double inst_thru;	// instantaneous throughput
 	double term = 0.0;
 	double avg_thru;
@@ -73,9 +73,9 @@ int main (int argc, char *argv[]) {
 
 	// get average throughput value
 	if(favg.is_open()) {
-		while (!favg.eof())	{
-			favg >> avg_thru;
-		}
+		while (!favg.eof())	
+		  favg >> avg_thru;
+
 		favg.close();
 	}
 
@@ -91,9 +91,8 @@ int main (int argc, char *argv[]) {
 		cout << "Unable to open file!!!" << endl;
 	}
 
-	if (avg_thru == 0)
-	cov = 0;
-	else
+	// avoid zero division
+	if (avg_thru != 0)
 	cov = sqrt(term/k)/avg_thru;
 
 	stringstream ss;

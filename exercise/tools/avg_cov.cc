@@ -59,10 +59,11 @@ int main (int argc, char *argv[]) {
 	double tot_cov = atof(argv[2]);
 	int num = atoi(argv[3]);
 	double bw = atof(argv[4]);
-	double avg_cov;
+	double avg_cov = 0.0;
 	ofstream fout;
 
 	// average CoV
+	if(num != 0)
 	avg_cov = tot_cov / num;
 
 	stringstream ss;

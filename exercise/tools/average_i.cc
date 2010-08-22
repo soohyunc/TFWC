@@ -49,7 +49,8 @@ int main (int argc, char *argv[]) {
 	ifstream fin (argv[5]);
 	ofstream fout_thru, fout_avg;
 	int k = 0;      // index number
-	double avg, item, time, total=0;
+	double avg = 0.0;
+	double item, time, total=0;
 
 	if(fin.is_open()) {
 		stringstream ss_thru;
@@ -66,6 +67,8 @@ int main (int argc, char *argv[]) {
 		fin.close();
 	}
 
+	// avoid zero division
+	if (k != 0)
 	avg = total/k;
 
 	stringstream ss_avg;
