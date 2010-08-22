@@ -36,14 +36,13 @@
 # (Find an outgoing packet from the queue at a bottleneck node)
 
 BEGIN {
+	k	= 0;
 	granul = 0.5;
 	bits = 0;
 	last_bits = 0;
 	cutoff	= ARGV[1];
     until = ARGV[2];
 	time = 0;
-
-	printf "" > "trace/tcp_thru.xg";
 }
 
 {
@@ -55,16 +54,20 @@ BEGIN {
 		rate = (bits-last_bits)/granul;
 		rate /= 1000000;
 
-		if (($2 > cutoff) && ($2 < until)) 
+		if (($2 > cutoff) && ($2 < until)) { 
 		print time, rate >> "trace/tcp_thru.xg";
+		k++;
+		}
 
 		last_bits = bits;
 		}
 
 		while (($2 - time) > 2* granul) {
 
-		if (($2 > cutoff) && ($2 < until)) 
+		if (($2 > cutoff) && ($2 < until)) {
 		print time, 0 >> "trace/tcp_thru.xg";
+		k++;
+		}
 
 		bits = 0;
 		last_bits = 0;
@@ -74,4 +77,6 @@ BEGIN {
 }
 
 END {
+	if (k == 0)
+	print cutoff,0 > "trace/tcp_thru.xg";
 }

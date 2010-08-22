@@ -4,6 +4,7 @@ BEGIN{
 	time        = 0;
 	last_bits   = 0;
 	thru        = 0;
+	k			= 0; # number of printing
 	option		= ARGV[1];
 	ix			= ARGV[2];
 	granul      = ARGV[3];
@@ -22,16 +23,20 @@ BEGIN{
 		# convert to Mb/s
 		thru /= 1000000;
 
-		if (($2 > cutoff) && ($2 < until))
+		if (($2 > cutoff) && ($2 < until)) {
 		print time,thru >> "trace/"option"_thru_"ix".xg";
+		k++;
+	}
 
 		last_bits = bits;
 		}
 
 		while (($2 - time) > 2 * granul) {
 
-		if (($2 > cutoff) && ($2 < until))
+		if (($2 > cutoff) && ($2 < until)) {
 		print time,0 >> "trace/"option"_thru_"ix".xg";
+		k++;
+		}
 
 		bits = 0;
 		last_bits = 0;
@@ -40,4 +45,9 @@ BEGIN{
 	} #end of if ($1 == "r")
 }
 
-END{}
+END{
+  if(k == 0) {
+	print cutoff,0 >> "trace/"option"_thru_"ix".xg";
+	print until,0 >> "trace/"option"_thru_"ix".xg";
+  }
+}
