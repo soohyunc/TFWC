@@ -415,21 +415,21 @@ proc red_plots {} {
 	global tcp_src_num tfrc_src_num tfwc_src_num app_num
 	global cutoff rtt_in_sec curr_dir t_sim
 
-	# THROUGHPUT PLOT
-	exec ../plt/red.thru.sh $curr_dir 2> /dev/null
-
-	# INSTANTANEOUS QUEUE SIZE PLOT
-	exec ../plt/red.q.sh $curr_dir 2> /dev/null
-
-	# AVERAGE RED QUEUE SIZE PLOT
-	exec ../plt/red.avg.sh $curr_dir 2> /dev/null
-
-	# LOSS RATE PLOT
-	exec ../plt/red.loss.sh $curr_dir 2> /dev/null
-
     # 30 secs from the half of the sim time
     set from [expr ($t_sim / 2.0)]
     set to   [expr ($from + 30)]
+
+	# THROUGHPUT PLOT
+	exec ../plt/red.thru.sh $curr_dir $from $to 2> /dev/null
+
+	# INSTANTANEOUS QUEUE SIZE PLOT
+	exec ../plt/red.q.sh $curr_dir $from $to 2> /dev/null
+
+	# AVERAGE RED QUEUE SIZE PLOT
+	exec ../plt/red.avg.sh $curr_dir $from $to 2> /dev/null
+
+	# LOSS RATE PLOT
+	exec ../plt/red.loss.sh $curr_dir $from $to 2> /dev/null
 
 	if {$tcp_src_num > 0} {
 		exec ../plt/plot.sh tcp thru red $from $to
@@ -465,18 +465,18 @@ proc fifo_plots {} {
 	global tcp_src_num tfrc_src_num tfwc_src_num app_num
 	global cutoff rtt_in_sec curr_dir t_sim 
 
-	# THROUGHPUT PLOT
-	exec ../plt/fifo.thru.sh $curr_dir 2> /dev/null
-
-	# INSTANTANEOUS QUEUE SIZE PLOT
-	exec ../plt/fifo.q.sh $curr_dir 2> /dev/null
-
-	# LOSS RATE PLOT
-	exec ../plt/fifo.loss.sh $curr_dir 2> /dev/null
-
     # 30 secs from the half of the sim time
     set from [expr ($t_sim / 2.0)]
     set to   [expr ($from + 30)]
+
+	# THROUGHPUT PLOT
+	exec ../plt/fifo.thru.sh $curr_dir $from $to 2> /dev/null
+
+	# INSTANTANEOUS QUEUE SIZE PLOT
+	exec ../plt/fifo.q.sh $curr_dir $from $to 2> /dev/null
+
+	# LOSS RATE PLOT
+	exec ../plt/fifo.loss.sh $curr_dir $from $to 2> /dev/null
 
 	if {$tcp_src_num > 0} {
 		exec ../plt/plot.sh tcp thru fifo $from $to
@@ -753,7 +753,10 @@ proc tfrc_results {} {
 	}
 
 	set freq [expr $rtt_in_sec/$max_factor]
-	set ff [expr 4 * $rtt_in_sec]
+	set ff [expr 6 * $rtt_in_sec]
+	if {$ff > 0.5} {
+		set ff 0.5
+	}
 	set tcl_precision 16
 
 #	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
