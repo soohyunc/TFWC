@@ -166,7 +166,6 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
-    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -261,7 +260,6 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
-    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -356,7 +354,6 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
-    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -451,7 +448,6 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
-    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -564,7 +560,6 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
-    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -659,7 +654,6 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
-    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -754,7 +748,6 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
-    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -849,7 +842,6 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
-    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
