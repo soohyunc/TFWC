@@ -166,6 +166,7 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
+    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -173,7 +174,10 @@ do
 	$CAT trace/tfrc_avg_cov.xg >> trace/tfrc_cov.xg
 
 	# archive throughput and fairness
+    if [ -s graph/aggr_${queue}_thru.png ];
+    then
 	$CP graph/aggr_${queue}_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+    fi
 	$TOOLS/fairness tcp-tfrc $toq $bw $src trace/tcp_thru_tot.dat trace/tfrc_thru_tot.dat
 	$CAT trace/tcp-tfrc_${queue}_fairness.xg >> trace/tcp-tfrc_${queue}x${factor}_fairness.xg
 	$RM trace/tcp-tfrc_${queue}_fairness.xg
@@ -257,6 +261,7 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
+    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -264,7 +269,10 @@ do
 	$CAT trace/tfrc_avg_cov.xg >> trace/tfrc_cov.xg
 
 	# archive throughput and fairness
+    if [ -s graph/aggr_${queue}_thru.png ];
+    then
 	$CP graph/aggr_${queue}_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+    fi
 	$TOOLS/fairness tcp-tfrc $toq $bw $src trace/tcp_thru_tot.dat trace/tfrc_thru_tot.dat
 	$CAT trace/tcp-tfrc_${queue}_fairness.xg >> trace/tcp-tfrc_${queue}x${factor}_fairness.xg
 	$RM trace/tcp-tfrc_${queue}_fairness.xg
@@ -348,6 +356,7 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
+    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -355,7 +364,10 @@ do
 	$CAT trace/tfrc_avg_cov.xg >> trace/tfrc_cov.xg
 
 	# archive throughput and fairness
+    if [ -s graph/aggr_${queue}_thru.png ];
+    then
 	$CP graph/aggr_${queue}_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+    fi
 	$TOOLS/fairness tcp-tfrc $toq $bw $src trace/tcp_thru_tot.dat trace/tfrc_thru_tot.dat
 	$CAT trace/tcp-tfrc_${queue}_fairness.xg >> trace/tcp-tfrc_${queue}x${factor}_fairness.xg
 	$RM trace/tcp-tfrc_${queue}_fairness.xg
@@ -439,6 +451,7 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
+    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -446,7 +459,10 @@ do
 	$CAT trace/tfrc_avg_cov.xg >> trace/tfrc_cov.xg
 
 	# archive throughput and fairness
+    if [ -s graph/aggr_${queue}_thru.png ];
+    then
 	$CP graph/aggr_${queue}_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+    fi
 	$TOOLS/fairness tcp-tfrc $toq $bw $src trace/tcp_thru_tot.dat trace/tfrc_thru_tot.dat
 	$CAT trace/tcp-tfrc_${queue}_fairness.xg >> trace/tcp-tfrc_${queue}x${factor}_fairness.xg
 	$RM trace/tcp-tfrc_${queue}_fairness.xg
@@ -548,6 +564,7 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
+    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -555,7 +572,10 @@ do
 	$CAT trace/tfwc_avg_cov.xg >> trace/tfwc_cov.xg
 
 	# archive throughput and fairness
+    if [ -s graph/aggr_${queue}_thru.png ];
+    then
 	$CP graph/aggr_${queue}_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+    fi
 	$TOOLS/fairness tcp-tfwc $toq $bw $src trace/tcp_thru_tot.dat trace/tfwc_thru_tot.dat
 	$CAT trace/tcp-tfwc_${queue}_fairness.xg >> trace/tcp-tfwc_${queue}x${factor}_fairness.xg
 	$RM trace/tcp-tfwc_${queue}_fairness.xg
@@ -639,6 +659,7 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
+    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -646,7 +667,10 @@ do
 	$CAT trace/tfwc_avg_cov.xg >> trace/tfwc_cov.xg
 
 	# archive throughput and fairness
+    if [ -s graph/aggr_${queue}_thru.png ];
+    then
 	$CP graph/aggr_${queue}_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+    fi
 	$TOOLS/fairness tcp-tfwc $toq $bw $src trace/tcp_thru_tot.dat trace/tfwc_thru_tot.dat
 	$CAT trace/tcp-tfwc_${queue}_fairness.xg >> trace/tcp-tfwc_${queue}x${factor}_fairness.xg
 	$RM trace/tcp-tfwc_${queue}_fairness.xg
@@ -730,6 +754,7 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
+    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -737,7 +762,10 @@ do
 	$CAT trace/tfwc_avg_cov.xg >> trace/tfwc_cov.xg
 
 	# archive throughput and fairness
+    if [ -s graph/aggr_${queue}_thru.png ];
+    then
 	$CP graph/aggr_${queue}_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+    fi
 	$TOOLS/fairness tcp-tfwc $toq $bw $src trace/tcp_thru_tot.dat trace/tfwc_thru_tot.dat
 	$CAT trace/tcp-tfwc_${queue}_fairness.xg >> trace/tcp-tfwc_${queue}x${factor}_fairness.xg
 	$RM trace/tcp-tfwc_${queue}_fairness.xg
@@ -821,6 +849,7 @@ do
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
 	echo ""
+    ./rmall.sh > /dev/null
 	$NICE $NS2 main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1
 
 	# CoV computation
@@ -828,7 +857,10 @@ do
 	$CAT trace/tfwc_avg_cov.xg >> trace/tfwc_cov.xg
 
 	# archive throughput and fairness
+    if [ -s graph/aggr_${queue}_thru.png ];
+    then
 	$CP graph/aggr_${queue}_thru.png archives/bw${bw}_${queue}_${qsize}_thru_tcp_${tcp}_tfrc_${tfrc}_tfwc_${tfwc}.png
+    fi
 	$TOOLS/fairness tcp-tfwc $toq $bw $src trace/tcp_thru_tot.dat trace/tfwc_thru_tot.dat
 	$CAT trace/tcp-tfwc_${queue}_fairness.xg >> trace/tcp-tfwc_${queue}x${factor}_fairness.xg
 	$RM trace/tcp-tfwc_${queue}_fairness.xg
