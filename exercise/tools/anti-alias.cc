@@ -89,8 +89,11 @@ int main (int argc, char *argv[]) {
 
 			if (currtime-time >= granul) {
 				time += granul;
-				if (currtime > cutoff)
+				if (currtime > cutoff) {
+                    // avoide zero division
+                    if ( count != 0)
 					fout << time << " " << tot/count << endl;
+                }
 				tot = 0.0; count = 0;
 			}
 			while (currtime-time >= 2 * granul) {
