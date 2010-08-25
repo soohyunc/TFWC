@@ -856,7 +856,10 @@ proc tfrc_results {} {
 	}
 
 	# LOSS RATE
-	exec awk -f ../awk/tfrc_loss.awk cutoff=$from trace/out.queue
+	exec awk -f ../awk/tfrc_loss.awk \
+            cutoff=$from \
+            until=$to \
+            trace/out.queue
 	for {set i 1} {$i <= $tfrc_src_num} {incr i} {
         exec awk -f ../awk/loss_indiv.awk \
 					option=tfrc \
