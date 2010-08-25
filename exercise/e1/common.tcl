@@ -806,7 +806,7 @@ proc tfrc_results {} {
 				$i \
                 $from \
                 $to \
-				trace/tfrc_thru_$i.xg
+				trace/tfrc_ant_thru_$i.xg
 	}
 
 	# CoV per flow
@@ -997,7 +997,7 @@ proc tfwc_results {} {
 				$i \
                 $from \
                 $to \
-				trace/tfwc_thru_$i.xg
+				trace/tfwc_ant_thru_$i.xg
 	}
 
 	# CoV per flow
