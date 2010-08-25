@@ -42,8 +42,7 @@ BEGIN {
 	cutoff = ARGV[1];
     until = ARGV[2];
 	time = 0;
-
-	printf "" > "trace/tfwc_thru.xg";
+    k = 0;
 }
 
 {
@@ -55,16 +54,20 @@ BEGIN {
 		rate = (bits-last_bits)/granul;
 		rate /= 1000000;
 
-		if (($2 > cutoff) && ($2 < until)) 
+		if ((time > cutoff) && (time < until)) {
 		print time, rate >> "trace/tfwc_thru.xg";
+        k++;
+        }
 
 		last_bits = bits;
 		}
 
 		while (($2 - time) > 2* granul) {
 
-		if (($2 > cutoff) && ($2 < until)) 
+		if ((time > cutoff) && (time < until)) {
 		print time, 0 >> "trace/tfwc_thru.xg";
+        k++;
+        }
 
 		bits = 0;
 		last_bits = 0;
@@ -74,5 +77,7 @@ BEGIN {
 }
 
 END {
-	}
+    if (k == 0)
+    print cutoff,0 >> "trace/tfwc_thru.xg"
+}
 

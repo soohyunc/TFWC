@@ -54,7 +54,7 @@ BEGIN {
 		rate = (bits-last_bits)/granul;
 		rate /= 1000000;
 
-		if (($2 > cutoff) && ($2 < until)) { 
+		if ((time > cutoff) && (time < until)) { 
 		print time, rate >> "trace/tcp_thru.xg";
 		k++;
 		}
@@ -64,7 +64,7 @@ BEGIN {
 
 		while (($2 - time) > 2* granul) {
 
-		if (($2 > cutoff) && ($2 < until)) {
+		if ((time > cutoff) && (time < until)) {
 		print time, 0 >> "trace/tcp_thru.xg";
 		k++;
 		}
