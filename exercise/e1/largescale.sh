@@ -64,6 +64,7 @@ echo "" >> trace/SIMENV
 a1=0.2
 a2=2.0
 a3=5.0
+minqueue=15
 
 TOOLS="`dirname $PWD`/tools"
 NICE=`which nice`
@@ -159,9 +160,9 @@ do
 	qsize=`$TOOLS/round $qsize`
 
 	# queue size is always greater than 5 packets
-	if [ $qsize -lt "5" ]
+	if [ $qsize -lt $minqueue ]
 	then
-	  qsize=5
+	  qsize=$minqueue
 	fi
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
@@ -253,9 +254,9 @@ do
 	qsize=`$TOOLS/round $qsize`
 
 	# queue size is always greater than 5 packets
-	if [ $qsize -lt "5" ]
+	if [ $qsize -lt $minqueue ]
 	then
-	  qsize=5
+	  qsize=$minqueue
 	fi
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
@@ -347,9 +348,9 @@ do
 	qsize=`$TOOLS/round $qsize`
 
 	# queue size is always greater than 5 packets
-	if [ $qsize -lt "5" ]
+	if [ $qsize -lt $minqueue ]
 	then
-	  qsize=5
+	  qsize=$minqueue
 	fi
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
@@ -441,9 +442,9 @@ do
 	qsize=`$TOOLS/round $qsize`
 
 	# queue size is always greater than 5 packets
-	if [ $qsize -lt "5" ]
+	if [ $qsize -lt $minqueue ]
 	then
-	  qsize=5
+	  qsize=$minqueue
 	fi
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
@@ -553,9 +554,9 @@ do
 	qsize=`$TOOLS/round $qsize`
 
 	# queue size is always greater than 5 packets
-	if [ $qsize -lt "5" ]
+	if [ $qsize -lt $minqueue ]
 	then
-	  qsize=5
+	  qsize=$minqueue
 	fi
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
@@ -647,9 +648,9 @@ do
 	qsize=`$TOOLS/round $qsize`
 
 	# queue size is always greater than 5 packets
-	if [ $qsize -lt "5" ]
+	if [ $qsize -lt $minqueue ]
 	then
-	  qsize=5
+	  qsize=$minqueue
 	fi
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
@@ -741,9 +742,9 @@ do
 	qsize=`$TOOLS/round $qsize`
 
 	# queue size is always greater than 5 packets
-	if [ $qsize -lt "5" ]
+	if [ $qsize -lt $minqueue ]
 	then
-	  qsize=5
+	  qsize=$minqueue
 	fi
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
@@ -835,9 +836,9 @@ do
 	qsize=`$TOOLS/round $qsize`
 
 	# queue size is always greater than 5 packets
-	if [ $qsize -lt "5" ]
+	if [ $qsize -lt $minqueue ]
 	then
-	  qsize=5
+	  qsize=$minqueue
 	fi
 
 	echo -n "ns main.tcl $tcp $tfrc $tfwc $accessbw $amindel $amaxdel $bw $del $qsize $runtime $rnd $reverse $toq > temp 2>&1"
