@@ -49,12 +49,15 @@ var=$PWD
 # count the number of files that we're plotting
 # it can count up to 999 sources per tcp/tfrc/tfwc
 # (e.g., each tcp/tfrc/tfwc can be counted up to 999 sources.)
+#tmp1=`find . -name "$1_$2_[0-9].xg" -type f  ! -size 0k -exec ls {} + | wc -l`
+#tmp2=`find . -name "$1_$2_[0-9][0-9].xg" -type f  ! -size 0k -exec ls {} + | wc -l`
+#tmp3=`find . -name "$1_$2_[0-9][0-9][0-9].xg" -type f  ! -size 0k -exec ls {} + | wc -l`
 tmp1=`find . -name "$1_$2_[0-9].xg" -type f  -exec ls {} + | wc -l`
 tmp2=`find . -name "$1_$2_[0-9][0-9].xg" -type f  -exec ls {} + | wc -l`
-tmp3=`find . -name "$1_$2_[0-9][0-9][0-9].xg" -type f  -exec ls {} + | wc -l`
+tmp3=`find . -name "$1_$2_[0-9][0-9][0-9].xg" -type f -exec ls {} + | wc -l`
 file_count=`expr $tmp1 + $tmp2 + $tmp3`
 
-#file_list=`find . -name "$1_$2_*.xg" -type f  -exec ls {} +`
+file_list=`find . -name "$1_$2_*.xg" -type f ! -size 0k -exec ls {} +`
 #for filename in $filelist ; do
 
 # determine the number of flows to plot
@@ -65,10 +68,12 @@ else
 	num_src=$file_count
 fi 2> /dev/null
 
+n=1
+
 # for loop for plotting
-for i in `seq 1 $num_src`
+for i in $file_list
 do
-	if [ $i -eq "1" ];
+	if [ $n -eq "1" ];
 	then
 		gnuplot -persist << EOF
 		set terminal postscript eps enhanced color
@@ -78,9 +83,10 @@ do
 		set title "$1 $2"
 		set xrange [$4:$5]
 		set yrange [$6:$7]
-		plot "trace/$1_$2_$i.xg" with lines title "$i"
+		plot "$i" with lines notitle
 		save "$1_$2_$3.env"
 EOF
+    n=`echo $n+1 | bc -l`
 	else
 		gnuplot -persist << EOF
 		set terminal postscript eps enhanced color
@@ -91,9 +97,10 @@ EOF
 		set title "$1 $2"
 		set xrange [$4:$5]
 		set yrange [$6:$7]
-		replot "trace/$1_$2_$i.xg" with lines title "$i"
+		replot "$i" with lines notitle
 		save "$1_$2_$3.env"
 EOF
+    n=`echo $n+1 | bc -l`
 	fi
 done > /dev/null 2>&1
 
