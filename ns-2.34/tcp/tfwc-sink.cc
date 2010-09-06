@@ -74,7 +74,7 @@ void TfwcSinkAgent::recv(Packet* pkt, Handler*) {
 	//printf(" (data receiver) ackofack_ = %d\n", ackofack_);
 	ackvec_.ackv_del(ackofack_);
 
-	ack(pkt);	// sending an ack message
+	ack();	// sending an ack message
 	Packet::free(pkt);
 }
 
@@ -100,15 +100,11 @@ int TfwcSinkAgent::command(int argc, const char*const* argv)
 /*
  * Sending an ACK
  */
-void TfwcSinkAgent::ack(Packet* opkt) {
+void TfwcSinkAgent::ack() {
 
-	/* 
-	 *  opkt = old packet
-	 *  npkt = new packet
-	 */
-	Packet* npkt = allocpkt();
-	hdr_tfwc_ack *tfwcah = hdr_tfwc_ack::access(npkt);
-	hdr_cmn *cmnh = hdr_cmn::access(npkt);
+	Packet* pkt = allocpkt();
+	hdr_tfwc_ack *tfwcah = hdr_tfwc_ack::access(pkt);
+	hdr_cmn *cmnh = hdr_cmn::access(pkt);
 	cmnh->size_ = ackpktSize_;	// ack packet size
 
 	// timestamp echo
@@ -126,5 +122,5 @@ void TfwcSinkAgent::ack(Packet* opkt) {
 	//tfwcah->tfwcAV.ackv_print();
 
 	// sending an ack
-	send(npkt, 0);
+	send(pkt, 0);
 }

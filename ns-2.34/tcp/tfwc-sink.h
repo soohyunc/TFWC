@@ -54,7 +54,7 @@ protected:
 	AckVec ackvec_;		// real ack vector
 
 	// sending an ack
-	void ack(Packet*);
+	void ack();
 
 	int seqno_;			// pkt seqno that the receiver has just got
 	int ackpktSize_;	// ack packet size
