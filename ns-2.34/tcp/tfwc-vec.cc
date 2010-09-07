@@ -218,8 +218,11 @@ void AckVec::ackv_clone(AckVec* orig) {
  */
 int AckVec::ackv_headval() {
 	AckVecElm *elm = headp_;
+    int val = 0;
 
-	return elm->getval();
+    if (elm != NULL)
+        val = elm->getval();
+    return val;
 }
 
 /*
@@ -227,8 +230,11 @@ int AckVec::ackv_headval() {
  */
 int AckVec::ackv_tailval() {
 	AckVecElm *elm = tailp_;
+    int val = 0;
 
-	return elm->getval();
+    if (elm != NULL)
+        val = elm->getval();
+	return val;
 }
 
 /*
