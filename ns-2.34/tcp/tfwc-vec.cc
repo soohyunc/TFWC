@@ -67,7 +67,7 @@ int AckVec::ackv_size() {
 void AckVec::ackv_insert_head(int seqno) {
 	AckVecElm *elm = new AckVecElm(seqno);
 
-	if (headp_ != NULL)
+	if (!headp_)
 		headp_ = tailp_ = elm;
 	else {
 		elm->next(headp_);
@@ -80,7 +80,7 @@ void AckVec::ackv_insert_head(int seqno) {
  * Ack Vector Insert from Tail
  */
 void AckVec::ackv_insert_tail(int seqno) {
-	if (tailp_ != NULL)
+	if (!tailp_)
 		tailp_ = headp_ = new AckVecElm(seqno);
 	else
 		tailp_ = new AckVecElm(seqno, tailp_);
@@ -175,7 +175,7 @@ void AckVec::ackv_del(int seqno) {
 	AckVecElm *elm = headp_;
 	AckVecElm *prev = elm;
 
-	while(elm != NULL) {
+	while(elm) {
 		if (elm->getval() <= seqno) {
 			prev->next(elm->next());
 			delete elm;
@@ -218,11 +218,8 @@ void AckVec::ackv_clone(AckVec* orig) {
  */
 int AckVec::ackv_headval() {
 	AckVecElm *elm = headp_;
-    int val = 0;
 
-    if (elm != NULL)
-        val = elm->getval();
-    return val;
+	return elm->getval();
 }
 
 /*
@@ -230,11 +227,8 @@ int AckVec::ackv_headval() {
  */
 int AckVec::ackv_tailval() {
 	AckVecElm *elm = tailp_;
-    int val = 0;
 
-    if (elm != NULL)
-        val = elm->getval();
-	return val;
+	return elm->getval();
 }
 
 /*
@@ -250,7 +244,7 @@ int AckVec::ackv_nthval(int nth) {
 
 	AckVecElm *elm = headp_;
 
-	if(headp_ != NULL)
+	if(!headp_)
 		return 0;
 
 	/*
